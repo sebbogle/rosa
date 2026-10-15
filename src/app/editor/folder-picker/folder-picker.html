@@ -1,0 +1,75 @@
+<div class="picker" (focusout)="leave($event)" (keydown.escape)="escape($event)">
+  <button
+    #trigger
+    type="button"
+    class="box"
+    [attr.aria-label]="'Folder ' + label()"
+    [attr.aria-expanded]="open()"
+    (click)="toggle()"
+  >
+    <span class="chosen">{{ label() }}</span>
+    <span class="chevron" aria-hidden="true">▾</span>
+  </button>
+
+  @if (open()) {
+    <div class="panel">
+      <nav class="crumb" aria-label="Where this recipe goes">
+        <button type="button" class="step" [disabled]="!crumb().length" (click)="upTo(0)">
+          {{ root }}
+        </button>
+
+        @for (step of crumb(); track step.depth) {
+          <span class="tick" aria-hidden="true">›</span>
+          <button
+            type="button"
+            class="step"
+            [disabled]="step.depth === crumb().length"
+            (click)="upTo(step.depth)"
+          >
+            {{ step.name }}
+          </button>
+        }
+      </nav>
+
+      <ul class="levels">
+        @for (child of children(); track child) {
+          <li>
+            <button type="button" class="level" (click)="into(child)">
+              <span class="folder">{{ child }}</span>
+              <span class="in" aria-hidden="true">›</span>
+            </button>
+          </li>
+        } @empty {
+          <li class="bare">Nothing in here yet.</li>
+        }
+      </ul>
+
+      <div class="acts">
+        <button #putButton type="button" class="put" (click)="put()">Put it in here</button>
+
+        @if (naming()) {
+          <div class="coining">
+            <input
+              #nameField
+              class="named"
+              type="text"
+              autocomplete="off"
+              aria-label="Name the new folder"
+              placeholder="Folder name"
+              [value]="typed()"
+              (input)="name($event)"
+              (keydown.enter)="coin($event)"
+            />
+            <button type="button" class="into" [disabled]="!sentence()" (click)="coin()">
+              Go into it
+            </button>
+          </div>
+
+          <p class="says" role="status">{{ sentence() }}</p>
+        } @else {
+          <button type="button" class="new" (click)="startNaming()">New folder in here</button>
+        }
+      </div>
+    </div>
+  }
+</div>

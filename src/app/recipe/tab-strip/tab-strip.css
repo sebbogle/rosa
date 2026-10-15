@@ -1,0 +1,158 @@
+:host {
+  display: flex;
+  min-width: 0;
+  background: var(--raised);
+  border-bottom: 1px solid var(--line);
+}
+
+.strip {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  margin-bottom: calc(-1 * var(--drift));
+  border-bottom: var(--drift) solid transparent;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: thin;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  flex: none;
+  max-width: 220px;
+  border-right: 1px solid var(--line);
+  color: var(--dim);
+}
+
+.tab:hover:not(.active) {
+  background: var(--hover);
+}
+
+.tab.active {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+:host(.focused) .tab.active {
+  box-shadow: inset 0 2px 0 var(--accent);
+}
+
+.tab.cdk-drag-preview {
+  background: var(--raised);
+  box-shadow: var(--popover);
+}
+
+.tab.active.cdk-drag-preview {
+  background: var(--paper);
+}
+
+:host(.focused) .tab.active.cdk-drag-preview {
+  box-shadow:
+    inset 0 2px 0 var(--accent),
+    var(--popover);
+}
+
+.tab.cdk-drag-placeholder {
+  opacity: 0.4;
+}
+
+.strip.cdk-drop-list-dragging .tab:not(.cdk-drag-placeholder, .cdk-drag-preview),
+.tab.cdk-drag-animating {
+  transition: transform calc(150ms * var(--motion)) ease;
+}
+
+.label {
+  min-width: 0;
+  padding: 8px 4px 8px 12px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-size: 13px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tab.preview .label {
+  font-style: italic;
+}
+
+.close {
+  flex: none;
+  padding: 8px 9px;
+  border: 0;
+  background: transparent;
+  color: var(--faint);
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: var(--ink);
+}
+
+@media not ((width < 1024px) or (pointer: coarse)) {
+  .tab.preview:not(.cdk-drag-placeholder) {
+    order: 1;
+  }
+}
+
+@media (width < 1024px), (pointer: coarse) {
+  :host {
+    border-bottom: 0;
+  }
+
+  .strip {
+    margin-bottom: 0;
+    border-bottom: 0;
+    overflow: visible;
+  }
+
+  .tab {
+    max-width: 280px;
+  }
+
+  :host(.focused) .tab.active {
+    box-shadow: inset 0 3px 0 var(--accent);
+  }
+
+  :host(:not(.focused)) .tab.active {
+    background: none;
+    color: var(--dim);
+  }
+
+  :host(:not(.focused)) .tab.active:hover {
+    background: var(--hover);
+  }
+
+  .label {
+    min-height: 44px;
+    padding: 10px 6px 10px 16px;
+    font-size: 15px;
+  }
+
+  .close {
+    min-width: 34px;
+    min-height: 44px;
+    padding: 0 6px;
+    font-size: 15px;
+  }
+
+  @media (width < 768px) {
+    .tab {
+      max-width: 220px;
+    }
+
+    .label {
+      padding: 10px 4px 10px 13px;
+    }
+
+    .close {
+      min-width: 32px;
+    }
+  }
+}

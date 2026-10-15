@@ -1,0 +1,88 @@
+<div class="app">
+  <app-sidebar />
+
+  <div class="reading" cdkDropListGroup [class.split]="split()">
+    <div class="chrome">
+      <button
+        type="button"
+        class="contents"
+        aria-label="Contents"
+        [class.showing]="drawerOpen()"
+        [attr.aria-expanded]="drawerOpen()"
+        (click)="toggleDrawer()"
+      >
+        <span aria-hidden="true">☰</span>
+      </button>
+
+      <div class="strips">
+        @for (side of sides(); track side.key; let at = $index) {
+          <app-tab-strip [side]="at" [class.tabless]="side.tabs.length === 0" />
+        }
+      </div>
+
+      @if (drive) {
+        <app-sync-control />
+      }
+
+      <button type="button" class="settings" aria-label="Settings" (click)="openSettings()">
+        <span aria-hidden="true">⚙︎</span>
+      </button>
+    </div>
+
+    <main class="sides">
+      @for (side of sides(); track side.key; let at = $index) {
+        <div
+          class="side"
+          [class.focused]="side.focused"
+          [attr.role]="split() ? 'region' : null"
+          [attr.aria-label]="split() ? sideNames[at] : null"
+          (pointerdown)="press(at, $event)"
+        >
+          <div class="pane">
+            @if (side.reading; as recipe) {
+              <app-recipe-pane
+                [recipe]="recipe"
+                [sizing]="side.sizing"
+                (choose)="choose(recipe.id, $event)"
+              />
+            } @else {
+              <app-resting-state [side]="at" />
+            }
+          </div>
+
+          @if (split()) {
+            <div
+              class="zone whole"
+              cdkDropList
+              [cdkDropListData]="at"
+              [cdkDropListEnterPredicate]="fromTheOtherSide"
+              (cdkDropListDropped)="moveToSide($event)"
+            ></div>
+          } @else {
+            <div
+              class="zone left"
+              cdkDropList
+              [cdkDropListEnterPredicate]="splittable"
+              (cdkDropListDropped)="makeSide($event, 'left')"
+            ></div>
+
+            <div
+              class="zone right"
+              cdkDropList
+              [cdkDropListEnterPredicate]="splittable"
+              (cdkDropListDropped)="makeSide($event, 'right')"
+            ></div>
+          }
+        </div>
+      }
+    </main>
+
+    @if (split()) {
+      <app-grip [edge]="divider" label="Divider" />
+    }
+  </div>
+</div>
+
+<app-editor />
+
+<app-settings />

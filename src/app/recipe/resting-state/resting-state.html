@@ -1,0 +1,31 @@
+<div class="block">
+  <svg class="mark" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M8 2a10 10 0 0 1 0 20Z" />
+  </svg>
+
+  <p class="line">{{ copy().line }}</p>
+  <p class="sentence">{{ copy().sentence }}</p>
+
+  <div class="slot">
+    @if (control(); as act) {
+      <div class="act" [class.elsewhere]="elsewhere()">
+        <button
+          type="button"
+          class="control"
+          [attr.aria-disabled]="inert() || held() ? 'true' : null"
+          (click)="press()"
+        >
+          {{ act }}
+        </button>
+
+        @if (elsewhere()) {
+          <app-bubble [words]="reason" />
+        }
+      </div>
+    }
+
+    @if (stranded()) {
+      <button type="button" class="reach" (click)="openContents()">Open Contents</button>
+    }
+  </div>
+</div>

@@ -1,0 +1,57 @@
+<div class="row drive">
+  @if (unsent() || speech().line || address()) {
+    <div class="text">
+      @if (unsent()) {
+        <p class="line unsent"><span class="marker" aria-hidden="true"></span>{{ unsentWords }}</p>
+      } @else if (speech().line; as line) {
+        <p class="line">{{ line }}</p>
+      }
+
+      @if (address(); as whose) {
+        <p class="address">{{ whose }}</p>
+      }
+    </div>
+  }
+
+  @if (used() || speech().button) {
+    <div class="acts">
+      @if (used()) {
+        <button
+          type="button"
+          class="danger"
+          [attr.aria-disabled]="held() || clearInert() ? 'true' : null"
+          [attr.aria-describedby]="clearInert() ? 'drive-inert-reason' : null"
+          (click)="askToClear()"
+        >
+          Clear Drive
+        </button>
+
+        <button type="button" class="quiet" (click)="disconnect()">Disconnect</button>
+      }
+
+      @if (speech().button; as act) {
+        <button
+          type="button"
+          class="primary"
+          [attr.aria-disabled]="inert() || held() ? 'true' : null"
+          [attr.aria-describedby]="inert() ? 'drive-inert-reason' : null"
+          (click)="press()"
+        >
+          {{ act }}
+        </button>
+      }
+    </div>
+  }
+</div>
+
+@if (inert() || clearInert()) {
+  <p id="drive-inert-reason" class="said-below">{{ reason }}</p>
+}
+
+@if (receipt(); as said) {
+  <p class="said-below" role="status">{{ said }}</p>
+}
+
+@if (confirming()) {
+  <app-confirm [ask]="clearing" (keep)="cancelClear()" (act)="clear()" />
+}

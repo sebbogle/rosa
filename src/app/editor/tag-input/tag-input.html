@@ -1,0 +1,45 @@
+<div class="box">
+  @for (tag of tags(); track $index) {
+    <span class="chip">
+      {{ tag }}
+      <button
+        type="button"
+        class="drop"
+        [attr.aria-label]="'Remove tag ' + tag"
+        (click)="remove(tag)"
+      >
+        ×
+      </button>
+    </span>
+  }
+
+  <input
+    class="field"
+    type="text"
+    autocomplete="off"
+    aria-label="Add a tag"
+    [value]="query()"
+    (input)="type($event)"
+    (keydown)="key($event)"
+    (focus)="focused.set(true)"
+    (blur)="focused.set(false)"
+  />
+</div>
+
+@if (listing()) {
+  <ul class="suggestions">
+    @for (tag of suggestions(); track tag; let index = $index) {
+      <li>
+        <button
+          type="button"
+          class="suggestion"
+          [class.highlighted]="index === highlighted()"
+          (mousedown)="$event.preventDefault()"
+          (click)="pick(tag)"
+        >
+          {{ tag }}
+        </button>
+      </li>
+    }
+  </ul>
+}

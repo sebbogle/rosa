@@ -1,0 +1,20 @@
+<dialog
+  #scrim
+  class="scrim"
+  closedby="none"
+  [class.leaving]="leaving()"
+  [attr.aria-label]="label()"
+  (pointerdown)="press($event)"
+  (pointerup)="lift($event)"
+  (click)="release($event)"
+>
+  <div #frame class="sheet" tabindex="-1" autofocus>
+    <div class="body" cdkScrollable>
+      <ng-content />
+    </div>
+
+    <footer class="bar">
+      <ng-content select="[bar]" />
+    </footer>
+  </div>
+</dialog>

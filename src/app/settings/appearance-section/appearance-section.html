@@ -1,0 +1,8 @@
+<div class="row appearance">
+  <app-segmented
+    label="Appearance"
+    [options]="appearances"
+    [chosen]="chosen()"
+    (choose)="choose($event)"
+  />
+</div>

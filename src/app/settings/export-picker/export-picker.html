@@ -1,0 +1,114 @@
+<div class="row">
+  <div class="text">
+    <h3 class="label">Export</h3>
+
+    @if (line(); as said) {
+      <p id="export-line" class="sub lands">{{ said }}</p>
+    }
+  </div>
+
+  @if (!open()) {
+    <button
+      #opener
+      type="button"
+      class="quiet"
+      [attr.aria-disabled]="exportable() ? null : 'true'"
+      [attr.aria-describedby]="exportable() ? null : 'export-line'"
+      (click)="show()"
+    >
+      Export
+    </button>
+  }
+</div>
+
+@if (open()) {
+  <div
+    #panel
+    class="panel picking"
+    role="region"
+    aria-label="Choose recipes"
+    [class.leaving]="leaving()"
+  >
+    <div class="filterwrap">
+      <input
+        #filter
+        class="filter"
+        type="search"
+        placeholder="Filter recipes…"
+        aria-label="Filter recipes"
+        autocomplete="off"
+        [value]="typed()"
+        (input)="search($event)"
+      />
+
+      <button type="button" class="sweep" [disabled]="sweep().nothing" (click)="sweepMatching()">
+        {{ sweep().label }}
+      </button>
+    </div>
+
+    <div class="tally">
+      <span class="count">{{ tally().count }}</span>
+      <span class="note">{{ tally().hidden }}</span>
+      <button type="button" class="clear" [disabled]="!tally().any" (click)="clear()">Clear</button>
+    </div>
+
+    <div class="box">
+      @for (row of rows(); track row.key) {
+        <div class="line">
+          @for (guide of row.guides; track guide) {
+            <span class="guide" aria-hidden="true"></span>
+          }
+
+          @if (row.kind === 'folder') {
+            <div class="item folder">
+              <input
+                type="checkbox"
+                [id]="row.box"
+                [checked]="row.tick === 'all'"
+                [indeterminate]="row.tick === 'some'"
+                (change)="tickFolder(row, $event)"
+              />
+
+              <button
+                type="button"
+                class="chevron"
+                [class.open]="row.expanded"
+                [attr.aria-expanded]="row.expanded"
+                [attr.aria-label]="(row.expanded ? 'Collapse ' : 'Expand ') + row.name"
+                (click)="toggle(row.key)"
+              >
+                <span aria-hidden="true">▸</span>
+              </button>
+
+              <label class="name" [attr.for]="row.box">{{ row.name }}</label>
+            </div>
+          } @else {
+            <label class="item recipe" [class.outside]="row.outside">
+              <input type="checkbox" [checked]="row.ticked" (change)="tickRecipe(row.id, $event)" />
+              <span class="name">{{ row.title }}</span>
+            </label>
+          }
+        </div>
+      } @empty {
+        <p class="nomatch">Nothing matches {{ quoted() }}, and nothing is set to export.</p>
+      }
+    </div>
+
+    <div class="foot">
+      <span class="draft">{{ foot() }}</span>
+
+      <app-segmented
+        label="Format"
+        [options]="formats"
+        [chosen]="format()"
+        (choose)="choose($event)"
+      />
+
+      <button type="button" class="quiet" (click)="cancel()">Cancel</button>
+
+      <button type="button" class="primary" [disabled]="!tally().any" (click)="send()">
+        {{ exportLabel() }}
+      </button>
+    </div>
+  </div>
+}

@@ -1,0 +1,39 @@
+<div
+  class="strip"
+  cdkDropList
+  cdkDropListOrientation="horizontal"
+  [cdkDropListDisabled]="touch()"
+  [cdkDropListSortPredicate]="beforePreview"
+  (cdkDropListDropped)="land($event)"
+>
+  @for (tab of tabs(); track tab.id) {
+    <div
+      class="tab"
+      cdkDrag
+      cdkDragPreviewContainer="parent"
+      [cdkDragData]="tab"
+      [class.preview]="tab.preview"
+      [class.active]="tab.active"
+      [title]="tab.title"
+    >
+      <button
+        type="button"
+        class="label"
+        [attr.aria-current]="tab.active ? 'true' : null"
+        (click)="activate(tab.id)"
+        (dblclick)="keep(tab.id)"
+      >
+        {{ tab.title }}
+      </button>
+
+      <button
+        type="button"
+        class="close"
+        [attr.aria-label]="'Close ' + tab.title"
+        (click)="close(tab.id)"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+  }
+</div>

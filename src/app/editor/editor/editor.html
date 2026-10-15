@@ -1,0 +1,101 @@
+<app-sheet #sheet label="Edit recipe" [shown]="open()" [peel]="peel" (dismiss)="requestClose()">
+  @if (sheet.held(); as editing) {
+    <div class="fields">
+      <label class="field title-field">
+        <span class="name">Title</span>
+        <input
+          #titleField
+          class="input title"
+          type="text"
+          autocomplete="off"
+          [value]="editing.fields.title"
+          (input)="type('title', $event)"
+          (blur)="settleTitle($event)"
+        />
+      </label>
+
+      <div class="field">
+        <span class="name">Folder</span>
+        <app-folder-picker [folder]="editing.fields.folder" (changed)="folder($event)" />
+      </div>
+
+      <div class="field">
+        <span class="name">Tags</span>
+        <app-tag-input [tags]="editing.fields.tags" (changed)="tag($event)" />
+      </div>
+    </div>
+
+    <div class="columns">
+      <app-block-column column="ingredients" label="Ingredients" addLabel="+ Item">
+        <app-sizing-bar />
+      </app-block-column>
+      <app-block-column column="method" label="Method" addLabel="+ Step" />
+    </div>
+
+    <div class="closing">
+      <label class="field">
+        <span class="name">Notes</span>
+        <textarea
+          class="input notes"
+          rows="3"
+          [value]="editing.fields.notes"
+          (input)="type('notes', $event)"
+          (blur)="settle('notes')"
+        ></textarea>
+      </label>
+
+      <div class="meta">
+        <label class="field">
+          <span class="name">Prep</span>
+          <input
+            class="input"
+            type="text"
+            autocomplete="off"
+            [value]="editing.fields.prep"
+            (input)="type('prep', $event)"
+            (blur)="settle('prep')"
+          />
+        </label>
+
+        <label class="field">
+          <span class="name">Source</span>
+          <input
+            class="input"
+            type="text"
+            autocomplete="off"
+            [value]="editing.fields.source.text"
+            (input)="typeSource('text', $event)"
+            (blur)="settleSource()"
+          />
+        </label>
+
+        <label class="field">
+          <span class="name">Link</span>
+          <input
+            class="input"
+            type="text"
+            autocomplete="off"
+            [value]="editing.fields.source.link"
+            (input)="typeSource('link', $event)"
+            (blur)="settleSource()"
+          />
+        </label>
+      </div>
+    </div>
+  }
+
+  @if (deletable()) {
+    <button bar type="button" class="danger" (click)="requestDelete()">Delete</button>
+  }
+
+  <div bar class="right">
+    @if (revertable()) {
+      <button type="button" class="quiet" (click)="requestRevert()">Revert</button>
+    }
+    <button type="button" class="primary" (click)="requestClose()">Done</button>
+  </div>
+
+  @if (asking(); as ask) {
+    <app-confirm [ask]="ask" (keep)="withdraw()" (act)="answer()" />
+  }
+</app-sheet>

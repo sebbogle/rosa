@@ -1,0 +1,48 @@
+<span class="grip" cdkDragHandle title="Drag to reorder this group" aria-hidden="true">⠿</span>
+
+<button
+  type="button"
+  class="chevron"
+  [class.shut]="collapsed()"
+  [attr.aria-expanded]="!collapsed()"
+  [attr.aria-label]="(collapsed() ? 'Expand ' : 'Collapse ') + called()"
+  (click)="toggle()"
+>
+  ▾
+</button>
+
+<input
+  #nameField
+  class="name"
+  type="text"
+  autocomplete="off"
+  aria-label="Group name"
+  [attr.data-name]="block()"
+  placeholder="Group name"
+  [value]="group()"
+  (input)="rename($event)"
+  (blur)="settle()"
+/>
+
+<button
+  type="button"
+  class="more"
+  aria-haspopup="menu"
+  [attr.aria-expanded]="open()"
+  [attr.aria-label]="'Actions for ' + called()"
+  (click)="toggleMenu()"
+>
+  ⋯
+</button>
+
+@if (open()) {
+  <div class="menu" role="menu">
+    <button type="button" role="menuitem" (click)="startRename()">Rename</button>
+    <button type="button" role="menuitem" (click)="shift(-1)">Move up</button>
+    <button type="button" role="menuitem" (click)="shift(1)">Move down</button>
+    <button type="button" role="menuitem" (click)="insert.emit()">Add group below</button>
+    <button type="button" role="menuitem" class="undo" (click)="delete()">
+      Delete group, keep rows
+    </button>
+  </div>
+}

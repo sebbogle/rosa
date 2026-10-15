@@ -1,0 +1,135 @@
+:host {
+  display: grid;
+  place-items: center;
+  height: 100%;
+}
+
+.block {
+  max-width: 42ch;
+  text-align: center;
+}
+
+.mark {
+  display: block;
+  width: 26px;
+  height: 26px;
+  margin: 0 auto 14px;
+  fill: var(--line);
+}
+
+.line {
+  margin: 0 0 8px;
+  color: var(--dim);
+  font-family: ui-serif, Georgia, 'Times New Roman', serif;
+  font-size: 21px;
+  font-weight: 500;
+}
+
+.sentence {
+  margin: 0 0 20px;
+  color: var(--faint);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.slot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  min-height: 36px;
+}
+
+.reach {
+  display: none;
+}
+
+.act {
+  position: relative;
+}
+
+.act.elsewhere {
+  display: none;
+}
+
+app-bubble {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  z-index: 1;
+  translate: -50% 0;
+}
+
+.control {
+  padding: 8px 16px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.control:hover {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+}
+
+.control[aria-disabled='true'],
+.control[aria-disabled='true']:hover {
+  border-color: var(--line);
+  background: var(--paper);
+  color: var(--faint);
+  cursor: default;
+}
+
+@media (width < 1024px), (pointer: coarse) {
+  .block {
+    padding: 60px 30px;
+  }
+
+  .line {
+    font-size: 22px;
+  }
+
+  .sentence {
+    font-size: 16px;
+  }
+
+  .control {
+    min-height: 44px;
+    padding: 12px 20px;
+    font-size: 16px;
+  }
+
+  .act.elsewhere {
+    display: block;
+  }
+
+  .reach {
+    display: block;
+    min-height: 44px;
+    padding: 12px 20px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--ink);
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  .reach:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  @media (width < 768px) {
+    .block {
+      padding: 40px 30px;
+    }
+
+    .sentence {
+      font-size: 17px;
+    }
+  }
+}

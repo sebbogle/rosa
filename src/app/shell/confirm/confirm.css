@@ -1,0 +1,63 @@
+:host {
+  display: contents;
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 16px;
+  border: 0;
+  background: var(--scrim);
+  color: inherit;
+}
+
+.scrim[open] {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scrim:focus {
+  outline: none;
+}
+
+.scrim::backdrop {
+  background: transparent;
+}
+
+.ask {
+  width: min(360px, 100%);
+  padding: 20px 22px;
+  border-radius: var(--radius-large);
+  background: var(--paper);
+  box-shadow: var(--confirm-shadow);
+}
+
+.line {
+  margin: 0 0 6px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.sentence {
+  margin: 0 0 10px;
+  color: var(--dim);
+  font-size: 13px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.sentence:last-of-type {
+  margin-bottom: 16px;
+}
+
+.choices {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}

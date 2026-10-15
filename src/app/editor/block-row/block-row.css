@@ -1,0 +1,95 @@
+:host {
+  display: grid;
+  grid-template-columns:
+    var(--grip-col) minmax(0, var(--qty-col)) minmax(0, var(--unit-col))
+    minmax(0, 1fr) var(--del-col);
+  gap: var(--row-gap);
+  align-items: center;
+}
+
+:host(.step) {
+  grid-template-columns: var(--grip-col) var(--num-col) minmax(0, 1fr) var(--del-col);
+  align-items: start;
+}
+
+:host(.cdk-drag-preview) {
+  overflow: visible;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: inherit;
+  box-shadow: var(--popover);
+}
+
+:host(.cdk-drag-placeholder) {
+  opacity: 0.4;
+}
+
+.grip,
+.lose {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: var(--cell-min);
+  line-height: 1;
+}
+
+.grip {
+  color: var(--handle);
+  font-size: var(--grip-fs);
+  cursor: grab;
+}
+
+.number {
+  padding-top: var(--num-lift);
+  color: var(--faint);
+  font-size: var(--num-fs);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.cell {
+  width: 100%;
+  min-height: var(--cell-min);
+  padding: var(--cell-pad);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  font: inherit;
+  font-size: var(--cell-fs);
+}
+
+.cell:hover {
+  border-color: var(--edge);
+}
+
+.qty {
+  font-variant-numeric: tabular-nums;
+}
+
+.prose {
+  field-sizing: content;
+  line-height: 1.55;
+  resize: none;
+  overflow: hidden;
+}
+
+.lose {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--handle);
+  font-size: var(--del-fs);
+  cursor: pointer;
+}
+
+.lose:hover {
+  color: var(--accent);
+}
+
+.cell:focus,
+.lose:focus-visible {
+  outline: var(--focus);
+  outline-offset: -1px;
+}

@@ -1,0 +1,85 @@
+:host {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: var(--head-min);
+  padding: var(--head-pad);
+  border-bottom: 1px solid var(--line);
+  border-radius: 8px 8px 0 0;
+  background: var(--hover);
+}
+
+.grip,
+.chevron {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--chev-w);
+  height: var(--chev-h);
+  line-height: 1;
+}
+
+.grip {
+  color: var(--handle-strong);
+  font-size: var(--grip-fs);
+  cursor: grab;
+}
+
+.chevron {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: var(--chev-fs);
+  cursor: pointer;
+  transition: transform calc(120ms * var(--motion)) ease;
+}
+
+.chevron.shut {
+  transform: rotate(-90deg);
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--group-fs);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--more-size);
+  height: var(--more-size);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: var(--more-fs);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  right: 6px;
+  z-index: 6;
+}
+
+.name:focus,
+:where(.chevron, .more):focus-visible {
+  outline: var(--focus);
+  outline-offset: -1px;
+}

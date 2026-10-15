@@ -1,0 +1,55 @@
+<span class="grip" cdkDragHandle title="Drag to move this row" aria-hidden="true">⠿</span>
+
+@if (steps()) {
+  <span class="number" aria-hidden="true">{{ index() + 1 }}.</span>
+
+  <textarea
+    class="cell prose"
+    rows="1"
+    [attr.aria-label]="label()"
+    placeholder="Step"
+    [value]="row().text"
+    (input)="type('text', $event)"
+    (blur)="settle()"
+  ></textarea>
+} @else {
+  <input
+    class="cell qty"
+    type="text"
+    autocomplete="off"
+    aria-label="Quantity"
+    placeholder="Quantity"
+    [value]="quantity().quantity"
+    (input)="type('quantity', $event)"
+    (blur)="settle()"
+  />
+  <input
+    class="cell"
+    type="text"
+    autocomplete="off"
+    aria-label="Unit"
+    placeholder="Unit"
+    [value]="quantity().unit"
+    (input)="type('unit', $event)"
+    (blur)="settle()"
+  />
+  <input
+    class="cell"
+    type="text"
+    autocomplete="off"
+    aria-label="Item"
+    placeholder="Item"
+    [value]="row().item"
+    (input)="type('item', $event)"
+    (blur)="settle()"
+  />
+}
+
+<button
+  type="button"
+  class="lose"
+  [attr.aria-label]="steps() ? 'Delete step' : 'Delete row'"
+  (click)="remove()"
+>
+  ×
+</button>

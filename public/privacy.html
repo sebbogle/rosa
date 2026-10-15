@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Rosa - Privacy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <style>
+      :root {
+        --ink: #171516;
+        --dim: #666063;
+        --line: #eae5e7;
+        --paper: #ffffff;
+        --accent: #7d2340;
+        color-scheme: light;
+      }
+      body {
+        margin: 0;
+        padding: 48px 24px 96px;
+        background: var(--paper);
+        color: var(--ink);
+        font:
+          15px/1.65 ui-sans-serif,
+          system-ui,
+          'Segoe UI',
+          sans-serif;
+      }
+      main {
+        max-width: 34rem;
+        margin: 0 auto;
+      }
+      h1 {
+        margin: 0 0 4px;
+        font-size: 26px;
+        letter-spacing: -0.01em;
+      }
+      .updated {
+        margin: 0 0 40px;
+        color: var(--dim);
+        font-size: 13px;
+      }
+      p,
+      li {
+        margin: 0 0 12px;
+      }
+      ul {
+        margin: 0 0 12px;
+        padding-left: 20px;
+      }
+      a {
+        color: var(--accent);
+      }
+      code {
+        font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+        font-size: 0.9em;
+      }
+      footer {
+        margin-top: 44px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+        color: var(--dim);
+        font-size: 13px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Privacy</h1>
+      <p class="updated">Rosa - updated 24 October 2026</p>
+
+      <p>
+        Rosa is a recipe app by Sebastian Bogle. It runs in your browser, with no account and no
+        server.
+      </p>
+
+      <ul>
+        <li>I collect nothing: no analytics, no tracking.</li>
+        <li>
+          If you connect Google Drive, Rosa can access only the <code>rosa</code> folder it creates,
+          plus your email address so it can show which account is connected.
+        </li>
+        <li>
+          Rosa uses this only to back up your recipes and sync them between your devices. Your data
+          goes straight from your browser to Google. It never reaches me and is never shared.
+        </li>
+        <li>Your email and a one-hour access token are stored only in your browser.</li>
+        <li>
+          To delete everything: revoke access at
+          <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>,
+          delete the <code>rosa</code> folder in Drive, and clear Rosa's site data in your browser.
+        </li>
+        <li>Rosa is provided as is, without warranty.</li>
+      </ul>
+
+      <footer>Questions: <a href="mailto:dev@sebastianbogle.com">dev@sebastianbogle.com</a></footer>
+    </main>
+  </body>
+</html>

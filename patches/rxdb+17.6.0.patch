@@ -1,0 +1,552 @@
+diff --git a/node_modules/rxdb/dist/cjs/plugins/replication-google-drive/google-drive-helper.js b/node_modules/rxdb/dist/cjs/plugins/replication-google-drive/google-drive-helper.js
+index 8bf08b0..9521cbf 100644
+--- a/node_modules/rxdb/dist/cjs/plugins/replication-google-drive/google-drive-helper.js
++++ b/node_modules/rxdb/dist/cjs/plugins/replication-google-drive/google-drive-helper.js
+@@ -134,46 +134,53 @@ async function ensureFolderExists(googleDriveOptions, folderPath) {
+   }
+   return parentId;
+ }
+-async function createEmptyFile(googleDriveOptions, parentId, fileName) {
+-  var url = googleDriveOptions.apiEndpoint + '/drive/v3/files?fields=id';
+-  var body = {
+-    name: fileName,
+-    parents: [parentId],
+-    mimeType: 'application/json'
+-  };
+-  var response = await fetch(url, {
+-    method: 'POST',
++async function findOldestFile(googleDriveOptions, parentId, fileName) {
++  var query = ["name = '" + fileName + "'", "'" + parentId + "' in parents", "trashed = false"].join(' and ');
++  var url = googleDriveOptions.apiEndpoint + '/drive/v3/files' + '?fields=files(id)' + '&orderBy=createdTime asc' + '&q=' + encodeURIComponent(query) + driveSpaceQuerySuffix(googleDriveOptions);
++  var res = await fetch(url, {
+     headers: {
+-      Authorization: 'Bearer ' + googleDriveOptions.authToken,
+-      'Content-Type': 'application/json'
+-    },
+-    body: JSON.stringify(body)
++      Authorization: 'Bearer ' + googleDriveOptions.authToken
++    }
+   });
+-
+-  /**
+-   * Do not throw on duplicates,
+-   * if the file is there already, find its id
+-   * and return that one.
+-   */
+-  if (!response.ok && response.status !== 409) {
+-    throw await (0, _rxError.newRxFetchError)(response, {
++  if (!res.ok) {
++    throw await (0, _rxError.newRxFetchError)(res, {
+       folderName: fileName
+     });
+   }
+-
++  var data = await res.json();
++  return data.files[0]?.id;
++}
++async function createEmptyFile(googleDriveOptions, parentId, fileName) {
+   /**
+-   * For idempotent runs, fetch the file again
+-   * after creating it.
++   * Look for the file before creating it, so that a run does not add
++   * another copy when one is there already. Of several copies, the oldest is the file.
+    */
+-  var query = ["name = '" + fileName + "'", "'" + parentId + "' in parents", "trashed = false"].join(' and ');
+-  var url2 = googleDriveOptions.apiEndpoint + '/drive/v3/files' + '?fields=files(id)' + '&orderBy=createdTime asc' + '&q=' + encodeURIComponent(query) + driveSpaceQuerySuffix(googleDriveOptions);
+-  var res = await fetch(url2, {
+-    headers: {
+-      Authorization: 'Bearer ' + googleDriveOptions.authToken
++  var status = 200;
++  var fileId = await findOldestFile(googleDriveOptions, parentId, fileName);
++  if (!fileId) {
++    var url = googleDriveOptions.apiEndpoint + '/drive/v3/files?fields=id';
++    var body = {
++      name: fileName,
++      parents: [parentId],
++      mimeType: 'application/json'
++    };
++    var response = await fetch(url, {
++      method: 'POST',
++      headers: {
++        Authorization: 'Bearer ' + googleDriveOptions.authToken,
++        'Content-Type': 'application/json'
++      },
++      body: JSON.stringify(body)
++    });
++    if (!response.ok) {
++      throw await (0, _rxError.newRxFetchError)(response, {
++        folderName: fileName
++      });
+     }
+-  });
+-  var data = await res.json();
+-  var fileId = (0, _index.ensureNotFalsy)(data.files[0]?.id);
++    status = response.status;
++    var created = await response.json();
++    fileId = (await findOldestFile(googleDriveOptions, parentId, fileName)) ?? (0, _index.ensureNotFalsy)(created.id);
++  }
+ 
+   /**
+    * Fetch the file metadata via v2 to get the etag (from the ETag response header)
+@@ -183,7 +190,7 @@ async function createEmptyFile(googleDriveOptions, parentId, fileName) {
+    */
+   var meta = await getFileMetadataV2(googleDriveOptions, fileId);
+   return {
+-    status: response.status,
++    status,
+     etag: meta.etag,
+     createdTime: meta.createdTime,
+     fileId,
+@@ -216,7 +223,7 @@ async function getFileMetadataV2(googleDriveOptions, fileId) {
+   }
+   var meta = await res.json();
+   return {
+-    etag: (0, _index.ensureNotFalsy)(res.headers.get('ETag'), 'ETag missing'),
++    etag: (0, _index.ensureNotFalsy)(meta.etag, 'etag missing from v2 metadata body'),
+     // v2 uses "fileSize" and "createdDate" instead of the v3 "size" and "createdTime"
+     size: parseInt(meta.fileSize ?? '0', 10),
+     createdTime: (0, _index.ensureNotFalsy)(meta.createdDate)
+@@ -319,7 +326,7 @@ async function readJsonFileContent(googleDriveOptions, fileId) {
+   }
+   var contentText = await res.text();
+   var content = contentText.length > 0 ? JSON.parse(contentText) : undefined;
+-  var etag = (0, _index.ensureNotFalsy)(res.headers.get('etag'));
++  var etag = res.headers.get('etag') ?? undefined;
+   return {
+     etag,
+     content: content,
+@@ -333,7 +340,7 @@ async function readFolder(googleDriveOptions, folderPath) {
+   // Resolve folder path
+   for (var part of parts) {
+     var _query = "name = '" + part + "' and '" + parentId + "' in parents and trashed = false and mimeType = '" + FOLDER_MIME_TYPE + "'";
+-    var searchUrl = googleDriveOptions.apiEndpoint + '/drive/v3/files?fields=files(id)&q=' + encodeURIComponent(_query) + driveSpaceQuerySuffix(googleDriveOptions);
++    var searchUrl = googleDriveOptions.apiEndpoint + '/drive/v3/files?fields=files(id)&orderBy=createdTime asc&q=' + encodeURIComponent(_query) + driveSpaceQuerySuffix(googleDriveOptions);
+     var searchResponse = await fetch(searchUrl, {
+       method: 'GET',
+       headers: {
+@@ -352,20 +359,26 @@ async function readFolder(googleDriveOptions, folderPath) {
+ 
+   // List children
+   var query = "'" + parentId + "' in parents and trashed = false";
+-  var listUrl = googleDriveOptions.apiEndpoint + '/drive/v3/files?fields=files(id,name,mimeType,trashed,parents)&q=' + encodeURIComponent(query) + driveSpaceQuerySuffix(googleDriveOptions);
+-  var listResponse = await fetch(listUrl, {
+-    method: 'GET',
+-    headers: {
+-      Authorization: 'Bearer ' + googleDriveOptions.authToken
+-    }
+-  });
+-  if (!listResponse.ok) {
+-    throw await (0, _rxError.newRxFetchError)(listResponse, {
+-      folderName: folderPath
++  var files = [];
++  var pageToken;
++  do {
++    var listUrl = googleDriveOptions.apiEndpoint + '/drive/v3/files?fields=nextPageToken,files(id,name,mimeType,trashed,parents)&pageSize=' + DRIVE_MAX_PAGE_SIZE + '&q=' + encodeURIComponent(query) + driveSpaceQuerySuffix(googleDriveOptions) + (pageToken ? '&pageToken=' + encodeURIComponent(pageToken) : '');
++    var listResponse = await fetch(listUrl, {
++      method: 'GET',
++      headers: {
++        Authorization: 'Bearer ' + googleDriveOptions.authToken
++      }
+     });
+-  }
+-  var listData = await listResponse.json();
+-  return listData.files || [];
++    if (!listResponse.ok) {
++      throw await (0, _rxError.newRxFetchError)(listResponse, {
++        folderName: folderPath
++      });
++    }
++    var listData = await listResponse.json();
++    files = files.concat(listData.files || []);
++    pageToken = listData.nextPageToken;
++  } while (pageToken);
++  return files;
+ }
+ async function insertMultipartFile(googleDriveOptions, folderId, filename, jsonData) {
+   var content = JSON.stringify(jsonData);
+diff --git a/node_modules/rxdb/dist/cjs/plugins/replication-google-drive/transaction.js b/node_modules/rxdb/dist/cjs/plugins/replication-google-drive/transaction.js
+index b780fb4..d28c7cf 100644
+--- a/node_modules/rxdb/dist/cjs/plugins/replication-google-drive/transaction.js
++++ b/node_modules/rxdb/dist/cjs/plugins/replication-google-drive/transaction.js
+@@ -18,6 +18,15 @@ var TRANSACTION_BLOCKED_FLAG = exports.TRANSACTION_BLOCKED_FLAG = {
+   retry: true
+ };
+ async function startTransactionTryOnce(googleDriveOptions, init) {
++  /**
++   * Both If-Match tokens here are resource etags read from the v2 metadata body.
++   * txFileContent.etag and writeResult.etag both come from alt=media responses,
++   * which carry a content etag the precondition rejects - and which a browser
++   * cannot read at all, since Drive does not name etag in
++   * Access-Control-Expose-Headers. The claim etag is read before the content,
++   * so a claim landing in between fails the precondition instead of being absorbed.
++   */
++  var claimEtag = await (0, _googleDriveHelper.getFileEtag)(googleDriveOptions, init.transactionFile.fileId);
+   var txFileContent = await (0, _googleDriveHelper.readJsonFileContent)(googleDriveOptions, init.transactionFile.fileId);
+   if (!isEmpty(txFileContent.content)) {
+     // tx already existed -> retry
+@@ -26,12 +35,12 @@ async function startTransactionTryOnce(googleDriveOptions, init) {
+   var newTxContent = {
+     createdAtClientTime: (0, _index.now)()
+   };
+-  var writeResult = await (0, _googleDriveHelper.fillFileIfEtagMatches)(googleDriveOptions, init.transactionFile.fileId, txFileContent.etag, newTxContent);
++  var writeResult = await (0, _googleDriveHelper.fillFileIfEtagMatches)(googleDriveOptions, init.transactionFile.fileId, claimEtag, newTxContent);
+   if (writeResult.status !== 200) {
+     return TRANSACTION_BLOCKED_FLAG;
+   }
+   return {
+-    etag: writeResult.etag
++    etag: await (0, _googleDriveHelper.getFileEtag)(googleDriveOptions, init.transactionFile.fileId)
+   };
+ }
+ async function startTransaction(googleDriveOptions, init) {
+@@ -95,7 +104,7 @@ async function isTransactionTimedOut(googleDriveOptions, init) {
+     timeLeft,
+     transactionAge,
+     expired: timeLeft <= 0,
+-    etag: (0, _index.ensureNotFalsy)(request.headers.get('ETag'), 'etag')
++    etag: (0, _index.ensureNotFalsy)(data.etag, 'etag')
+   };
+ }
+ async function commitTransaction(googleDriveOptions, init, transactionInput) {
+diff --git a/node_modules/rxdb/dist/cjs/plugins/replication-google-drive/upstream.js b/node_modules/rxdb/dist/cjs/plugins/replication-google-drive/upstream.js
+index 11a4960..4271bc6 100644
+--- a/node_modules/rxdb/dist/cjs/plugins/replication-google-drive/upstream.js
++++ b/node_modules/rxdb/dist/cjs/plugins/replication-google-drive/upstream.js
+@@ -98,7 +98,7 @@ async function writeToWal(googleDriveOptions, init, writeRows) {
+       }
+     });
+   }
+-  var etag = (0, _index.ensureNotFalsy)(metaRes.headers.get("etag"), 'etag missing');
++  var etag = (0, _index.ensureNotFalsy)(meta.etag, 'etag missing from v2 metadata body');
+   var writeResult = await (0, _googleDriveHelper.fillFileIfEtagMatches)(googleDriveOptions, walFileId, etag, writeRows);
+   if (writeResult.status !== 200) {
+     throw (0, _rxError.newRxError)("GDR19", {
+@@ -122,7 +122,7 @@ async function readWalContent(googleDriveOptions, init) {
+   if (!res.ok) {
+     throw await (0, _rxError.newRxFetchError)(res);
+   }
+-  var etag = (0, _index.ensureNotFalsy)(res.headers.get("etag"), "etag missing on WAL read");
++  var etag = res.headers.get("etag") ?? undefined;
+   var text = await res.text();
+ 
+   // If empty or whitespace → no WAL entries
+@@ -152,6 +152,10 @@ async function processWalFile(googleDriveOptions, init, primaryPath) {
+   if (!content.rows) {
+     return;
+   }
++  if (content.rows.length === 0) {
++    await writeToWal(googleDriveOptions, init, undefined);
++    return;
++  }
+   var docIds = content.rows.map(row => row.newDocumentState[primaryPath]);
+   var docFiles = await (0, _documentHandling.getDocumentFiles)(googleDriveOptions, init, docIds);
+   var fileMetaByDocId = {};
+@@ -189,7 +193,9 @@ async function processWalFile(googleDriveOptions, init, primaryPath) {
+ }
+ async function handleUpstreamBatch(googleDriveOptions, init, primaryPath, writeRows) {
+   var conflictResult = await fetchConflicts(googleDriveOptions, init, primaryPath, writeRows);
+-  await writeToWal(googleDriveOptions, init, conflictResult.nonConflicts);
++  if (conflictResult.nonConflicts.length > 0) {
++    await writeToWal(googleDriveOptions, init, conflictResult.nonConflicts);
++  }
+   return conflictResult.conflicts;
+ }
+ //# sourceMappingURL=upstream.js.map
+\ No newline at end of file
+diff --git a/node_modules/rxdb/dist/esm/plugins/replication-google-drive/google-drive-helper.js b/node_modules/rxdb/dist/esm/plugins/replication-google-drive/google-drive-helper.js
+index 51623b3..6025331 100644
+--- a/node_modules/rxdb/dist/esm/plugins/replication-google-drive/google-drive-helper.js
++++ b/node_modules/rxdb/dist/esm/plugins/replication-google-drive/google-drive-helper.js
+@@ -112,46 +112,53 @@ export async function ensureFolderExists(googleDriveOptions, folderPath) {
+   }
+   return parentId;
+ }
+-export async function createEmptyFile(googleDriveOptions, parentId, fileName) {
+-  var url = googleDriveOptions.apiEndpoint + '/drive/v3/files?fields=id';
+-  var body = {
+-    name: fileName,
+-    parents: [parentId],
+-    mimeType: 'application/json'
+-  };
+-  var response = await fetch(url, {
+-    method: 'POST',
++async function findOldestFile(googleDriveOptions, parentId, fileName) {
++  var query = ["name = '" + fileName + "'", "'" + parentId + "' in parents", "trashed = false"].join(' and ');
++  var url = googleDriveOptions.apiEndpoint + '/drive/v3/files' + '?fields=files(id)' + '&orderBy=createdTime asc' + '&q=' + encodeURIComponent(query) + driveSpaceQuerySuffix(googleDriveOptions);
++  var res = await fetch(url, {
+     headers: {
+-      Authorization: 'Bearer ' + googleDriveOptions.authToken,
+-      'Content-Type': 'application/json'
+-    },
+-    body: JSON.stringify(body)
++      Authorization: 'Bearer ' + googleDriveOptions.authToken
++    }
+   });
+-
+-  /**
+-   * Do not throw on duplicates,
+-   * if the file is there already, find its id
+-   * and return that one.
+-   */
+-  if (!response.ok && response.status !== 409) {
+-    throw await newRxFetchError(response, {
++  if (!res.ok) {
++    throw await newRxFetchError(res, {
+       folderName: fileName
+     });
+   }
+-
++  var data = await res.json();
++  return data.files[0]?.id;
++}
++export async function createEmptyFile(googleDriveOptions, parentId, fileName) {
+   /**
+-   * For idempotent runs, fetch the file again
+-   * after creating it.
++   * Look for the file before creating it, so that a run does not add
++   * another copy when one is there already. Of several copies, the oldest is the file.
+    */
+-  var query = ["name = '" + fileName + "'", "'" + parentId + "' in parents", "trashed = false"].join(' and ');
+-  var url2 = googleDriveOptions.apiEndpoint + '/drive/v3/files' + '?fields=files(id)' + '&orderBy=createdTime asc' + '&q=' + encodeURIComponent(query) + driveSpaceQuerySuffix(googleDriveOptions);
+-  var res = await fetch(url2, {
+-    headers: {
+-      Authorization: 'Bearer ' + googleDriveOptions.authToken
++  var status = 200;
++  var fileId = await findOldestFile(googleDriveOptions, parentId, fileName);
++  if (!fileId) {
++    var url = googleDriveOptions.apiEndpoint + '/drive/v3/files?fields=id';
++    var body = {
++      name: fileName,
++      parents: [parentId],
++      mimeType: 'application/json'
++    };
++    var response = await fetch(url, {
++      method: 'POST',
++      headers: {
++        Authorization: 'Bearer ' + googleDriveOptions.authToken,
++        'Content-Type': 'application/json'
++      },
++      body: JSON.stringify(body)
++    });
++    if (!response.ok) {
++      throw await newRxFetchError(response, {
++        folderName: fileName
++      });
+     }
+-  });
+-  var data = await res.json();
+-  var fileId = ensureNotFalsy(data.files[0]?.id);
++    status = response.status;
++    var created = await response.json();
++    fileId = (await findOldestFile(googleDriveOptions, parentId, fileName)) ?? ensureNotFalsy(created.id);
++  }
+ 
+   /**
+    * Fetch the file metadata via v2 to get the etag (from the ETag response header)
+@@ -161,7 +168,7 @@ export async function createEmptyFile(googleDriveOptions, parentId, fileName) {
+    */
+   var meta = await getFileMetadataV2(googleDriveOptions, fileId);
+   return {
+-    status: response.status,
++    status,
+     etag: meta.etag,
+     createdTime: meta.createdTime,
+     fileId,
+@@ -194,7 +201,7 @@ async function getFileMetadataV2(googleDriveOptions, fileId) {
+   }
+   var meta = await res.json();
+   return {
+-    etag: ensureNotFalsy(res.headers.get('ETag'), 'ETag missing'),
++    etag: ensureNotFalsy(meta.etag, 'etag missing from v2 metadata body'),
+     // v2 uses "fileSize" and "createdDate" instead of the v3 "size" and "createdTime"
+     size: parseInt(meta.fileSize ?? '0', 10),
+     createdTime: ensureNotFalsy(meta.createdDate)
+@@ -297,7 +304,7 @@ export async function readJsonFileContent(googleDriveOptions, fileId) {
+   }
+   var contentText = await res.text();
+   var content = contentText.length > 0 ? JSON.parse(contentText) : undefined;
+-  var etag = ensureNotFalsy(res.headers.get('etag'));
++  var etag = res.headers.get('etag') ?? undefined;
+   return {
+     etag,
+     content: content,
+@@ -311,7 +318,7 @@ export async function readFolder(googleDriveOptions, folderPath) {
+   // Resolve folder path
+   for (var part of parts) {
+     var _query = "name = '" + part + "' and '" + parentId + "' in parents and trashed = false and mimeType = '" + FOLDER_MIME_TYPE + "'";
+-    var searchUrl = googleDriveOptions.apiEndpoint + '/drive/v3/files?fields=files(id)&q=' + encodeURIComponent(_query) + driveSpaceQuerySuffix(googleDriveOptions);
++    var searchUrl = googleDriveOptions.apiEndpoint + '/drive/v3/files?fields=files(id)&orderBy=createdTime asc&q=' + encodeURIComponent(_query) + driveSpaceQuerySuffix(googleDriveOptions);
+     var searchResponse = await fetch(searchUrl, {
+       method: 'GET',
+       headers: {
+@@ -330,20 +337,26 @@ export async function readFolder(googleDriveOptions, folderPath) {
+ 
+   // List children
+   var query = "'" + parentId + "' in parents and trashed = false";
+-  var listUrl = googleDriveOptions.apiEndpoint + '/drive/v3/files?fields=files(id,name,mimeType,trashed,parents)&q=' + encodeURIComponent(query) + driveSpaceQuerySuffix(googleDriveOptions);
+-  var listResponse = await fetch(listUrl, {
+-    method: 'GET',
+-    headers: {
+-      Authorization: 'Bearer ' + googleDriveOptions.authToken
+-    }
+-  });
+-  if (!listResponse.ok) {
+-    throw await newRxFetchError(listResponse, {
+-      folderName: folderPath
++  var files = [];
++  var pageToken;
++  do {
++    var listUrl = googleDriveOptions.apiEndpoint + '/drive/v3/files?fields=nextPageToken,files(id,name,mimeType,trashed,parents)&pageSize=' + DRIVE_MAX_PAGE_SIZE + '&q=' + encodeURIComponent(query) + driveSpaceQuerySuffix(googleDriveOptions) + (pageToken ? '&pageToken=' + encodeURIComponent(pageToken) : '');
++    var listResponse = await fetch(listUrl, {
++      method: 'GET',
++      headers: {
++        Authorization: 'Bearer ' + googleDriveOptions.authToken
++      }
+     });
+-  }
+-  var listData = await listResponse.json();
+-  return listData.files || [];
++    if (!listResponse.ok) {
++      throw await newRxFetchError(listResponse, {
++        folderName: folderPath
++      });
++    }
++    var listData = await listResponse.json();
++    files = files.concat(listData.files || []);
++    pageToken = listData.nextPageToken;
++  } while (pageToken);
++  return files;
+ }
+ export async function insertMultipartFile(googleDriveOptions, folderId, filename, jsonData) {
+   var content = JSON.stringify(jsonData);
+diff --git a/node_modules/rxdb/dist/esm/plugins/replication-google-drive/transaction.js b/node_modules/rxdb/dist/esm/plugins/replication-google-drive/transaction.js
+index 673e298..502e7a0 100644
+--- a/node_modules/rxdb/dist/esm/plugins/replication-google-drive/transaction.js
++++ b/node_modules/rxdb/dist/esm/plugins/replication-google-drive/transaction.js
+@@ -1,4 +1,4 @@
+-import { fillFileIfEtagMatches, readJsonFileContent } from "./google-drive-helper.js";
++import { fillFileIfEtagMatches, getFileEtag, readJsonFileContent } from "./google-drive-helper.js";
+ import { newRxError } from "../../rx-error.js";
+ import { ensureNotFalsy, now, promiseWait } from "../utils/index.js";
+ import { processWalFile } from "./upstream.js";
+@@ -7,6 +7,15 @@ export var TRANSACTION_BLOCKED_FLAG = {
+   retry: true
+ };
+ export async function startTransactionTryOnce(googleDriveOptions, init) {
++  /**
++   * Both If-Match tokens here are resource etags read from the v2 metadata body.
++   * txFileContent.etag and writeResult.etag both come from alt=media responses,
++   * which carry a content etag the precondition rejects - and which a browser
++   * cannot read at all, since Drive does not name etag in
++   * Access-Control-Expose-Headers. The claim etag is read before the content,
++   * so a claim landing in between fails the precondition instead of being absorbed.
++   */
++  var claimEtag = await getFileEtag(googleDriveOptions, init.transactionFile.fileId);
+   var txFileContent = await readJsonFileContent(googleDriveOptions, init.transactionFile.fileId);
+   if (!isEmpty(txFileContent.content)) {
+     // tx already existed -> retry
+@@ -15,12 +24,12 @@ export async function startTransactionTryOnce(googleDriveOptions, init) {
+   var newTxContent = {
+     createdAtClientTime: now()
+   };
+-  var writeResult = await fillFileIfEtagMatches(googleDriveOptions, init.transactionFile.fileId, txFileContent.etag, newTxContent);
++  var writeResult = await fillFileIfEtagMatches(googleDriveOptions, init.transactionFile.fileId, claimEtag, newTxContent);
+   if (writeResult.status !== 200) {
+     return TRANSACTION_BLOCKED_FLAG;
+   }
+   return {
+-    etag: writeResult.etag
++    etag: await getFileEtag(googleDriveOptions, init.transactionFile.fileId)
+   };
+ }
+ export async function startTransaction(googleDriveOptions, init) {
+@@ -84,7 +93,7 @@ export async function isTransactionTimedOut(googleDriveOptions, init) {
+     timeLeft,
+     transactionAge,
+     expired: timeLeft <= 0,
+-    etag: ensureNotFalsy(request.headers.get('ETag'), 'etag')
++    etag: ensureNotFalsy(data.etag, 'etag')
+   };
+ }
+ export async function commitTransaction(googleDriveOptions, init, transactionInput) {
+diff --git a/node_modules/rxdb/dist/esm/plugins/replication-google-drive/upstream.js b/node_modules/rxdb/dist/esm/plugins/replication-google-drive/upstream.js
+index 4224b6a..d333609 100644
+--- a/node_modules/rxdb/dist/esm/plugins/replication-google-drive/upstream.js
++++ b/node_modules/rxdb/dist/esm/plugins/replication-google-drive/upstream.js
+@@ -87,7 +87,7 @@ export async function writeToWal(googleDriveOptions, init, writeRows) {
+       }
+     });
+   }
+-  var etag = ensureNotFalsy(metaRes.headers.get("etag"), 'etag missing');
++  var etag = ensureNotFalsy(meta.etag, 'etag missing from v2 metadata body');
+   var writeResult = await fillFileIfEtagMatches(googleDriveOptions, walFileId, etag, writeRows);
+   if (writeResult.status !== 200) {
+     throw newRxError("GDR19", {
+@@ -111,7 +111,7 @@ export async function readWalContent(googleDriveOptions, init) {
+   if (!res.ok) {
+     throw await newRxFetchError(res);
+   }
+-  var etag = ensureNotFalsy(res.headers.get("etag"), "etag missing on WAL read");
++  var etag = res.headers.get("etag") ?? undefined;
+   var text = await res.text();
+ 
+   // If empty or whitespace → no WAL entries
+@@ -141,6 +141,10 @@ export async function processWalFile(googleDriveOptions, init, primaryPath) {
+   if (!content.rows) {
+     return;
+   }
++  if (content.rows.length === 0) {
++    await writeToWal(googleDriveOptions, init, undefined);
++    return;
++  }
+   var docIds = content.rows.map(row => row.newDocumentState[primaryPath]);
+   var docFiles = await getDocumentFiles(googleDriveOptions, init, docIds);
+   var fileMetaByDocId = {};
+@@ -178,7 +182,9 @@ export async function processWalFile(googleDriveOptions, init, primaryPath) {
+ }
+ export async function handleUpstreamBatch(googleDriveOptions, init, primaryPath, writeRows) {
+   var conflictResult = await fetchConflicts(googleDriveOptions, init, primaryPath, writeRows);
+-  await writeToWal(googleDriveOptions, init, conflictResult.nonConflicts);
++  if (conflictResult.nonConflicts.length > 0) {
++    await writeToWal(googleDriveOptions, init, conflictResult.nonConflicts);
++  }
+   return conflictResult.conflicts;
+ }
+ //# sourceMappingURL=upstream.js.map
+\ No newline at end of file
+diff --git a/node_modules/rxdb/dist/types/plugins/replication-google-drive/google-drive-helper.d.ts b/node_modules/rxdb/dist/types/plugins/replication-google-drive/google-drive-helper.d.ts
+index 4d16a60..e7dcffc 100644
+--- a/node_modules/rxdb/dist/types/plugins/replication-google-drive/google-drive-helper.d.ts
++++ b/node_modules/rxdb/dist/types/plugins/replication-google-drive/google-drive-helper.d.ts
+@@ -32,14 +32,16 @@ export declare function createEmptyFile(googleDriveOptions: GoogleDriveOptionsWi
+ export declare function getFileEtag(googleDriveOptions: GoogleDriveOptionsWithDefaults, fileId: string): Promise<string>;
+ export declare function fillFileIfEtagMatches<T = any>(googleDriveOptions: GoogleDriveOptionsWithDefaults, fileId: string, etag: string, jsonContent?: any): Promise<{
+     status: number;
+-    etag: string;
++    /** Forwarded from readJsonFileContent(): a content etag, never an If-Match token. */
++    etag: string | undefined;
+     content: T | undefined;
+     serverTime: number;
+ }>;
+ export declare function deleteIfEtagMatches(googleDriveOptions: GoogleDriveOptionsWithDefaults, fileId: string, etag: string): Promise<void>;
+ export declare function deleteFile(googleDriveOptions: GoogleDriveOptionsWithDefaults, fileId: string): Promise<void>;
+ export declare function readJsonFileContent<T>(googleDriveOptions: GoogleDriveOptionsWithDefaults, fileId: string): Promise<{
+-    etag: string;
++    /** Content etag from alt=media: absent on an empty file, and unreadable in a browser. */
++    etag: string | undefined;
+     content: T | undefined;
+     serverTime: number;
+ }>;
+diff --git a/node_modules/rxdb/dist/types/plugins/replication-google-drive/upstream.d.ts b/node_modules/rxdb/dist/types/plugins/replication-google-drive/upstream.d.ts
+index be9ded1..8b120dc 100644
+--- a/node_modules/rxdb/dist/types/plugins/replication-google-drive/upstream.d.ts
++++ b/node_modules/rxdb/dist/types/plugins/replication-google-drive/upstream.d.ts
+@@ -8,7 +8,7 @@ export declare function fetchConflicts<RxDocType>(googleDriveOptions: GoogleDriv
+ }>;
+ export declare function writeToWal<RxDocType>(googleDriveOptions: GoogleDriveOptionsWithDefaults, init: DriveStructure, writeRows?: RxReplicationWriteToMasterRow<RxDocType>[]): Promise<void>;
+ export declare function readWalContent<RxDocType>(googleDriveOptions: GoogleDriveOptionsWithDefaults, init: DriveStructure): Promise<{
+-    etag: string;
++    etag: string | undefined;
+     rows: RxReplicationWriteToMasterRow<RxDocType>[] | undefined;
+ }>;
+ /**

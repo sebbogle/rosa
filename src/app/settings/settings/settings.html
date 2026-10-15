@@ -1,0 +1,28 @@
+<app-sheet #sheet label="Settings" [shown]="shown()" (dismiss)="close()">
+  @if (sheet.held()) {
+    @if (drive) {
+      <section class="section" aria-labelledby="drive-heading">
+        <h2 id="drive-heading" class="heading">Google Drive</h2>
+
+        <app-drive-section />
+      </section>
+    }
+
+    <section class="section" aria-labelledby="import-export-heading">
+      <h2 id="import-export-heading" class="heading">Import &amp; export</h2>
+
+      <div class="card">
+        <app-import-control />
+        <app-export-picker />
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="appearance-heading">
+      <h2 id="appearance-heading" class="heading">Appearance</h2>
+
+      <app-appearance-section />
+    </section>
+  }
+
+  <button bar type="button" class="primary" (click)="close()">Done</button>
+</app-sheet>

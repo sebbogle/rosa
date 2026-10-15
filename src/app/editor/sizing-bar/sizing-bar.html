@@ -1,0 +1,59 @@
+@if (several()) {
+  <app-segmented
+    class="switch"
+    label="Sizing"
+    [options]="segments()"
+    [chosen]="chosen()"
+    (choose)="choose($event)"
+  />
+}
+
+<button type="button" class="add" (click)="add()">+ Sizing</button>
+
+<div class="line">
+  <div class="sizing">
+    <input
+      #nameField
+      class="name"
+      type="text"
+      autocomplete="off"
+      aria-label="Sizing name"
+      [placeholder]="placeholder()"
+      [value]="name()"
+      (input)="rename($event)"
+      (blur)="settle()"
+    />
+
+    <button
+      type="button"
+      class="more"
+      aria-haspopup="menu"
+      [attr.aria-expanded]="open()"
+      [attr.aria-label]="actions()"
+      (click)="toggleMenu()"
+    >
+      ⋯
+    </button>
+
+    @if (open()) {
+      <div class="menu" role="menu">
+        <button type="button" role="menuitem" [disabled]="first()" (click)="move(-1)">
+          Move left
+        </button>
+        <button type="button" role="menuitem" [disabled]="last()" (click)="move(1)">
+          Move right
+        </button>
+        <button type="button" role="menuitem" (click)="copy()">Copy as a new sizing</button>
+        <button
+          type="button"
+          role="menuitem"
+          class="undo"
+          [disabled]="!several()"
+          (click)="delete()"
+        >
+          Delete sizing
+        </button>
+      </div>
+    }
+  </div>
+</div>

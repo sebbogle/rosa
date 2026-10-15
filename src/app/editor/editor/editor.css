@@ -1,0 +1,133 @@
+:host {
+  display: contents;
+}
+
+app-sheet {
+  --sheet-width: 1120px;
+  --sheet-height: min(800px, 90vh);
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px 18px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+}
+
+.name {
+  color: var(--dim);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.input {
+  width: 100%;
+  padding: 7px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  font: inherit;
+  font-size: 14px;
+}
+
+.input:focus {
+  outline: var(--focus);
+  outline-offset: -1px;
+}
+
+.title {
+  font-size: 18px;
+}
+
+.notes {
+  min-height: 56px;
+  line-height: 1.55;
+  resize: vertical;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 34px;
+  margin-top: 26px;
+}
+
+.closing {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px 18px;
+}
+
+@container sheet (width < 900px) {
+  .fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .title-field {
+    grid-column: 1 / -1;
+  }
+
+  .columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 24px;
+  }
+
+  .meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.right {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+
+@media (width < 1024px), (pointer: coarse) {
+  .name {
+    font-size: 12px;
+  }
+
+  .input {
+    padding: 11px 12px;
+    font-size: 16px;
+  }
+
+  .title {
+    font-size: 19px;
+  }
+
+  @media (width < 768px) {
+    .fields {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .name {
+      font-size: 11px;
+    }
+
+    .input {
+      padding: 7px 10px;
+      font-size: 14px;
+    }
+
+    .title {
+      font-size: 18px;
+    }
+  }
+}

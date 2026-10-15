@@ -1,0 +1,35 @@
+<dialog
+  #layer
+  class="drawer"
+  role="navigation"
+  aria-label="Contents"
+  closedby="none"
+  (click)="beside($event)"
+>
+  <div class="searchwrap">
+    <input
+      #searchField
+      class="search"
+      type="search"
+      placeholder="Search recipes…"
+      aria-label="Search recipes"
+      autocomplete="off"
+      [value]="query()"
+      (input)="search($event)"
+    />
+
+    <button type="button" class="shut" aria-label="Close Contents" (click)="close()">
+      <span aria-hidden="true">×</span>
+    </button>
+  </div>
+
+  <div class="tree">
+    <app-folder-tree (surfaced)="findSearch()" />
+  </div>
+
+  <footer class="foot">
+    <button type="button" class="addnew" (click)="add()">Add new recipe</button>
+  </footer>
+
+  <app-grip [edge]="edge" label="Contents edge" />
+</dialog>

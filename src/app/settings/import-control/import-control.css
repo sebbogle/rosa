@@ -1,0 +1,126 @@
+:host {
+  display: block;
+}
+
+.picker {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.lead {
+  margin: 0;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.note {
+  margin: 4px 0 0;
+  color: var(--faint);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.group {
+  margin-top: 10px;
+}
+
+.tick {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.tick input {
+  flex: none;
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+
+.names,
+.faults {
+  margin: 6px 0 0;
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+  color: var(--dim);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.names {
+  max-height: 96px;
+  padding-left: 25px;
+}
+
+.names li,
+.faults li {
+  overflow-wrap: anywhere;
+}
+
+.becoming {
+  color: var(--faint);
+}
+
+.faults {
+  max-height: 180px;
+  margin-top: 4px;
+}
+
+.faults li {
+  display: flex;
+  gap: 8px;
+}
+
+.faults b {
+  flex: none;
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.faults span {
+  flex: 1;
+  min-width: 0;
+  color: var(--faint);
+}
+
+.act {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.act.decide {
+  margin-top: 14px;
+}
+
+.tick input:focus-visible {
+  outline: var(--focus);
+  outline-offset: 1px;
+}
+
+@media (width < 1024px), (pointer: coarse) {
+  .lead,
+  .tick {
+    font-size: 14px;
+  }
+
+  .note,
+  .names,
+  .faults {
+    font-size: 13px;
+  }
+}

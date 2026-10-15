@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  pointer-events: none;
+}
+
+.bubble {
+  margin: 0;
+  color: var(--dim);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.saying {
+  padding: 8px 11px;
+  border-radius: var(--radius);
+  background: var(--paper);
+  box-shadow: var(--popover);
+}
+
+@media (width < 1024px), (pointer: coarse) {
+  .bubble {
+    font-size: 13px;
+  }
+}

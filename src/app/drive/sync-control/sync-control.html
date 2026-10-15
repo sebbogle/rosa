@@ -1,0 +1,39 @@
+@if (showing() === 'Google Drive') {
+  <button type="button" class="control to-settings" (click)="openSettings()">{{ words() }}</button>
+} @else if (words(); as said) {
+  <button
+    type="button"
+    class="control"
+    [class.inert]="inert()"
+    [attr.aria-disabled]="inert() || held() ? 'true' : null"
+    [attr.aria-describedby]="marked() ? 'unsent-changes' : null"
+    (click)="press()"
+  >
+    <span class="glyph" [class.turning]="turning()" aria-hidden="true">
+      @if (showing() === 'in Google Drive') {
+        <svg viewBox="0 0 16 16"><path d="M3.5 8.5l3 3 6-7" /></svg>
+      } @else {
+        <svg viewBox="0 0 16 16">
+          <path d="M13 6.4A5.1 5.1 0 0 0 3.6 4.6" />
+          <path d="M3 2.4v2.8h2.8" />
+          <path d="M3 9.6a5.1 5.1 0 0 0 9.4 1.8" />
+          <path d="M13 13.6v-2.8h-2.8" />
+        </svg>
+      }
+
+      @if (marked()) {
+        <span class="marker"></span>
+      }
+    </span>
+
+    <span class="words">{{ said }}</span>
+  </button>
+
+  @if (marked()) {
+    <span id="unsent-changes" hidden>{{ unsentWords }}</span>
+  }
+
+  @if (showing() === 'offered') {
+    <app-bubble [words]="reason" />
+  }
+}

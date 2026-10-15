@@ -1,0 +1,132 @@
+:root {
+  --ink: #171516;
+  --dim: #666063;
+  --faint: #8b8285;
+  --line: #eae5e7;
+  --paper: #ffffff;
+  --card: #f7f4f5;
+  --raised: #fcfbfb;
+
+  --field: #fff;
+
+  --hover: #f1eaec;
+  --accent: #7d2340;
+  --accent-strong: #661c34;
+  --accent-edge: #e3c8d1;
+  --accent-wash: #faf3f5;
+  --hover-strong: #e7dde0;
+
+  --on-accent: #fff;
+
+  --selected: var(--card);
+  --on-selected: var(--ink);
+
+  --handle: #d8d0d3;
+  --handle-strong: #b58a9a;
+  --edge: #d8cdd2;
+
+  --focus: 2px solid var(--accent);
+  --scrim: color-mix(in srgb, var(--ink) 32%, transparent);
+  --popover: 0 6px 18px color-mix(in srgb, var(--ink) 12%, transparent);
+  --sheet: 0 28px 72px color-mix(in srgb, var(--ink) 34%, transparent);
+  --drawer-shadow: 0 0 40px color-mix(in srgb, var(--ink) 24%, transparent);
+  --menu-shadow: 0 14px 34px color-mix(in srgb, var(--ink) 18%, transparent);
+  --confirm-shadow: 0 14px 40px color-mix(in srgb, var(--ink) 28%, transparent);
+
+  --card-shadow: none;
+
+  color-scheme: light;
+
+  --motion: 1;
+
+  --drift: 32px;
+
+  --sidebar-preferred: 264px;
+  --sidebar-width: min(var(--sidebar-preferred), 40vw);
+  --divider: 0.5;
+  --gutter: 28px;
+
+  --radius: 7px;
+  --radius-small: 4px;
+  --radius-small-button: 6px;
+  --radius-card: 9px;
+  --radius-large: 10px;
+  --radius-sheet: 12px;
+
+  font-family: ui-sans-serif, system-ui, 'Segoe UI', sans-serif;
+  font-size: 15px;
+}
+
+[data-appearance='e-ink'] {
+  --ink: #000000;
+  --dim: #4e4e4e;
+  --faint: #4e4e4e;
+  --line: #a2a2a2;
+  --paper: #ffffff;
+  --card: #ffffff;
+  --raised: #ffffff;
+
+  --field: #ffffff;
+
+  --hover: #c6c6c6;
+  --accent: #3f3f3f;
+  --accent-strong: #222222;
+  --accent-edge: #7f7f7f;
+  --accent-wash: #ececec;
+  --hover-strong: #b4b4b4;
+
+  --on-accent: #ffffff;
+
+  --selected: var(--ink);
+  --on-selected: var(--paper);
+
+  --handle: #a2a2a2;
+  --handle-strong: #6f6f6f;
+  --edge: #b4b4b4;
+
+  --focus: 2px solid var(--ink);
+
+  --popover: 0 0 0 1px var(--line);
+  --sheet: 0 0 0 1px var(--ink);
+  --drawer-shadow: none;
+  --menu-shadow: 0 0 0 1px var(--line);
+  --confirm-shadow: 0 0 0 1px var(--ink);
+  --card-shadow: inset 0 0 0 2px var(--line);
+
+  color-scheme: light;
+
+  --motion: 0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  height: 100dvh;
+  background: var(--paper);
+  color: var(--ink);
+  overflow: hidden;
+}
+
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+@media (width < 1024px), (pointer: coarse) {
+  :root {
+    --gutter: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion: 0;
+  }
+}

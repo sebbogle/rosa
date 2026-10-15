@@ -1,0 +1,92 @@
+:host {
+  display: contents;
+}
+
+.switch {
+  flex-wrap: wrap;
+  max-width: 100%;
+  line-height: 16px;
+  overflow-wrap: anywhere;
+}
+
+.add {
+  margin-left: auto;
+  padding: var(--add-pad);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small-button);
+  background: var(--paper);
+  color: var(--dim);
+  font: inherit;
+  font-size: var(--add-fs);
+  cursor: pointer;
+}
+
+.add:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.line {
+  flex-basis: 100%;
+  margin: 2px 0;
+}
+
+.sizing {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 260px;
+  min-height: var(--more-size);
+  border-bottom: 1px solid var(--line);
+}
+
+.sizing:focus-within {
+  border-bottom-color: var(--accent);
+}
+
+.name {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 2px;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font: inherit;
+  font-size: var(--group-fs);
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.name::placeholder {
+  color: var(--faint);
+  font-weight: 400;
+}
+
+.more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: var(--more-size);
+  height: var(--more-size);
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  font-size: var(--more-fs);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 6;
+}
+
+.name:focus,
+:where(.add, .more):focus-visible {
+  outline: var(--focus);
+  outline-offset: -1px;
+}

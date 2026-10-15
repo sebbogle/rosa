@@ -1,0 +1,118 @@
+<header class="head">
+  <h1>{{ recipe().title }}</h1>
+
+  <div class="headmain">
+    @if (crumbline(); as crumbline) {
+      <p class="crumbline">{{ crumbline }}</p>
+    }
+
+    @if (folder(); as folder) {
+      <p class="folder">{{ folder }}</p>
+    }
+
+    @if (recipe().tags.length) {
+      <p class="tags">
+        @for (tag of recipe().tags; track $index) {
+          <span class="tag">{{ tag }}</span>
+        }
+      </p>
+    }
+
+    @if (meta(); as meta) {
+      <p class="meta">{{ meta }}</p>
+    }
+
+    @if (recipe().notes; as notes) {
+      <p class="notes">{{ notes }}</p>
+    }
+  </div>
+
+  <div class="actions">
+    @if (source(); as source) {
+      @if (source.link; as link) {
+        <a
+          class="source"
+          [href]="link"
+          [title]="source.text"
+          target="_blank"
+          rel="noreferrer noopener"
+          ><span class="text">{{ source.text }}</span
+          ><span class="tell" aria-hidden="true">↗</span></a
+        >
+      } @else {
+        <span class="source" [title]="source.text"
+          ><span class="text">{{ source.text }}</span></span
+        >
+      }
+    }
+
+    @if (!frozen()) {
+      <button
+        type="button"
+        class="edit"
+        title="Edit recipe"
+        aria-label="Edit recipe"
+        (click)="edit()"
+      >
+        ✎
+      </button>
+    }
+  </div>
+</header>
+
+<div class="two-column columns">
+  <section class="column">
+    <div class="ingredients-head">
+      <h2>Ingredients</h2>
+      @if (segments().length > 1) {
+        <app-segmented
+          label="Sizing"
+          [options]="segments()"
+          [chosen]="shown()"
+          (choose)="choose.emit($event)"
+        />
+      } @else if (loneName(); as name) {
+        <span class="sizing-name">{{ name }}</span>
+      }
+    </div>
+    @for (list of sizings(); track list.id) {
+      <div class="sizing" [hidden]="list.id !== shown()">
+        @for (group of list.groups; track $index) {
+          <div class="group-card">
+            @if (group.group; as heading) {
+              <h3>{{ heading }}</h3>
+            }
+            <ul class="ingredients">
+              @for (ingredient of group.rows; track $index) {
+                <li>
+                  @if (ingredient.amount; as amount) {
+                    <b class="amount">{{ amount }}</b>
+                  }
+                  {{ ingredient.item }}
+                </li>
+              }
+            </ul>
+          </div>
+        }
+      </div>
+    }
+  </section>
+
+  @if (method().length) {
+    <section class="column">
+      <h2>Method</h2>
+      @for (group of method(); track $index) {
+        <div class="group-card">
+          @if (group.group; as heading) {
+            <h3>{{ heading }}</h3>
+          }
+          <ol class="steps">
+            @for (step of group.rows; track $index) {
+              <li>{{ step }}</li>
+            }
+          </ol>
+        </div>
+      }
+    </section>
+  }
+</div>

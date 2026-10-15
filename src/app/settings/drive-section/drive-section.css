@@ -1,0 +1,77 @@
+:host {
+  display: block;
+}
+
+.drive {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+.line {
+  margin: 0;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+.unsent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.marker {
+  flex: none;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+
+.address {
+  margin: 0;
+  color: var(--faint);
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+
+.acts {
+  flex: none;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@container sheet (width < 560px) {
+  .drive {
+    flex-wrap: wrap;
+  }
+
+  .acts {
+    flex-basis: 100%;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+}
+
+.said-below {
+  margin: 8px 2px 0;
+  color: var(--dim);
+  font-size: 12px;
+  line-height: 1.5;
+  text-wrap: pretty;
+}
+
+@media (width < 1024px), (pointer: coarse) {
+  .line {
+    font-size: 14px;
+  }
+
+  .address,
+  .said-below {
+    font-size: 13px;
+  }
+}

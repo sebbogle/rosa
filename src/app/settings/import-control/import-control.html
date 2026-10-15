@@ -1,0 +1,115 @@
+<input
+  #picker
+  type="file"
+  class="picker"
+  accept="application/json,.json,application/zip,.zip"
+  multiple
+  aria-hidden="true"
+  tabindex="-1"
+  (change)="chosen($event)"
+/>
+
+<div class="row">
+  <div class="text">
+    <h3 class="label">Import</h3>
+
+    @if (sub(); as line) {
+      <p class="sub" role="status">{{ line }}</p>
+    }
+  </div>
+
+  @if (stage() === 'ready') {
+    <button type="button" class="quiet" (click)="pick()">Choose files</button>
+  }
+</div>
+
+@switch (stage()) {
+  @case ('asking') {
+    @if (disclosure(); as ask) {
+      <div class="panel" role="region" aria-label="Import">
+        <p class="lead">{{ ask.lead }}</p>
+
+        @if (ask.refused) {
+          <p class="note">{{ ask.refused }}</p>
+        }
+
+        @if (ask.replaced.length > 0) {
+          <div class="group">
+            <label class="tick">
+              <input type="checkbox" [checked]="replacing()" (change)="setReplacing($event)" />
+              <span>{{ ask.replacing }}</span>
+            </label>
+
+            <ul class="names">
+              @for (row of ask.replaced; track row.id) {
+                <li>
+                  {{ row.title }}
+                  @if (row.becoming) {
+                    <span class="becoming">→ {{ row.becoming }}</span>
+                  }
+                </li>
+              }
+            </ul>
+          </div>
+        }
+
+        @if (ask.restored.length > 0) {
+          <div class="group">
+            <label class="tick">
+              <input type="checkbox" [checked]="restoring()" (change)="setRestoring($event)" />
+              <span>{{ ask.restoring }}</span>
+            </label>
+
+            <ul class="names">
+              @for (row of ask.restored; track row.id) {
+                <li>{{ row.title }}</li>
+              }
+            </ul>
+          </div>
+        }
+
+        <div class="act decide">
+          <button type="button" class="quiet" (click)="cancel()">Cancel</button>
+          <button type="button" class="primary" (click)="confirm()">
+            Import {{ ask.writing }}
+          </button>
+        </div>
+      </div>
+    }
+  }
+
+  @case ('done') {
+    @if (outcome(); as done) {
+      <div class="panel">
+        <p class="lead" role="status">
+          @if (done.nothing) {
+            Nothing was imported.
+          } @else {
+            {{ done.counts }}
+          }
+        </p>
+
+        @for (line of done.left; track line) {
+          <p class="note">{{ line }}</p>
+        }
+
+        @if (done.refused) {
+          <p class="note">{{ done.refused }}</p>
+
+          <ul class="faults">
+            @for (refusal of done.refusals; track $index) {
+              <li>
+                <b>{{ refusal.name }}</b>
+                <span>{{ refusal.faults }}</span>
+              </li>
+            }
+          </ul>
+        }
+
+        <div class="act">
+          <button type="button" class="quiet" (click)="dismiss()">Dismiss</button>
+        </div>
+      </div>
+    }
+  }
+}

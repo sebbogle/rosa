@@ -1,0 +1,25 @@
+<dialog
+  #scrim
+  class="scrim"
+  role="alertdialog"
+  closedby="none"
+  tabindex="-1"
+  [attr.aria-label]="ask().label"
+  (keydown.escape)="escape($event)"
+  (click)="release($event)"
+>
+  <div class="ask">
+    <p class="line">{{ ask().line }}</p>
+
+    @for (sentence of ask().sentences; track $index) {
+      <p class="sentence">{{ sentence }}</p>
+    }
+
+    <div class="choices">
+      <button type="button" class="quiet" autofocus (click)="answer(keep)">
+        {{ ask().keep }}
+      </button>
+      <button type="button" [class]="ask().tone" (click)="answer(act)">{{ ask().act }}</button>
+    </div>
+  </div>
+</dialog>

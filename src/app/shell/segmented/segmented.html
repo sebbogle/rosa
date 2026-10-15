@@ -1,0 +1,12 @@
+@for (segment of options(); track segment.value) {
+  <label class="segment">
+    <input
+      type="radio"
+      [name]="name"
+      [value]="segment.value"
+      [checked]="segment.value === chosen()"
+      (change)="choose.emit(segment.value)"
+    />
+    {{ segment.label }}
+  </label>
+}

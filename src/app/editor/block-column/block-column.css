@@ -1,0 +1,228 @@
+:host {
+  display: block;
+  min-width: 0;
+
+  --grip-col: 18px;
+  --qty-col: 84px;
+  --unit-col: 64px;
+  --num-col: 16px;
+  --del-col: 20px;
+  --row-gap: 6px;
+  --cell-pad: 6px 8px;
+  --cell-fs: 13px;
+  --cell-min: 29px;
+  --grip-fs: 12px;
+  --del-fs: 14px;
+  --num-fs: 12px;
+  --num-lift: 7px;
+  --label-fs: 11px;
+  --label-min: 30px;
+  --head-pad: 7px 10px;
+  --head-min: 0;
+  --group-fs: 11px;
+  --chev-w: 20px;
+  --chev-h: 20px;
+  --chev-fs: 11px;
+  --more-size: 24px;
+  --more-fs: 13px;
+  --add-wrap: 4px 0 0 24px;
+  --add-pad: 3px 8px;
+  --add-fs: 12px;
+  --gap-pad: 3px 9px;
+  --gap-fs: 11px;
+}
+
+.label-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  padding-bottom: 8px;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  min-height: var(--label-min);
+  color: var(--dim);
+  font-size: var(--label-fs);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.groups {
+  padding-bottom: 2px;
+}
+
+.place {
+  min-width: 0;
+  padding-top: 2px;
+}
+
+.place.cdk-drag-preview {
+  overflow: visible;
+  padding: 2px 0 0;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+
+.place.cdk-drag-preview .block {
+  background: var(--paper);
+  box-shadow: var(--popover);
+}
+
+.place.cdk-drag-preview .divider {
+  visibility: hidden;
+}
+
+.place.cdk-drag-placeholder {
+  opacity: 0.45;
+}
+
+.cdk-drop-list-dragging .cdk-drag:not(.cdk-drag-placeholder),
+.cdk-drag-animating {
+  transition: transform calc(150ms * var(--motion)) ease;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+}
+
+.block.grouped {
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 4px 0 0;
+}
+
+.grouped .rows {
+  padding: 10px 10px 0;
+}
+
+.more-rows {
+  order: 1;
+  margin-top: 8px;
+  padding: var(--add-wrap);
+}
+
+.grouped .more-rows {
+  margin: 8px 10px 6px;
+}
+
+.grouped > .cdk-drag-placeholder {
+  margin: 5px 10px 0;
+}
+
+.more-rows button {
+  padding: var(--add-pad);
+  border: 0;
+  border-radius: var(--radius-small-button);
+  background: transparent;
+  color: var(--dim);
+  font: inherit;
+  font-size: var(--add-fs);
+  cursor: pointer;
+}
+
+.more-rows button:hover {
+  background: var(--hover);
+  color: var(--accent);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+  opacity: 0;
+  transition: opacity calc(120ms * var(--motion)) ease;
+}
+
+.divider:hover,
+.divider:focus-within {
+  opacity: 1;
+}
+
+.rule {
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.divider button {
+  padding: var(--gap-pad);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small-button);
+  background: var(--paper);
+  color: var(--faint);
+  font: inherit;
+  font-size: var(--gap-fs);
+  cursor: pointer;
+}
+
+.divider button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+:where(.more-rows button, .divider button):focus-visible {
+  outline: var(--focus);
+  outline-offset: -1px;
+}
+
+@media (width < 1024px), (pointer: coarse) {
+  .divider {
+    opacity: 1;
+  }
+
+  @media (width >= 768px) {
+    :host {
+      --grip-col: 32px;
+      --qty-col: 92px;
+      --unit-col: 80px;
+      --num-col: 22px;
+      --del-col: 40px;
+      --row-gap: 8px;
+      --cell-pad: 10px 11px;
+      --cell-fs: 16px;
+      --cell-min: 44px;
+      --grip-fs: 15px;
+      --del-fs: 18px;
+      --num-fs: 14px;
+      --num-lift: 13px;
+      --label-fs: 12px;
+      --label-min: 46px;
+      --head-pad: 0 8px 0 12px;
+      --head-min: 48px;
+      --group-fs: 12px;
+      --chev-w: 32px;
+      --chev-h: 44px;
+      --chev-fs: 13px;
+      --more-size: 44px;
+      --more-fs: 18px;
+      --add-wrap: 6px 0 0 40px;
+      --add-pad: 8px 12px;
+      --add-fs: 15px;
+      --gap-pad: 6px 12px;
+      --gap-fs: 13px;
+      --segment-target: 44px;
+    }
+
+    @container sheet (width < 900px) {
+      :host {
+        --qty-col: 110px;
+        --unit-col: 96px;
+        --del-col: 44px;
+        --cell-pad: 11px 12px;
+      }
+    }
+  }
+}
