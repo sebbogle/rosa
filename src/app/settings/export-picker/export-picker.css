@@ -9,7 +9,7 @@
 }
 
 .picking {
-  padding: 12px 14px;
+  padding: 12px 14px 14px;
   overflow: hidden;
   animation: open-body calc(220ms * var(--motion)) ease-out;
 }
@@ -43,195 +43,102 @@
   }
 }
 
-.line {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.guide {
+.small {
   flex: none;
-  align-self: stretch;
-  width: 17px;
-  margin-left: 7px;
-  border-left: 1px solid var(--line);
-}
-
-.item {
-  display: grid;
-  grid-template-columns: 15px 15px minmax(0, 1fr);
-  align-items: center;
-  column-gap: 5px;
-  flex: 1;
-  width: 100%;
-  min-width: 0;
-  padding: 5px 8px;
-  border: 0;
+  padding: 4px 9px;
+  border: 1px solid var(--line);
   border-radius: var(--radius-small-button);
-  background: transparent;
-  color: var(--dim);
-  font-size: 13px;
-  text-align: left;
-  cursor: pointer;
-}
-
-.name {
-  overflow: hidden;
-  text-overflow: ellipsis;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 12px;
   white-space: nowrap;
   cursor: pointer;
 }
 
-.item:hover {
-  background: var(--hover);
-  color: var(--ink);
+.small:hover:not([aria-disabled='true']) {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-.chevron {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 15px;
-  height: 15px;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-small);
-  background: transparent;
-  font-size: 9px;
-  line-height: 1;
+.small[aria-disabled='true'] {
   color: var(--faint);
-  cursor: pointer;
-  transition: transform calc(120ms * var(--motion)) ease;
+  cursor: default;
 }
 
-.chevron:hover {
-  background: var(--hover-strong);
-  color: var(--ink);
-}
-
-.chevron.open {
-  transform: rotate(90deg);
-}
-
-.folder {
-  font-weight: 500;
-}
-
-.item.recipe .name {
-  grid-column: 3;
-}
-
-.item input {
-  width: 15px;
-  height: 15px;
-  margin: 0;
-  accent-color: var(--accent);
-  cursor: pointer;
-}
-
-.chevron:focus-visible,
-.item input:focus-visible {
+.small:focus-visible {
   outline: var(--focus);
   outline-offset: 1px;
 }
 
-.item.outside {
-  color: var(--faint);
+.tree {
+  height: 248px;
 }
 
-.filterwrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.filter {
-  flex: 1;
-  min-width: 0;
-  padding: 7px 10px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--paper);
-  font-size: 13px;
-}
-
-.filter:focus {
-  outline: var(--focus);
-  outline-offset: -1px;
-}
-
-.sweep {
-  flex: none;
-  padding: 7px 12px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--paper);
-  font-size: 13px;
-  white-space: nowrap;
+.tick {
+  position: absolute;
+  top: 50%;
+  left: 8px;
+  width: 14px;
+  height: 14px;
+  margin: 0;
+  opacity: 0;
+  transform: translateY(-50%);
   cursor: pointer;
 }
 
-.sweep:hover:not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.tally {
-  display: flex;
+.tickbox {
+  display: inline-flex;
+  flex: none;
   align-items: center;
-  gap: 10px;
-  padding: 7px 10px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius) var(--radius) 0 0;
-  background: var(--card);
-  font-size: 12px;
-}
-
-.tally .count {
-  flex: none;
-  font-weight: 600;
-}
-
-.tally .note {
-  flex: 1;
-  min-width: 0;
-  overflow: hidden;
-  color: var(--faint);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.tally .clear {
-  flex: none;
-  padding: 3px 9px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-small-button);
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--faint);
+  border-radius: 4px;
   background: var(--paper);
-  color: var(--dim);
-  font-size: 12px;
-  cursor: pointer;
+  color: var(--on-accent);
 }
 
-.tally .clear:hover:not(:disabled) {
+.tick:is(:checked, :indeterminate) + .tickbox {
   border-color: var(--accent);
-  color: var(--accent);
+  background: var(--accent);
 }
 
-.box {
-  height: 240px;
-  overflow: auto;
-  overscroll-behavior: contain;
-  padding: 4px 6px;
-  border: 1px solid var(--line);
-  border-top: 0;
-  border-radius: 0 0 var(--radius) var(--radius);
-  background: var(--paper);
+.mark,
+.dash {
+  display: none;
+}
+
+.mark {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.dash {
+  width: 7px;
+  height: 2px;
+  border-radius: 1px;
+  background: currentColor;
+}
+
+.tick:checked:not(:indeterminate) + .tickbox .mark {
+  display: block;
+}
+
+.tick:indeterminate + .tickbox .dash {
+  display: block;
+}
+
+.item.outside .name {
+  font-style: italic;
 }
 
 .nomatch {
   margin: 14px 10px;
-  color: var(--faint);
+  color: var(--dim);
   font-size: 13px;
   line-height: 1.5;
   text-wrap: pretty;
@@ -241,12 +148,14 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid var(--line);
+  margin-top: 12px;
 }
 
-.draft {
+app-segmented {
+  flex: none;
+}
+
+.note {
   flex: 1;
   min-width: 0;
   overflow: hidden;
@@ -256,20 +165,20 @@
   white-space: nowrap;
 }
 
-app-segmented {
-  flex: none;
-}
+@media (width < 1024px), (pointer: coarse) {
+  .small {
+    min-height: 36px;
+    padding: 6px 12px;
+    font-size: 14px;
+  }
 
-.sweep:focus-visible,
-.clear:focus-visible {
-  outline: var(--focus);
-  outline-offset: 1px;
-}
+  .nomatch {
+    font-size: 16px;
+  }
 
-.sweep:disabled,
-.clear:disabled {
-  color: var(--faint);
-  cursor: default;
+  .note {
+    font-size: 13px;
+  }
 }
 
 @container sheet (width < 480px) {
@@ -277,8 +186,13 @@ app-segmented {
     flex-wrap: wrap;
   }
 
-  .draft {
+  .note {
     flex-basis: 100%;
+    order: -1;
+  }
+
+  .note:empty {
+    display: none;
   }
 
   app-segmented {

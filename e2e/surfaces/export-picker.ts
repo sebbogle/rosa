@@ -6,10 +6,10 @@ import type { FilePayload } from './settings';
 
 export type Format = 'JSON' | 'HTML';
 
-const SWEEP = /^(Export all \d+|Export \d+ matching|Untick these)$/;
-
 export class ExportPicker {
   readonly root: Locator;
+  readonly clearButton: Locator;
+  readonly sweepButton: Locator;
   private readonly page: Page;
   private readonly opener: Locator;
   private readonly filterBox: Locator;
@@ -25,6 +25,8 @@ export class ExportPicker {
     this.root = section.getByRole('region', { name: 'Choose recipes', exact: true });
     this.filterBox = this.root.getByRole('searchbox', { name: 'Filter recipes', exact: true });
     this.formats = this.root.getByRole('radiogroup', { name: 'Format', exact: true });
+    this.clearButton = this.root.getByRole('button', { name: 'Clear', exact: true });
+    this.sweepButton = this.root.getByRole('button', { name: 'Tick all', exact: true });
   }
 
   async open(): Promise<void> {
@@ -41,11 +43,11 @@ export class ExportPicker {
   }
 
   async sweep(): Promise<void> {
-    await this.root.getByRole('button', { name: SWEEP }).click();
+    await this.sweepButton.click();
   }
 
   async clear(): Promise<void> {
-    await this.root.getByRole('button', { name: 'Clear', exact: true }).click();
+    await this.clearButton.click();
   }
 
   async outline(): Promise<readonly OutlineRow[]> {

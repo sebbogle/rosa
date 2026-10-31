@@ -24,8 +24,7 @@ const COARSE = '(pointer: coarse)';
 interface PickerFolderRow {
   readonly kind: 'folder';
   readonly key: string;
-  readonly guides: readonly number[];
-  readonly box: string;
+  readonly depth: number;
   readonly segments: readonly string[];
   readonly name: string;
   readonly expanded: boolean;
@@ -35,7 +34,7 @@ interface PickerFolderRow {
 interface PickerRecipeRow {
   readonly kind: 'recipe';
   readonly key: string;
-  readonly guides: readonly number[];
+  readonly depth: number;
   readonly id: string;
   readonly title: string;
   readonly ticked: boolean;
@@ -48,7 +47,7 @@ type PickerRow = PickerFolderRow | PickerRecipeRow;
   selector: 'app-export-picker',
   imports: [Segmented],
   templateUrl: './export-picker.html',
-  styleUrls: ['../settings-row.css', './export-picker.css'],
+  styleUrls: ['../settings-row.css', '../../shell/tree-row.css', './export-picker.css'],
 })
 export class ExportPicker {
   private readonly store = inject(RecipeStore);
@@ -81,6 +80,8 @@ export class ExportPicker {
   private readonly opener = viewChild<ElementRef<HTMLButtonElement>>('opener');
 
   private readonly filter = viewChild<ElementRef<HTMLInputElement>>('filter');
+
+  private readonly sweeper = viewChild<ElementRef<HTMLButtonElement>>('sweeper');
 
   private readonly panel = viewChild<ElementRef<HTMLElement>>('panel');
 
@@ -134,14 +135,13 @@ export class ExportPicker {
 
     const rows = contentsRows(contentsTree(this.shown()), (key) => isOpen(key, open));
 
-    return rows.map((row, at): PickerRow => {
-      const shared = { key: row.key, guides: row.guides };
+    return rows.map((row): PickerRow => {
+      const shared = { key: row.key, depth: row.guides.length };
 
       if (row.kind === 'folder') {
         return {
           kind: 'folder',
           ...shared,
-          box: `tick-${at}`,
           segments: row.segments,
           name: row.name,
           expanded: row.expanded,
@@ -170,37 +170,19 @@ export class ExportPicker {
   });
 
   protected readonly tally = computed(() => {
-    const count = this.ticked().length;
     const hidden = this.outside().size;
 
     return {
-      count: count === 0 ? 'Nothing to export' : `${countOf(count)} to export`,
-      hidden: hidden === 0 ? '' : `${hidden} of them outside the filter`,
-      any: count > 0,
+      hidden: hidden === 0 ? '' : `${hidden} ticked outside the filter`,
+      any: this.ticked().length > 0,
     };
   });
 
   protected readonly sweep = computed(() => {
     const matched = this.matched();
     const draft = this.draft();
-    const held = matched.length > 0 && matched.every((recipe) => draft.has(recipe.id));
 
-    return {
-      label: held
-        ? 'Untick these'
-        : this.searching()
-          ? `Export ${matched.length} matching`
-          : `Export all ${this.cookbook().length}`,
-      untick: held,
-      nothing: matched.length === 0,
-    };
-  });
-
-  protected readonly foot = computed(() => {
-    const count = this.ticked().length;
-    if (count === 0) return 'Nothing to export';
-    if (count === this.cookbook().length) return `Everything · ${countOf(count)}`;
-    return `${countOf(count)} to export`;
+    return { nothing: matched.every((recipe) => draft.has(recipe.id)) };
   });
 
   protected readonly exportLabel = computed(() => {
@@ -266,19 +248,17 @@ export class ExportPicker {
   }
 
   protected sweepMatching(): void {
-    const untick = this.sweep().untick;
-    const matched = this.matched();
+    if (this.sweep().nothing) return;
 
+    const matched = this.matched();
     this.retick((draft) => {
-      for (const recipe of matched) {
-        if (untick) draft.delete(recipe.id);
-        else draft.add(recipe.id);
-      }
+      for (const recipe of matched) draft.add(recipe.id);
     });
   }
 
   protected clear(): void {
     this.draft.set(new Set());
+    afterNextRender(() => this.sweeper()?.nativeElement.focus(), { injector: this.injector });
   }
 
   protected toggle(key: string): void {

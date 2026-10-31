@@ -19,8 +19,7 @@ test('a cook brings recipes back from an export', async ({
   await exportPicker.open();
   await expect(exportPicker.root, 'the whole cookbook should be to export').toMatchAriaSnapshot(`
     - region "Choose recipes":
-      - button "Untick these"
-      - text: 4 recipes to export
+      - button "Tick all" [disabled]
       - checkbox "Baking" [checked]
       - checkbox "Brunch" [checked]
       - checkbox "Shakshuka" [checked]
