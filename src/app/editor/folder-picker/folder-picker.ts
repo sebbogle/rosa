@@ -1,71 +1,103 @@
 import {
   Component,
   ElementRef,
+  Injector,
+  afterNextRender,
   computed,
-  effect,
   inject,
   input,
   output,
   signal,
   viewChild,
 } from '@angular/core';
-import { Placement, childrenOf, drawnPath, resolveFolderName } from '../../recipe/folders';
+import { searchTerms, toggled } from '../../contents/contents-rules';
+import { ancestorsOf, folderKey } from '../../contents/contents-tree';
+import {
+  Placement,
+  beneath,
+  childrenOf,
+  drawnPath,
+  folderNameOf,
+  resolveFolderName,
+} from '../../recipe/folders';
 import { RecipeStore } from '../../recipe/recipe-store';
+import { folderRows } from './folder-rows';
 
 const ROOT = 'No folder';
+
+const COARSE = '(pointer: coarse)';
+
+interface Adding {
+  readonly at: Placement;
+  readonly name: string;
+}
 
 @Component({
   selector: 'app-folder-picker',
   templateUrl: './folder-picker.html',
-  styleUrl: './folder-picker.css',
+  styleUrls: ['../../shell/tree-row.css', './folder-picker.css'],
 })
 export class FolderPicker {
   private readonly recipes = inject(RecipeStore);
+  private readonly injector = inject(Injector);
+
+  private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   readonly folder = input.required<Placement>();
   readonly changed = output<Placement>();
 
   protected readonly root = ROOT;
 
+  protected readonly rootKey = folderKey([]);
+
   private readonly shown = signal(false);
 
   readonly open = this.shown.asReadonly();
 
-  protected readonly at = signal<Placement>([]);
-
-  protected readonly naming = signal(false);
+  private readonly expanded = signal<ReadonlySet<string>>(new Set());
 
   protected readonly typed = signal('');
 
+  protected readonly adding = signal<Adding | undefined>(undefined);
+
   private readonly trigger = viewChild<ElementRef<HTMLButtonElement>>('trigger');
-  private readonly putButton = viewChild<ElementRef<HTMLButtonElement>>('putButton');
+  private readonly finder = viewChild<ElementRef<HTMLInputElement>>('finder');
   private readonly nameField = viewChild<ElementRef<HTMLInputElement>>('nameField');
 
   protected readonly label = computed(() => drawnPath(this.folder()) || ROOT);
 
-  protected readonly crumb = computed(() =>
-    this.at().map((name, index) => ({ name, depth: index + 1 })),
-  );
-
-  protected readonly children = computed(() => childrenOf(this.recipes.recipes(), this.at()));
-
-  private readonly resolution = computed(() => resolveFolderName(this.children(), this.typed()));
-
-  protected readonly sentence = computed(() => {
-    const resolution = this.resolution();
-    if (resolution === undefined) return '';
-
-    return resolution.existing
-      ? `${resolution.name} already exists here - you will go into that one.`
-      : `Creates ${drawnPath([...this.at(), resolution.name])}`;
+  protected readonly above = computed(() => {
+    const folder = this.folder();
+    return folder.length > 1 ? `${drawnPath(folder.slice(0, -1))} › ` : '';
   });
 
-  constructor() {
-    effect(() => {
-      const field = this.nameField();
-      if (field) field.nativeElement.focus();
-    });
-  }
+  protected readonly here = computed(() => this.folder().at(-1) ?? ROOT);
+
+  // Folders are implied by recipes. The chosen placement joins them so a folder made a moment ago
+  // shows before the recipe holding it is saved.
+  private readonly folders = computed(() => [
+    ...this.recipes.recipes().map((recipe) => recipe.folder),
+    this.folder(),
+  ]);
+
+  private readonly searching = computed(() => searchTerms(this.typed()).length > 0);
+
+  protected readonly rows = computed(() =>
+    folderRows(this.folders(), {
+      chosen: this.folder(),
+      expanded: this.expanded(),
+      typed: this.typed(),
+      addingAt: this.adding()?.at,
+    }),
+  );
+
+  protected readonly nothing = computed(() => this.searching() && this.rows().length === 0);
+
+  protected readonly quoted = computed(() => `“${this.typed().trim()}”`);
+
+  protected readonly coined = computed(() => folderNameOf(this.typed()));
+
+  protected readonly named = computed(() => folderNameOf(this.adding()?.name ?? '') !== '');
 
   focus(): void {
     this.trigger()?.nativeElement.focus();
@@ -73,56 +105,96 @@ export class FolderPicker {
 
   close(): void {
     this.shown.set(false);
+    this.stopAdding();
   }
 
   protected toggle(): void {
     if (this.open()) {
-      this.shown.set(false);
+      this.close();
       return;
     }
 
-    this.stand(this.folder());
+    this.expanded.set(new Set(ancestorsOf(this.folder().slice(0, -1))));
+    this.typed.set('');
+    this.stopAdding();
     this.shown.set(true);
+
+    afterNextRender(
+      () => {
+        if (!matchMedia(COARSE).matches) this.finder()?.nativeElement.focus();
+      },
+      { injector: this.injector },
+    );
   }
 
-  protected into(name: string): void {
-    this.walk([...this.at(), name]);
+  protected choose(folder: Placement): void {
+    this.changed.emit(folder);
+    this.close();
+    this.focus();
   }
 
-  protected upTo(depth: number): void {
-    this.walk(this.at().slice(0, depth));
+  protected flip(folder: Placement): void {
+    if (this.searching()) return;
+
+    const key = folderKey(folder);
+    const closing = this.expanded().has(key);
+    this.expanded.update((open) => toggled(open, key));
+
+    const adding = this.adding();
+    if (closing && adding !== undefined && beneath(adding.at, folder)) this.stopAdding();
   }
 
-  protected coin(event?: Event): void {
-    event?.preventDefault();
-
-    const resolution = this.resolution();
-    if (resolution === undefined) return;
-
-    this.stand([...this.at(), resolution.name], true);
-
-    setTimeout(() => this.nameField()?.nativeElement.focus());
+  protected search(event: Event): void {
+    this.typed.set((event.target as HTMLInputElement).value);
+    this.stopAdding();
   }
 
-  protected startNaming(): void {
-    this.naming.set(true);
+  protected startAdding(at: Placement): void {
+    if (at.length === 0) this.typed.set('');
+    else this.expanded.update((open) => new Set(open).add(folderKey(at)));
+
+    this.adding.set({ at: [...at], name: '' });
+
+    afterNextRender(() => this.nameField()?.nativeElement.focus(), { injector: this.injector });
   }
 
   protected name(event: Event): void {
-    this.typed.set((event.target as HTMLInputElement).value);
+    const name = (event.target as HTMLInputElement).value;
+    this.adding.update((adding) => adding && { ...adding, name });
   }
 
-  protected put(): void {
-    this.changed.emit(this.at());
-    this.shown.set(false);
-    this.focus();
+  protected add(event?: Event): void {
+    event?.preventDefault();
+
+    const adding = this.adding();
+    if (adding === undefined) return;
+
+    const resolution = resolveFolderName(childrenOf(this.folders(), adding.at), adding.name);
+    if (resolution !== undefined) this.choose([...adding.at, resolution.name]);
+  }
+
+  protected createFromFilter(): void {
+    const resolution = resolveFolderName(childrenOf(this.folders(), []), this.typed());
+    if (resolution !== undefined) this.choose([resolution.name]);
   }
 
   protected escape(event: Event): void {
     if (!this.open()) return;
     event.preventDefault();
-    this.shown.set(false);
-    this.focus();
+
+    const adding = this.adding();
+    if (adding === undefined) {
+      this.close();
+      this.focus();
+      return;
+    }
+
+    this.stopAdding();
+    const from = `[data-adds="${CSS.escape(folderKey(adding.at))}"]`;
+    afterNextRender(
+      () => (this.host.querySelector<HTMLElement>(from) ?? this.finder()?.nativeElement)?.focus(),
+      { injector: this.injector },
+    );
   }
 
   protected leave(event: FocusEvent): void {
@@ -132,18 +204,11 @@ export class FolderPicker {
 
     setTimeout(() => {
       if (picker instanceof Node && picker.contains(document.activeElement)) return;
-      this.shown.set(false);
+      this.close();
     });
   }
 
-  private walk(at: Placement): void {
-    this.putButton()?.nativeElement.focus();
-    this.stand(at);
-  }
-
-  private stand(at: Placement, naming = false): void {
-    this.at.set([...at]);
-    this.naming.set(naming);
-    this.typed.set('');
+  private stopAdding(): void {
+    this.adding.set(undefined);
   }
 }

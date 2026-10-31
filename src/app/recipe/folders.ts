@@ -7,13 +7,13 @@ export function folderNameOf(typed: string): string {
   return trimmed === '' ? '' : trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
 }
 
-export function childrenOf(recipes: readonly Recipe[], at: Placement): readonly string[] {
+export function childrenOf(folders: readonly Placement[], at: Placement): readonly string[] {
   const names = new Set<string>();
 
-  for (const recipe of recipes) {
-    if (recipe.folder.length <= at.length) continue;
-    if (!at.every((segment, index) => recipe.folder[index] === segment)) continue;
-    names.add(recipe.folder[at.length]);
+  for (const folder of folders) {
+    if (folder.length <= at.length) continue;
+    if (!beneath(folder, at)) continue;
+    names.add(folder[at.length]);
   }
 
   return [...names].sort((a, b) => a.localeCompare(b));
@@ -66,7 +66,10 @@ export interface Lift {
 export function liftOf(recipes: readonly Recipe[], at: Placement): Lift {
   return {
     recipes: beneathAt(recipes, at).length,
-    folders: childrenOf(recipes, at).length,
+    folders: childrenOf(
+      recipes.map((recipe) => recipe.folder),
+      at,
+    ).length,
     to: at.slice(0, -1),
   };
 }

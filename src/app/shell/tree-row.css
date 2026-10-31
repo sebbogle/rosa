@@ -1,0 +1,160 @@
+/* Tree rows shared by the folder picker and the export picker. Spacing follows the Contents tree. */
+
+.listbox {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-card);
+  background: var(--paper);
+}
+
+.search {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 34px;
+  padding: 2px 5px 2px 11px;
+  border-bottom: 1px solid var(--line);
+  border-radius: calc(var(--radius-card) - 1px) calc(var(--radius-card) - 1px) 0 0;
+}
+
+.search:has(.find:focus-visible) {
+  outline: var(--focus);
+  outline-offset: -2px;
+}
+
+.magnifier {
+  display: inline-flex;
+  flex: none;
+  color: var(--dim);
+}
+
+.find {
+  flex: 1;
+  min-width: 0;
+  padding: 2px 0;
+  border: 0;
+  background: transparent;
+  font-size: 13px;
+}
+
+.find:focus {
+  outline: none;
+}
+
+.tree {
+  --indent: 17px;
+  padding: 4px 6px 6px;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
+.line {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding-left: calc(var(--depth, 0) * var(--indent));
+}
+
+.chevron {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: var(--indent);
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-small);
+  background: transparent;
+  color: var(--faint);
+  font-size: 9px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.chevron:hover {
+  color: var(--ink);
+}
+
+.chevron:focus-visible {
+  outline: var(--focus);
+  outline-offset: -1px;
+}
+
+.glyph {
+  display: inline-block;
+  transition: transform calc(120ms * var(--motion)) ease;
+}
+
+.chevron.open .glyph {
+  transform: rotate(90deg);
+}
+
+.spacer {
+  flex: none;
+  width: var(--indent);
+}
+
+.item {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 5px 8px;
+  border: 0;
+  border-radius: var(--radius-small-button);
+  background: transparent;
+  color: var(--dim);
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+
+.item:hover {
+  background: var(--hover);
+  color: var(--ink);
+}
+
+.item:focus-visible,
+.item:has(input:focus-visible) {
+  outline: var(--focus);
+  outline-offset: -1px;
+}
+
+.folder {
+  font-weight: 500;
+}
+
+.name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (width < 1024px), (pointer: coarse) {
+  .search {
+    min-height: 44px;
+  }
+
+  .find {
+    font-size: 16px;
+  }
+
+  .tree {
+    --indent: 21px;
+  }
+
+  .chevron {
+    height: 44px;
+    font-size: 11px;
+  }
+
+  .item {
+    min-height: 44px;
+    padding: 11px 8px;
+    font-size: 17px;
+  }
+}

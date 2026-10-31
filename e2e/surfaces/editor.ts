@@ -54,7 +54,10 @@ export class Editor {
   readonly sizingShown: Locator;
   readonly sizingName: Locator;
   readonly folderPicker: Locator;
-  readonly crumb: Locator;
+  readonly folderField: Locator;
+  readonly folderDropdown: Locator;
+  readonly folderName: Locator;
+  readonly addButton: Locator;
   readonly menus: Locator;
   private readonly page: Page;
 
@@ -65,10 +68,13 @@ export class Editor {
     this.behind = page.locator('app-sidebar, .reading');
     this.title = textbox(this.root, 'Title');
     this.folderPicker = this.root.locator('app-folder-picker');
-    this.crumb = this.folderPicker.getByRole('navigation', {
-      name: 'Where this recipe goes',
+    this.folderField = this.folderPicker.getByRole('button', { name: /^Folder / });
+    this.folderDropdown = this.folderPicker.getByRole('dialog', {
+      name: 'Choose a folder',
       exact: true,
     });
+    this.folderName = textbox(this.folderDropdown, 'Folder name');
+    this.addButton = this.folderDropdown.getByRole('button', { name: 'Add', exact: true });
     this.doneButton = this.button('Done');
     this.driveControls = this.root.getByRole('button', { name: /Drive/ });
     this.suggestions = this.root.locator('app-tag-input').getByRole('listitem');
@@ -186,46 +192,79 @@ export class Editor {
   }
 
   async openFolderPicker(): Promise<void> {
-    await this.folderPicker.getByRole('button', { name: /^Folder / }).click();
-    await this.crumb.waitFor();
-  }
-
-  async walkUpTo(folder: string): Promise<void> {
-    await this.crumb.getByRole('button', { name: folder, exact: true }).click();
-    await this.standingIn(folder);
+    await this.folderField.click();
+    await this.folderDropdown.waitFor();
   }
 
   async putIn(folder: readonly string[]): Promise<void> {
     await this.openFolderPicker();
 
-    const naming = textbox(this.folderPicker, 'Name the new folder');
-    const pressed = (name: string): Locator =>
-      this.folderPicker.getByRole('button', { name, exact: true });
+    for (const [at, level] of folder.entries()) {
+      const parent = folder[at - 1];
+      if (parent !== undefined) await this.expandFolder(parent, { ifClosed: true });
+      if (await this.folderRow(level).isVisible()) continue;
 
-    const standing = (await this.crumb.getByRole('button').allInnerTexts())
-      .slice(1)
-      .map((name) => name.trim());
-    let shared = 0;
-    while (shared < standing.length && standing[shared] === folder[shared]) shared++;
+      await this.startNewFolder(parent);
+      await this.folderName.fill(level);
+      await this.addFolder();
+      await this.waitForFolder(folder.slice(0, at + 1));
 
-    if (shared < standing.length) {
-      await this.walkUpTo(shared === 0 ? 'No folder' : folder[shared - 1]);
+      if (at === folder.length - 1) return;
+      await this.openFolderPicker();
     }
 
-    for (const level of folder.slice(shared)) {
-      if (await this.child(level).isVisible()) {
-        await this.walkInto(level);
-        continue;
-      }
+    await this.chooseFolder(folder.at(-1) ?? 'No folder');
+    await this.waitForFolder(folder);
+  }
 
-      if (!(await naming.isVisible())) await pressed('New folder in here').click();
-      await naming.fill(level);
-      await pressed('Go into it').click();
-      await this.standingIn(level);
-    }
+  folderRow(name: string): Locator {
+    return this.folderDropdown.getByRole('button', { name, exact: true });
+  }
 
-    await pressed('Put it in here').click();
-    await pressed(`Folder ${folder.join(' › ') || 'No folder'}`).waitFor();
+  newFolderButton(parent?: string): Locator {
+    return this.folderDropdown.getByRole('button', {
+      name: parent === undefined ? 'New folder' : `New folder in ${parent}`,
+      exact: true,
+    });
+  }
+
+  async expandFolder(name: string, { ifClosed = false } = {}): Promise<void> {
+    const expand = this.folderDropdown.getByRole('button', { name: `Expand ${name}`, exact: true });
+    if (ifClosed && !(await expand.isVisible())) return;
+    await expand.click();
+  }
+
+  async collapseFolder(name: string): Promise<void> {
+    await this.folderDropdown
+      .getByRole('button', { name: `Collapse ${name}`, exact: true })
+      .click();
+  }
+
+  async chooseFolder(name: string): Promise<void> {
+    await this.folderRow(name).click();
+    await this.folderDropdown.waitFor({ state: 'detached' });
+  }
+
+  async findFolder(words: string): Promise<void> {
+    await this.folderDropdown
+      .getByRole('searchbox', { name: 'Find a folder', exact: true })
+      .fill(words);
+  }
+
+  async startNewFolder(parent?: string): Promise<void> {
+    await this.newFolderButton(parent).click();
+    await this.folderName.waitFor();
+  }
+
+  async addFolder(): Promise<void> {
+    await this.addButton.click();
+    await this.folderDropdown.waitFor({ state: 'detached' });
+  }
+
+  async waitForFolder(folder: readonly string[]): Promise<void> {
+    await this.folderPicker
+      .getByRole('button', { name: `Folder ${folder.join(' › ') || 'No folder'}`, exact: true })
+      .waitFor();
   }
 
   async addTag(tag: string): Promise<void> {
@@ -414,21 +453,6 @@ export class Editor {
     await this.openSizingActions(name);
     await this.menus.getByRole('menuitem', { name: item, exact: true }).click();
     await this.menus.waitFor({ state: 'detached' });
-  }
-
-  private async walkInto(folder: string): Promise<void> {
-    await this.child(folder).click();
-    await this.standingIn(folder);
-  }
-
-  private child(folder: string): Locator {
-    return this.folderPicker
-      .getByRole('listitem')
-      .getByRole('button', { name: folder, exact: true });
-  }
-
-  private async standingIn(folder: string): Promise<void> {
-    await this.crumb.getByRole('button', { name: folder, exact: true, disabled: true }).waitFor();
   }
 
   private async nameGroup(column: Column, from: string, to: string): Promise<void> {
