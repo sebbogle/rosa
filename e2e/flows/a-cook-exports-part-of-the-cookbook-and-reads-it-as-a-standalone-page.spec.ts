@@ -45,11 +45,27 @@ test('a cook exports part of the cookbook and reads it as a standalone page', as
   `);
 
   await exportPicker.open();
-  await exportPicker.sweep();
+  await expect(exportPicker.root, 'with everything ticked, Tick all should have nothing left to do')
+    .toMatchAriaSnapshot(`
+    - region "Choose recipes":
+      - searchbox "Filter recipes"
+      - button "Clear"
+      - button "Tick all" [disabled]
+      - checkbox "Baking" [checked]
+      - button "Export 6"
+  `);
+  await expect(exportPicker.root, 'the panel should not count in words').not.toContainText(
+    'to export',
+  );
+
+  await exportPicker.clear();
+  await expect(exportPicker.clearButton, 'Clear should go once nothing is ticked').toBeHidden();
+  await expect(exportPicker.sweepButton, 'Clear should hand focus to Tick all').toBeFocused();
+  await expect(exportPicker.sweepButton).toBeEnabled();
   await expect(exportPicker.root).toMatchAriaSnapshot(`
     - region "Choose recipes":
-      - button "Export all 6"
-      - text: Nothing to export
+      - searchbox "Filter recipes"
+      - button "Tick all"
       - checkbox "Baking" [checked=false]
       - checkbox "Brunch" [checked=false]
       - checkbox "Shakshuka" [checked=false]
@@ -58,75 +74,70 @@ test('a cook exports part of the cookbook and reads it as a standalone page', as
   `);
 
   await exportPicker.filter('lemon');
-  await expect(exportPicker.root).toMatchAriaSnapshot(`
+  await exportPicker.sweep();
+  await expect(exportPicker.root, 'Tick all should reach only what the filter matches')
+    .toMatchAriaSnapshot(`
     - region "Choose recipes":
       - searchbox "Filter recipes": lemon
-      - button "Export 1 matching"
-      - text: Nothing to export
-      - checkbox "Baking" [checked=false]
-      - checkbox "Tarts" [checked=false]
-      - checkbox "Lemon tart" [checked=false]
+      - button "Clear"
+      - button "Tick all" [disabled]
+      - checkbox "Baking" [checked=mixed]
+      - checkbox "Tarts" [checked]
+      - checkbox "Lemon tart" [checked]
+      - button "Export 1"
   `);
 
   await exportPicker.tick('Baking');
   await expect(
     exportPicker.root,
-    'a folder’s box should mean the whole folder, whatever the search is showing',
+    'a folder’s box should mean the whole folder, whatever the filter is showing',
   ).toMatchAriaSnapshot(`
     - region "Choose recipes":
-      - button "Untick these"
-      - text: 3 recipes to export 2 of them outside the filter
+      - button "Clear"
+      - button "Tick all" [disabled]
       - checkbox "Baking" [checked]
       - checkbox "Bread" [checked]
       - checkbox "Tarts" [checked]
       - checkbox "Lemon tart" [checked]
+      - radiogroup "Format"
+      - status: 2 ticked outside the filter
+      - button "Cancel"
       - button "Export 3"
   `);
 
-  await exportPicker.sweep();
-  await expect(exportPicker.root, 'the sweep should reach only what the search matches')
-    .toMatchAriaSnapshot(`
-    - region "Choose recipes":
-      - button "Export 1 matching"
-      - text: 2 recipes to export 2 of them outside the filter
-      - checkbox "Baking" [checked=mixed]
-      - checkbox "Bread" [checked]
-      - checkbox "Tarts" [checked=false]
-      - checkbox "Lemon tart" [checked=false]
-      - button "Export 2"
-  `);
-
   await exportPicker.clear();
-  await expect(exportPicker.root, 'Clear should reach what is outside the search too')
+  await expect(exportPicker.root, 'Clear should reach what is outside the filter too')
     .toMatchAriaSnapshot(`
     - region "Choose recipes":
-      - button "Export 1 matching"
-      - text: Nothing to export
+      - searchbox "Filter recipes": lemon
+      - button "Tick all"
       - checkbox "Baking" [checked=false]
       - checkbox "Tarts" [checked=false]
       - checkbox "Lemon tart" [checked=false]
       - button "Export" [disabled]
   `);
+  await expect(exportPicker.clearButton).toBeHidden();
 
   await exportPicker.tick('Lemon tart');
   await expect(exportPicker.root).toMatchAriaSnapshot(`
     - region "Choose recipes":
-      - text: 1 recipe to export
       - checkbox "Baking" [checked=mixed]
       - checkbox "Lemon tart" [checked]
+      - button "Export 1"
   `);
 
   await exportPicker.tick('Baking');
   await exportPicker.format('HTML');
   await expect(exportPicker.root).toMatchAriaSnapshot(`
     - region "Choose recipes":
-      - button "Untick these"
-      - text: 3 recipes to export 2 of them outside the filter
+      - button "Tick all" [disabled]
       - checkbox "Baking" [checked]
       - checkbox "Lemon tart" [checked]
       - radiogroup "Format":
         - radio "JSON" [checked=false]
         - radio "HTML" [checked]
+      - status: 2 ticked outside the filter
+      - button "Cancel"
       - button "Export 3"
   `);
 
@@ -158,8 +169,7 @@ test('a cook exports part of the cookbook and reads it as a standalone page', as
   await exportPicker.open();
   await expect(exportPicker.root).toMatchAriaSnapshot(`
     - region "Choose recipes":
-      - button "Untick these"
-      - text: 6 recipes to export
+      - button "Tick all" [disabled]
       - checkbox "Baking" [checked]
       - checkbox "Brunch" [checked]
       - checkbox "Shakshuka" [checked]

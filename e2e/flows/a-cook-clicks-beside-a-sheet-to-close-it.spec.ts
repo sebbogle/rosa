@@ -30,7 +30,7 @@ test(
 
     await editor.openFolderPicker();
     await editor.clickBeside();
-    await expect(editor.crumb).toBeHidden();
+    await expect(editor.folderDropdown).toBeHidden();
     await expect(
       editor.open,
       'a click beside the folder picker should close only it',

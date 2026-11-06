@@ -144,33 +144,36 @@ test(
 
     await pane.edit();
     await editor.openFolderPicker();
-    await expect(editor.folderPicker).toMatchAriaSnapshot(`
-      - navigation "Where this recipe goes":
+    await expect(editor.folderDropdown).toMatchAriaSnapshot(`
+      - dialog "Choose a folder":
         - /children: equal
+        - searchbox "Find a folder"
+        - button "New folder"
         - button "No folder"
-        - button "Bakery" [disabled]
-      - list:
-        - /children: equal
-        - listitem:
-          - button "Tarts"
+        - button "Expand Bakery" [expanded=false]
+        - button "Bakery"
+        - button "New folder in Bakery"
+        - button "Brunch"
+        - button "New folder in Brunch"
     `);
 
-    await editor.walkUpTo('No folder');
-    await expect(editor.folderPicker).toMatchAriaSnapshot(`
-      - navigation "Where this recipe goes":
-        - /children: equal
-        - button "No folder" [disabled]
-      - list:
-        - /children: equal
-        - listitem:
-          - button "Bakery"
-        - listitem:
-          - button "Brunch"
+    await editor.expandFolder('Bakery');
+    await expect(editor.folderDropdown).toMatchAriaSnapshot(`
+      - dialog "Choose a folder":
+        - button "Collapse Bakery" [expanded]
+        - button "Bakery"
+        - button "New folder in Bakery"
+        - button "Tarts"
+        - button "New folder in Tarts"
+        - button "Brunch"
     `);
+    await editor.pressEscape();
+    await expect(editor.folderDropdown).toBeHidden();
     await editor.done();
-    await expect(pane.folder, 'walking the picker should put the recipe nowhere').toHaveText(
-      'Bakery',
-    );
+    await expect(
+      pane.folder,
+      'looking through the picker should put the recipe nowhere',
+    ).toHaveText('Bakery');
 
     const narrower = await contents.width();
     await contents.widen();

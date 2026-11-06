@@ -9,7 +9,6 @@
 .box {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 8px;
   width: 100%;
   padding: 7px 10px;
@@ -21,199 +20,250 @@
   cursor: pointer;
 }
 
-.box:focus {
+.box.open {
+  border-color: var(--accent);
+}
+
+.box:focus-visible {
   outline: var(--focus);
   outline-offset: -1px;
 }
 
+.icon {
+  flex: none;
+  color: var(--dim);
+}
+
 .chosen {
+  flex: 1;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.chevron {
+.above {
+  color: var(--dim);
+}
+
+.here {
+  color: var(--ink);
+}
+
+.here.nowhere {
+  font-style: italic;
+}
+
+.caret {
+  flex: none;
   color: var(--dim);
   font-size: 11px;
 }
 
-.panel {
+.dropdown {
   position: absolute;
   z-index: 1;
+  top: calc(100% + 4px);
   left: 0;
   right: 0;
   min-width: 240px;
-  margin-top: 3px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius);
-  background: var(--paper);
-  box-shadow: var(--popover);
+  box-shadow: var(--menu-shadow);
 }
 
-.crumb {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 2px;
-  padding: 7px 9px;
-  border-bottom: 1px solid var(--line);
-  background: var(--raised);
-  border-radius: var(--radius) var(--radius) 0 0;
+.dropdown:focus {
+  outline: none;
 }
 
-.step {
-  padding: 1px 4px;
-  border: 0;
-  border-radius: var(--radius-small);
-  background: transparent;
-  color: var(--accent);
-  font: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  cursor: pointer;
-}
-
-.step:hover:not(:disabled) {
-  background: var(--hover);
-}
-
-.step:disabled {
-  color: var(--ink);
-  cursor: default;
-}
-
-.tick {
-  color: var(--faint);
-  font-size: 11px;
-}
-
-.levels {
-  max-height: 180px;
-  margin: 0;
-  padding: 4px;
-  overflow: auto;
-  list-style: none;
-}
-
-.level {
-  display: flex;
+.new {
+  display: inline-flex;
+  flex: none;
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  width: 100%;
-  min-height: 40px;
-  padding: 7px 8px;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
   border: 0;
-  border-radius: var(--radius-small);
+  border-radius: var(--radius-small-button);
   background: transparent;
-  font: inherit;
-  font-size: 14px;
-  text-align: left;
+  color: var(--dim);
   cursor: pointer;
 }
 
-.level:hover,
-.level:focus-visible {
+.new:hover {
   background: var(--hover);
+  color: var(--ink);
 }
 
-.folder {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.in {
-  color: var(--faint);
-  font-size: 11px;
-}
-
-.bare {
-  padding: 6px 8px;
-  color: var(--faint);
-  font-size: 12px;
-}
-
-.acts {
+.tree {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 8px;
-  border-top: 1px solid var(--line);
+  max-height: 320px;
 }
 
-.put,
-.new,
-.into {
-  min-height: 40px;
-  padding: 8px 10px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-small-button);
-  background: var(--paper);
-  font: inherit;
-  font-size: 13px;
-  cursor: pointer;
+.item.nowhere {
+  font-style: italic;
 }
 
-.put {
-  border-color: var(--accent);
+.item.picked,
+.item.picked:hover {
   background: var(--accent);
   color: var(--on-accent);
 }
 
-.put:hover {
+.item.picked:focus-visible {
+  outline-offset: 1px;
+}
+
+.add {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-left: 4px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-small);
+  background: transparent;
+  color: var(--dim);
+  cursor: pointer;
+  opacity: 0;
+}
+
+.line:hover .add,
+.line:focus-within .add {
+  opacity: 1;
+}
+
+.add:hover {
+  background: var(--hover);
+  color: var(--ink);
+}
+
+.room {
+  flex: none;
+  width: 26px;
+}
+
+.adder {
+  padding-top: 1px;
+  padding-bottom: 1px;
+  padding-right: 4px;
+}
+
+.naming {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 8px 4px 7px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-small-button);
+  background: var(--paper);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.naming:focus {
+  outline: none;
+}
+
+.make {
+  flex: none;
+  margin-left: 4px;
+  padding: 4px 9px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-small-button);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.make:hover:not(:disabled) {
   border-color: var(--accent-strong);
   background: var(--accent-strong);
 }
 
-.new:hover,
-.into:hover:not(:disabled) {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.into:disabled {
+.make:disabled {
+  border-color: var(--line);
+  background: var(--paper);
   color: var(--faint);
   cursor: default;
 }
 
-.coining {
+.nomatch {
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 6px;
-}
-
-.named {
-  flex: 1;
-  min-width: 0;
   padding: 8px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-small);
-  background: var(--paper);
-  font: inherit;
-  font-size: 14px;
 }
 
-.named:focus {
-  outline: var(--focus);
-  outline-offset: -1px;
-}
-
-.says {
-  min-height: 15px;
+.said {
   margin: 0;
   color: var(--dim);
-  font-size: 11px;
-  line-height: 1.35;
+  font-size: 13px;
 }
 
-:where(.step, .level, .put, .new, .into):focus-visible {
+.create {
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-small-button);
+  background: var(--paper);
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.create:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+:where(.new, .add, .make, .create):focus-visible {
   outline: var(--focus);
   outline-offset: -1px;
 }
+
 @media (width < 1024px), (pointer: coarse) {
   .box {
     padding: 11px 12px;
+    font-size: 16px;
+  }
+
+  .new {
+    width: 36px;
+    height: 36px;
+  }
+
+  .add {
+    width: 32px;
+    height: 32px;
+    opacity: 1;
+  }
+
+  .add svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  .room {
+    width: 36px;
+  }
+
+  .naming {
+    min-height: 44px;
+    padding: 10px 8px 10px 7px;
+    font-size: 16px;
+  }
+
+  .make {
+    min-height: 44px;
+    padding: 4px 14px;
+    font-size: 14px;
+  }
+
+  .said,
+  .create {
     font-size: 16px;
   }
 

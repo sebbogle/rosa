@@ -76,9 +76,8 @@ export class RecipeStore {
     if (at.length === 0) return;
 
     const here = at[at.length - 1];
-    const siblings = childrenOf(untracked(this.recipes), at.slice(0, -1)).filter(
-      (name) => name !== here,
-    );
+    const folders = untracked(this.recipes).map((recipe) => recipe.folder);
+    const siblings = childrenOf(folders, at.slice(0, -1)).filter((name) => name !== here);
 
     const resolution = resolveFolderName(siblings, typed);
     if (resolution === undefined || resolution.name === here) return;

@@ -3,71 +3,175 @@
     #trigger
     type="button"
     class="box"
+    [class.open]="open()"
     [attr.aria-label]="'Folder ' + label()"
     [attr.aria-expanded]="open()"
     (click)="toggle()"
   >
-    <span class="chosen">{{ label() }}</span>
-    <span class="chevron" aria-hidden="true">▾</span>
+    <svg
+      class="icon"
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.5"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path
+        d="M1.75 4.25a1 1 0 0 1 1-1h3.4l1.5 1.5h5.6a1 1 0 0 1 1 1v6.5a1 1 0 0 1-1 1H2.75a1 1 0 0 1-1-1z"
+      />
+    </svg>
+    <span class="chosen">
+      <span class="above">{{ above() }}</span>
+      <span class="here" [class.nowhere]="folder().length === 0">{{ here() }}</span>
+    </span>
+    <span class="caret" aria-hidden="true">▾</span>
   </button>
 
   @if (open()) {
-    <div class="panel">
-      <nav class="crumb" aria-label="Where this recipe goes">
-        <button type="button" class="step" [disabled]="!crumb().length" (click)="upTo(0)">
-          {{ root }}
-        </button>
-
-        @for (step of crumb(); track step.depth) {
-          <span class="tick" aria-hidden="true">›</span>
-          <button
-            type="button"
-            class="step"
-            [disabled]="step.depth === crumb().length"
-            (click)="upTo(step.depth)"
+    <div class="dropdown listbox" role="dialog" aria-label="Choose a folder" tabindex="-1">
+      <div class="search">
+        <span class="magnifier" aria-hidden="true">
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
           >
-            {{ step.name }}
-          </button>
+            <circle cx="7" cy="7" r="4.5" />
+            <path d="M10.5 10.5L14 14" />
+          </svg>
+        </span>
+
+        <input
+          #finder
+          class="find"
+          type="search"
+          autocomplete="off"
+          aria-label="Find a folder"
+          placeholder="Find a folder"
+          [value]="typed()"
+          (input)="search($event)"
+        />
+
+        <button
+          type="button"
+          class="new"
+          aria-label="New folder"
+          title="New folder"
+          [attr.data-adds]="rootKey"
+          (click)="startAdding([])"
+        >
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <path d="M8 3v10M3 8h10" />
+          </svg>
+        </button>
+      </div>
+
+      <div class="tree">
+        @for (row of rows(); track row.key) {
+          @if (row.kind === 'folder') {
+            <div class="line" [style.--depth]="row.depth">
+              @if (row.branches) {
+                <button
+                  type="button"
+                  class="chevron"
+                  [class.open]="row.expanded"
+                  [attr.aria-expanded]="row.expanded"
+                  [attr.aria-label]="(row.expanded ? 'Collapse ' : 'Expand ') + row.name"
+                  (click)="flip(row.segments)"
+                >
+                  <span class="glyph" aria-hidden="true">▸</span>
+                </button>
+              } @else {
+                <span class="spacer" aria-hidden="true"></span>
+              }
+
+              <button
+                type="button"
+                class="item folder"
+                [class.picked]="row.chosen"
+                [attr.aria-current]="row.chosen ? 'true' : null"
+                (click)="choose(row.segments)"
+              >
+                <span class="name">{{ row.name }}</span>
+              </button>
+
+              <button
+                type="button"
+                class="add"
+                [attr.aria-label]="'New folder in ' + row.name"
+                [title]="'New folder in ' + row.name"
+                [attr.data-adds]="row.key"
+                (click)="startAdding(row.segments)"
+              >
+                <svg
+                  width="11"
+                  height="11"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.9"
+                  stroke-linecap="round"
+                  aria-hidden="true"
+                >
+                  <path d="M8 3v10M3 8h10" />
+                </svg>
+              </button>
+            </div>
+          } @else if (row.kind === 'none') {
+            <div class="line">
+              <button
+                type="button"
+                class="item folder nowhere"
+                [class.picked]="row.chosen"
+                [attr.aria-current]="row.chosen ? 'true' : null"
+                (click)="choose([])"
+              >
+                <span class="name">{{ root }}</span>
+              </button>
+              <span class="room" aria-hidden="true"></span>
+            </div>
+          } @else {
+            <div class="line adder" [style.--depth]="row.depth">
+              <span class="spacer" aria-hidden="true"></span>
+              <input
+                #nameField
+                class="naming"
+                type="text"
+                autocomplete="off"
+                aria-label="Folder name"
+                placeholder="Folder name"
+                [value]="adding()?.name ?? ''"
+                (input)="name($event)"
+                (keydown.enter)="add($event)"
+              />
+              <button type="button" class="make" [disabled]="!named()" (click)="add()">Add</button>
+            </div>
+          }
         }
-      </nav>
 
-      <ul class="levels">
-        @for (child of children(); track child) {
-          <li>
-            <button type="button" class="level" (click)="into(child)">
-              <span class="folder">{{ child }}</span>
-              <span class="in" aria-hidden="true">›</span>
-            </button>
-          </li>
-        } @empty {
-          <li class="bare">Nothing in here yet.</li>
-        }
-      </ul>
-
-      <div class="acts">
-        <button #putButton type="button" class="put" (click)="put()">Put it in here</button>
-
-        @if (naming()) {
-          <div class="coining">
-            <input
-              #nameField
-              class="named"
-              type="text"
-              autocomplete="off"
-              aria-label="Name the new folder"
-              placeholder="Folder name"
-              [value]="typed()"
-              (input)="name($event)"
-              (keydown.enter)="coin($event)"
-            />
-            <button type="button" class="into" [disabled]="!sentence()" (click)="coin()">
-              Go into it
+        @if (nothing()) {
+          <div class="nomatch">
+            <p class="said">No folder called {{ quoted() }}.</p>
+            <button type="button" class="create" (click)="createFromFilter()">
+              Create “{{ coined() }}”
             </button>
           </div>
-
-          <p class="says" role="status">{{ sentence() }}</p>
-        } @else {
-          <button type="button" class="new" (click)="startNaming()">New folder in here</button>
         }
       </div>
     </div>

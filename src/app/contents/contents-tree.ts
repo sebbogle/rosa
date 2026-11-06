@@ -28,6 +28,7 @@ export interface FolderRow {
   readonly segments: readonly string[];
   readonly guides: readonly number[];
   readonly name: string;
+  readonly branches: boolean;
   readonly expanded: boolean;
 }
 
@@ -50,22 +51,28 @@ function emptyLevel(): Level {
   return { folders: new Map<string, Level>(), recipes: [] };
 }
 
+function levelAt(root: Level, folder: readonly string[]): Level {
+  let level = root;
+  for (const name of folder) {
+    let child = level.folders.get(name);
+    if (child === undefined) {
+      child = emptyLevel();
+      level.folders.set(name, child);
+    }
+    level = child;
+  }
+  return level;
+}
+
 export function contentsTree(recipes: readonly Recipe[]): readonly ContentsNode[] {
   const root = emptyLevel();
+  for (const recipe of recipes) levelAt(root, recipe.folder).recipes.push(recipe);
+  return nodesOf(root, []);
+}
 
-  for (const recipe of recipes) {
-    let level = root;
-    for (const name of recipe.folder) {
-      let child = level.folders.get(name);
-      if (child === undefined) {
-        child = emptyLevel();
-        level.folders.set(name, child);
-      }
-      level = child;
-    }
-    level.recipes.push(recipe);
-  }
-
+export function folderTree(folders: readonly (readonly string[])[]): readonly ContentsNode[] {
+  const root = emptyLevel();
+  for (const folder of folders) levelAt(root, folder);
   return nodesOf(root, []);
 }
 
@@ -120,6 +127,7 @@ function collect(
       segments: node.segments,
       guides,
       name: node.name,
+      branches: node.children.length > 0,
       expanded,
     });
     if (expanded) collect(node.children, level + 1, [...guides, level], isExpanded, rows);

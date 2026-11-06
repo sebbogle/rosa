@@ -23,9 +23,17 @@ test('a cook presses Escape layer by layer', async ({
   await expect(editor.open, 'Escape should close only the menu').toBeVisible();
 
   await editor.openFolderPicker();
+  await editor.startNewFolder();
   await editor.pressEscape();
-  await expect(editor.crumb).toBeHidden();
+  await expect(editor.folderName).toBeHidden();
+  await expect(
+    editor.folderDropdown,
+    'Escape should close only the new folder field',
+  ).toBeVisible();
+  await editor.pressEscape();
+  await expect(editor.folderDropdown).toBeHidden();
   await expect(editor.open, 'Escape should close only the folder picker').toBeVisible();
+  await expect(editor.folderField, 'closing the picker should hand focus back to it').toBeFocused();
 
   await editor.typeTag('qu');
   await expect(editor.suggestions).toHaveText(['quick']);
