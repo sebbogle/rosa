@@ -5,6 +5,7 @@ import type { Recipe } from '../src/app/recipe/recipe';
 import { Device } from './device';
 import { GoogleDrive } from './google-drive';
 import { recipeFile } from './recipe-file';
+import { Safekeeping } from './safekeeping';
 import { BesideTheGear } from './surfaces/beside-the-gear';
 import { Contents } from './surfaces/contents';
 import { Editor } from './surfaces/editor';
@@ -41,6 +42,7 @@ interface Fixtures {
   editor: Editor;
   exportPicker: ExportPicker;
   googleDrive: GoogleDrive;
+  safekeeping: Safekeeping;
   settings: Settings;
   sides: Sides;
   standalonePages: StandalonePages;
@@ -50,7 +52,7 @@ interface Fixtures {
 export const test = base.extend<Fixtures>({
   watch: async ({ context }, use) => use(keepWatch(context)),
   rosa: [
-    async ({ context, page, watch }, use) => {
+    async ({ context, page, safekeeping: _, watch }, use) => {
       await context.route(
         (url) => GOOGLE.test(url.hostname),
         (route) => route.abort(),
@@ -106,6 +108,12 @@ export const test = base.extend<Fixtures>({
       googleDrive.unrecognised,
       'the fake Google Drive was asked what it does not serve',
     ).toEqual([]);
+  },
+  safekeeping: async ({ context }, use) => {
+    const safekeeping = new Safekeeping();
+    await safekeeping.answer(context);
+
+    await use(safekeeping);
   },
   settings: async ({ page }, use) => use(new Settings(page)),
   sides: async ({ page }, use) => use(new Sides(page)),

@@ -6,7 +6,7 @@ const DOWNSTREAM_RETRY = 6_000;
 test(
   'a cook syncs a new phone with Drive',
   { tag: '@narrow' },
-  async ({ besideTheGear, contents, device, googleDrive, page, settings, sides }) => {
+  async ({ besideTheGear, contents, device, googleDrive, page, safekeeping, settings, sides }) => {
     const { resting } = sides.one;
     const fetching = `
     - /children: equal
@@ -28,6 +28,7 @@ test(
     - paragraph: Recipes are written in rosa, and saved as you go.
     - button "Add new recipe"
   `);
+    expect(safekeeping.asks, 'rosa should not ask the browser before anything arrives').toBe(0);
 
     await settings.open();
     const fetchStalls = googleDrive.stallAtTheLock();
@@ -105,6 +106,11 @@ test(
     - paragraph: Pick a recipe from the Contents.
     - button "Open Contents"
   `);
+    await expect
+      .poll(() => safekeeping.asks, {
+        message: 'a cookbook that arrives from Drive should ask the browser once',
+      })
+      .toBe(1);
 
     await contents.open();
     await expect(contents.root).toMatchAriaSnapshot(`
