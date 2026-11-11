@@ -1,30 +1,20 @@
 import type { BrowserContext } from '@playwright/test';
 
 interface Asking {
-  rosaIsKept(): Promise<boolean>;
   rosaAsksToBeKept(): Promise<boolean>;
 }
 
 export class Safekeeping {
-  private willing = false;
-  private kept = false;
   private count = 0;
 
   get asks(): number {
     return this.count;
   }
 
-  agree(): void {
-    this.willing = true;
-  }
-
   async answer(context: BrowserContext): Promise<void> {
-    await context.exposeFunction('rosaIsKept', () => this.kept);
-
     await context.exposeFunction('rosaAsksToBeKept', () => {
       this.count += 1;
-      this.kept = this.willing;
-      return this.kept;
+      return false;
     });
 
     await context.addInitScript(() => {
@@ -35,7 +25,7 @@ export class Safekeeping {
 
       Object.defineProperty(storage, 'persisted', {
         configurable: true,
-        value: () => asking.rosaIsKept(),
+        value: () => Promise.resolve(false),
       });
 
       Object.defineProperty(storage, 'persist', {
