@@ -27,6 +27,7 @@ test('a cook keeps their cookbook in Drive', async ({
     - region "Google Drive":
       - /children: equal
       - heading "Google Drive" [level=2]
+      - paragraph: Not connected
       - button "Sync with Drive"
   `;
   const inTheHour = (line: string) => `
@@ -79,6 +80,7 @@ test('a cook keeps their cookbook in Drive', async ({
     - region "Google Drive":
       - /children: equal
       - heading "Google Drive" [level=2]
+      - paragraph: Not connected
       - button "Sync with Drive"
       - status: rosa's folder is gone from your Google Drive.
   `;
@@ -104,14 +106,14 @@ test('a cook keeps their cookbook in Drive', async ({
   await settings.open();
   await expect(
     settings.googleDrive,
-    'a device that has not used Drive should be offered the act alone',
+    'a device that has not used Drive should say it is not connected and offer the act alone',
   ).toMatchAriaSnapshot(unused);
   googleDrive.stall();
   await settings.sync();
   await settings.disconnect();
   await expect(
     settings.googleDrive,
-    'Disconnect while the first sync finds the folder should leave the act alone',
+    'Disconnect while the first sync finds the folder should leave Drive not connected, with the act alone',
   ).toMatchAriaSnapshot(unused);
   await settings.sync();
   await settings.done();
@@ -322,9 +324,10 @@ test('a cook keeps their cookbook in Drive', async ({
   await expect(settings.root, 'Escape should cancel only Clear Drive?').toBeVisible();
   await settings.clearDrive();
   await settings.confirmClearDrive();
-  await expect(settings.googleDrive, 'Clear Drive should leave the act alone').toMatchAriaSnapshot(
-    gone,
-  );
+  await expect(
+    settings.googleDrive,
+    'Clear Drive should leave Drive not connected, with the act alone',
+  ).toMatchAriaSnapshot(gone);
   expect(inDrive(), 'Clear Drive should delete rosa’s folder from Google Drive').toBeUndefined();
   const askedOnceCleared = googleDrive.asked;
   await device.goOffline();
@@ -376,9 +379,10 @@ test('a cook keeps their cookbook in Drive', async ({
   await settings.open();
   await googleDrive.fallsQuiet();
   await settings.disconnect();
-  await expect(settings.googleDrive, 'Disconnect should leave the act alone').toMatchAriaSnapshot(
-    unused,
-  );
+  await expect(
+    settings.googleDrive,
+    'Disconnect should leave Drive not connected, with the act alone',
+  ).toMatchAriaSnapshot(unused);
   expect(inDrive(), 'Disconnect should delete nothing in Drive').toEqual([
     'Pea soup',
     'Shakshuka',
@@ -430,11 +434,12 @@ test('a cook keeps their cookbook in Drive', async ({
   await expect(settings.syncButton).toBeEnabled();
   await expect(
     settings.googleDrive,
-    'Clear Drive between hours should leave the act alone, though Settings was closed',
+    'Clear Drive between hours should leave Drive not connected, with the act alone, though Settings was closed',
   ).toMatchAriaSnapshot(`
     - region "Google Drive":
       - /children: equal
       - heading "Google Drive" [level=2]
+      - paragraph: Not connected
       - button "Sync with Drive"
   `);
   expect(

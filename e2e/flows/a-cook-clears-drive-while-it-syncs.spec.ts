@@ -22,6 +22,7 @@ test('a cook clears Drive while it syncs', async ({ cookbook, googleDrive, setti
     - region "Google Drive":
       - /children: equal
       - heading "Google Drive" [level=2]
+      - paragraph: Not connected
       - button "Sync with Drive"
       - status: rosa's folder is gone from your Google Drive.
   `);

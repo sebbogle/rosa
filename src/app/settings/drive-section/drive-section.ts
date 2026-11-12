@@ -5,6 +5,8 @@ import { Ask, Confirm } from '../../shell/confirm/confirm';
 
 const STILL_THERE = 'rosa could not clear Drive, and the folder is still there.';
 
+const NOT_CONNECTED = 'Not connected';
+
 const RECEIPTS: Record<ClearOutcome, string> = {
   gone: "rosa's folder is gone from your Google Drive.",
   'still there': STILL_THERE,
@@ -44,7 +46,7 @@ export class DriveSection {
 
   protected readonly unsent = this.drive.unsent;
 
-  protected readonly address = this.drive.address;
+  protected readonly account = computed(() => (this.used() ? this.drive.address() : NOT_CONNECTED));
 
   protected readonly inert = computed(() => inertOf(this.drive.state(), this.drive.offline()));
 

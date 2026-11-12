@@ -1,5 +1,5 @@
 <div class="row drive">
-  @if (unsent() || speech().line || address()) {
+  @if (unsent() || speech().line || account()) {
     <div class="text">
       @if (unsent()) {
         <p class="line unsent"><span class="marker" aria-hidden="true"></span>{{ unsentWords }}</p>
@@ -7,8 +7,8 @@
         <p class="line">{{ line }}</p>
       }
 
-      @if (address(); as whose) {
-        <p class="address">{{ whose }}</p>
+      @if (account(); as whose) {
+        <p class="account">{{ whose }}</p>
       }
     </div>
   }
