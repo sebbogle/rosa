@@ -8,9 +8,11 @@ import {
 import { DriveService } from '../drive/drive-service';
 import { openCookbook } from './cookbook';
 import { RecipeStore } from './recipe-store';
+import { safekeep } from './safekeeping';
 
 async function start(injector: EnvironmentInjector): Promise<void> {
-  await openCookbook(injector);
+  const book = await openCookbook(injector);
+  safekeep(book.recipes);
 
   const recipes = injector.get(RecipeStore);
   await recipes.ready;
