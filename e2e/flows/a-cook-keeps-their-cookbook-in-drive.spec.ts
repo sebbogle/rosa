@@ -4,7 +4,7 @@ import { expect, test } from '../test';
 
 const UPSTREAM_RETRY = 15_000;
 
-const LEAVES_FOR_THE_HOUR = 10_000;
+const IN_GOOGLE_DRIVE_LEAVES = 10_000;
 
 const ASKS_AT_ONCE = 1_000;
 
@@ -30,7 +30,7 @@ test('a cook keeps their cookbook in Drive', async ({
       - paragraph: Not connected
       - button "Sync with Drive"
   `;
-  const inTheHour = (line: string) => `
+  const tokenValid = (line: string) => `
     - region "Google Drive":
       - /children: equal
       - heading "Google Drive" [level=2]
@@ -59,7 +59,7 @@ test('a cook keeps their cookbook in Drive', async ({
       - button "Disconnect"
       - button "Sync with Drive"
   `;
-  const betweenHours = `
+  const tokenExpired = `
     - region "Google Drive":
       - /children: equal
       - heading "Google Drive" [level=2]
@@ -127,11 +127,11 @@ test('a cook keeps their cookbook in Drive', async ({
   );
   await expect(
     besideTheGear.controls,
-    'nothing should sit beside the gear during the hour',
-  ).toHaveCount(0, { timeout: LEAVES_FOR_THE_HOUR });
+    'nothing should sit beside the gear while the token is valid',
+  ).toHaveCount(0, { timeout: IN_GOOGLE_DRIVE_LEAVES });
   await settings.open();
   await expect(settings.googleDrive).toMatchAriaSnapshot(
-    inTheHour('Your recipes are in Google Drive.'),
+    tokenValid('Your recipes are in Google Drive.'),
   );
   await settings.done();
 
@@ -144,17 +144,17 @@ test('a cook keeps their cookbook in Drive', async ({
     .toEqual(['Shakshuka', 'Soda bread', 'Tarka dal']);
 
   await googleDrive.fallsQuiet();
-  googleDrive.lapse();
+  googleDrive.expireToken();
   await page.reload();
   await settings.open();
   await expect(
     settings.googleDrive,
-    'a lapse after everything has been sent should leave no line',
-  ).toMatchAriaSnapshot(betweenHours);
+    'a token expiring after everything has been sent should leave no line',
+  ).toMatchAriaSnapshot(tokenExpired);
   await settings.done();
   await expect(
     besideTheGear.root,
-    'Sync with Drive should sit beside the gear between hours',
+    'Sync with Drive should sit beside the gear with the token expired',
   ).toMatchAriaSnapshot(offered);
   await expect(besideTheGear.syncButton).toHaveAccessibleDescription('');
 
@@ -171,7 +171,7 @@ test('a cook keeps their cookbook in Drive', async ({
   await settings.open();
   await expect(
     settings.googleDrive,
-    'a recipe edited between hours should be an unsent change',
+    'a recipe edited with the token expired should be an unsent change',
   ).toMatchAriaSnapshot(unsent);
   await settings.done();
   await expect(
@@ -188,7 +188,7 @@ test('a cook keeps their cookbook in Drive', async ({
   await expect(
     settings.googleDrive,
     'a recipe written back to what was sent should not be an unsent change',
-  ).toMatchAriaSnapshot(betweenHours);
+  ).toMatchAriaSnapshot(tokenExpired);
   await settings.done();
   await expect(besideTheGear.syncButton).toHaveAccessibleDescription('');
 
@@ -199,7 +199,7 @@ test('a cook keeps their cookbook in Drive', async ({
   await settings.open();
   await expect(
     settings.googleDrive,
-    'a recipe deleted between hours should be an unsent change',
+    'a recipe deleted with the token expired should be an unsent change',
   ).toMatchAriaSnapshot(unsent);
   await settings.done();
 
@@ -208,9 +208,12 @@ test('a cook keeps their cookbook in Drive', async ({
   await settings.open();
   await expect(
     settings.googleDrive,
-    'a reload between hours should still know what has not gone to Google Drive',
+    'a reload with the token expired should still know what has not gone to Google Drive',
   ).toMatchAriaSnapshot(unsent);
-  expect(googleDrive.asked, 'a reload between hours should not resume the hour').toBe(asked);
+  expect(
+    googleDrive.asked,
+    'a reload with the token expired should make no requests to Google Drive',
+  ).toBe(asked);
 
   await device.goOffline();
   await expect(
@@ -220,7 +223,7 @@ test('a cook keeps their cookbook in Drive', async ({
   await expect(settings.syncButton).toHaveAccessibleDescription('Unable to reach Google Drive.');
   await expect(
     settings.clearButton,
-    'Clear Drive between hours should need Google Drive in reach',
+    'Clear Drive with the token expired should need Google Drive in reach',
   ).toBeDisabled();
   await expect(settings.clearButton).toHaveAccessibleDescription('Unable to reach Google Drive.');
   await expect(settings.googleDrive, 'Unsent changes should stay while the device is offline')
@@ -265,7 +268,7 @@ test('a cook keeps their cookbook in Drive', async ({
   await expect(
     settings.googleDrive,
     'Sync with Drive should take Unsent changes away and be watched while it runs',
-  ).toMatchAriaSnapshot(inTheHour('Syncing with Google Drive.'));
+  ).toMatchAriaSnapshot(tokenValid('Syncing with Google Drive.'));
   await settings.done();
   googleDrive.resume();
   await expect(besideTheGear.root, 'the catch-up should say where it ended').toMatchAriaSnapshot(
@@ -273,20 +276,20 @@ test('a cook keeps their cookbook in Drive', async ({
   );
   expect(
     inDrive(),
-    'the catch-up should end only once Drive no longer holds the recipe deleted between hours',
+    'the catch-up should end only once Drive no longer holds the recipe deleted with the token expired',
   ).toEqual(['Shakshuka', 'Tarka dal']);
   await expect(
     besideTheGear.controls,
-    'Sync with Drive should leave the row for the hour',
-  ).toHaveCount(0, { timeout: LEAVES_FOR_THE_HOUR });
+    'Sync with Drive should leave the row while the token is valid',
+  ).toHaveCount(0, { timeout: IN_GOOGLE_DRIVE_LEAVES });
   await settings.open();
   await expect(settings.googleDrive, 'the catch-up should end in Google Drive').toMatchAriaSnapshot(
-    inTheHour('Your recipes are in Google Drive.'),
+    tokenValid('Your recipes are in Google Drive.'),
   );
   await settings.done();
 
   await googleDrive.fallsQuiet();
-  googleDrive.lapse();
+  googleDrive.expireToken();
   await contents.addNewRecipe();
   await editor.typeTitle('Pea soup');
   await editor.leaveTitle();
@@ -295,7 +298,7 @@ test('a cook keeps their cookbook in Drive', async ({
   await settings.open();
   await expect(
     settings.googleDrive,
-    'a recipe written after the hour should be an unsent change',
+    'a recipe written with the token expired should be an unsent change',
   ).toMatchAriaSnapshot(unsent);
   await settings.disconnect();
   await expect(
@@ -304,12 +307,12 @@ test('a cook keeps their cookbook in Drive', async ({
   ).toMatchAriaSnapshot(unused);
   await settings.sync();
   await expect(settings.googleDrive).toMatchAriaSnapshot(
-    inTheHour('Your recipes are in Google Drive.'),
+    tokenValid('Your recipes are in Google Drive.'),
     { timeout: UPSTREAM_RETRY },
   );
   expect(
     inDrive(),
-    'a catch-up that resumes the hour should end only once the recipe written between hours is in Drive',
+    'a catch-up with a new token should end only once the recipe written with the token expired is in Drive',
   ).toEqual(['Pea soup', 'Shakshuka', 'Tarka dal']);
 
   await googleDrive.fallsQuiet();
@@ -356,7 +359,7 @@ test('a cook keeps their cookbook in Drive', async ({
     })
     .toEqual(['Pea soup', 'Shakshuka', 'Tarka dal']);
   await expect(settings.googleDrive).toMatchAriaSnapshot(
-    inTheHour('Your recipes are in Google Drive.'),
+    tokenValid('Your recipes are in Google Drive.'),
   );
   await settings.done();
 
@@ -367,7 +370,7 @@ test('a cook keeps their cookbook in Drive', async ({
   await contents.open();
   await expect(
     contents.root,
-    'a recipe another device wrote during the hour should arrive once rosa comes back into view',
+    'a recipe another device wrote while the token is valid should arrive once rosa comes back into view',
   ).toMatchAriaSnapshot(`
     - button "Brunch"
     - button "Pea soup"
@@ -403,20 +406,20 @@ test('a cook keeps their cookbook in Drive', async ({
   await settings.open();
   await settings.sync();
   await expect(settings.googleDrive).toMatchAriaSnapshot(
-    inTheHour('Your recipes are in Google Drive.'),
+    tokenValid('Your recipes are in Google Drive.'),
   );
   await settings.done();
 
   const wholeCookbook = ['Pea soup', 'Shakshuka', 'Tarka dal', 'Turkish eggs'];
   await googleDrive.fallsQuiet();
-  googleDrive.lapse();
+  googleDrive.expireToken();
   await page.reload();
   await settings.open();
-  await expect(settings.googleDrive).toMatchAriaSnapshot(betweenHours);
+  await expect(settings.googleDrive).toMatchAriaSnapshot(tokenExpired);
   await settings.clearDrive();
   await expect(
     settings.clearing,
-    'Clear Drive between hours should be confirmed as it is during the hour',
+    'Clear Drive with the token expired should be confirmed as it is with a valid token',
   ).toMatchAriaSnapshot(confirmation);
   googleDrive.stall();
   await settings.beginClearDrive();
@@ -434,7 +437,7 @@ test('a cook keeps their cookbook in Drive', async ({
   await expect(settings.syncButton).toBeEnabled();
   await expect(
     settings.googleDrive,
-    'Clear Drive between hours should leave Drive not connected, with the act alone, though Settings was closed',
+    'Clear Drive with the token expired should leave Drive not connected, with the act alone, though Settings was closed',
   ).toMatchAriaSnapshot(`
     - region "Google Drive":
       - /children: equal
@@ -444,7 +447,7 @@ test('a cook keeps their cookbook in Drive', async ({
   `);
   expect(
     inDrive(),
-    'Clear Drive between hours should delete rosa’s folder from Google Drive',
+    'Clear Drive with the token expired should delete rosa’s folder from Google Drive',
   ).toBeUndefined();
   await settings.done();
 
@@ -453,27 +456,27 @@ test('a cook keeps their cookbook in Drive', async ({
   await expect
     .poll(inDrive, {
       message:
-        'the sync after Clear Drive between hours should fill a new folder with the whole cookbook',
+        'the sync after Clear Drive with the token expired should fill a new folder with the whole cookbook',
       timeout: UPSTREAM_RETRY,
     })
     .toEqual(wholeCookbook);
   await expect(settings.googleDrive).toMatchAriaSnapshot(
-    inTheHour('Your recipes are in Google Drive.'),
+    tokenValid('Your recipes are in Google Drive.'),
   );
   await settings.done();
 
   await googleDrive.fallsQuiet();
-  googleDrive.lapse();
+  googleDrive.expireToken();
   await device.leaveRosa();
   await device.returnToRosa();
   await settings.open();
-  await expect(settings.googleDrive).toMatchAriaSnapshot(betweenHours);
+  await expect(settings.googleDrive).toMatchAriaSnapshot(tokenExpired);
   googleDrive.clearedElsewhere();
   await settings.clearDrive();
   await settings.confirmClearDrive();
   await expect(
     settings.googleDrive,
-    'Clear Drive between hours should find a folder cleared from another device already gone',
+    'Clear Drive with the token expired should find a folder cleared from another device already gone',
   ).toMatchAriaSnapshot(gone);
   await settings.done();
 
@@ -487,12 +490,12 @@ test('a cook keeps their cookbook in Drive', async ({
     })
     .toEqual(wholeCookbook);
   await expect(settings.googleDrive).toMatchAriaSnapshot(
-    inTheHour('Your recipes are in Google Drive.'),
+    tokenValid('Your recipes are in Google Drive.'),
   );
   await settings.done();
 
   await googleDrive.fallsQuiet();
-  googleDrive.lapse();
+  googleDrive.expireToken();
   await device.leaveRosa();
   await device.returnToRosa();
   await expect(besideTheGear.root).toMatchAriaSnapshot(offered);
@@ -525,31 +528,31 @@ test('a cook keeps their cookbook in Drive', async ({
 
   await googleDrive.fallsQuiet();
   await page.clock.fastForward('01:00:00');
-  googleDrive.lapse();
+  googleDrive.expireToken();
   await settings.putThemBack();
   await expect
     .poll(inDrive, {
-      message: 'Put them back in Drive between hours should put the whole cookbook back',
+      message: 'Put them back in Drive with the token expired should put the whole cookbook back',
       timeout: UPSTREAM_RETRY,
     })
     .toEqual(wholeCookbook);
   await expect(
     settings.googleDrive,
-    'Put them back in Drive between hours should run the hour',
-  ).toMatchAriaSnapshot(inTheHour('Your recipes are in Google Drive.'));
+    'Put them back in Drive with the token expired should end with a valid token',
+  ).toMatchAriaSnapshot(tokenValid('Your recipes are in Google Drive.'));
   await settings.done();
 
   await googleDrive.fallsQuiet();
-  googleDrive.lapse();
+  googleDrive.expireToken();
   await page.reload();
   await settings.open();
-  await expect(settings.googleDrive).toMatchAriaSnapshot(betweenHours);
+  await expect(settings.googleDrive).toMatchAriaSnapshot(tokenExpired);
   googleDrive.binnedElsewhere();
   await settings.clearDrive();
   await settings.confirmClearDrive();
   await expect(
     settings.googleDrive,
-    'Clear Drive between hours should leave a folder binned from another device still there',
+    'Clear Drive with the token expired should leave a folder binned from another device still there',
   ).toMatchAriaSnapshot(`
     - region "Google Drive":
       - /children: equal

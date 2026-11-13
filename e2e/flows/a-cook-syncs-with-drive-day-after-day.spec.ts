@@ -39,14 +39,14 @@ test('a cook syncs with Drive day after day', async ({
     written.push(title);
     await expect
       .poll(() => googleDrive.titles(), {
-        message: 'a reload should carry the hour on and send what is written',
+        message: 'a reload should keep the valid token and send what is written',
         timeout: UPSTREAM_RETRY,
       })
       .toEqual([...written].sort());
     await googleDrive.fallsQuiet();
     expect(
       googleDrive.controlFiles(),
-      'carrying the hour on should add nothing beside the recipes in Drive',
+      'keeping the token across reloads should add nothing beside the recipes in Drive',
     ).toEqual(googleDrive.oneOfEach);
   }
 });

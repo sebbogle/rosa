@@ -91,13 +91,13 @@ function anyUnsent(collection: RecipeCollection, identifier: string): Observable
 export function unsentChanges(
   collection: RecipeCollection,
   identifier: string,
-  betweenHours: Signal<boolean>,
+  tokenExpired: Signal<boolean>,
 ): Signal<boolean> {
   const unsent = anyUnsent(collection, identifier);
   const any = signal(false);
 
   effect((onCleanup) => {
-    if (!betweenHours()) return;
+    if (!tokenExpired()) return;
 
     const following = untracked(() => unsent.subscribe((found) => any.set(found)));
     onCleanup(() => {
@@ -106,5 +106,5 @@ export function unsentChanges(
     });
   });
 
-  return computed(() => betweenHours() && any());
+  return computed(() => tokenExpired() && any());
 }

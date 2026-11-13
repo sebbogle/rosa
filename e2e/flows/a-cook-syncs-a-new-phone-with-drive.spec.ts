@@ -40,7 +40,7 @@ test(
     await device.goOffline();
     await expect(
       resting.root,
-      'a first fetch offline during the hour should wait with nothing to press',
+      'a first fetch offline while the token is valid should wait with nothing to press',
     ).toMatchAriaSnapshot(elsewhere());
     await device.comeOnline();
     await expect(
@@ -48,15 +48,15 @@ test(
       'a first fetch should go on fetching once the network returns',
     ).toMatchAriaSnapshot(fetching);
 
-    googleDrive.lapse();
+    googleDrive.expireToken();
     googleDrive.resume();
     await expect(
       resting.root,
-      'a first fetch the hour cut short should leave the cookbook in Google Drive',
+      'a first fetch cut short by the token expiring should leave the cookbook in Google Drive',
     ).toMatchAriaSnapshot(elsewhere('button "Sync with Drive"', 'status'));
     await expect(
       besideTheGear.syncButton,
-      'Sync with Drive should sit beside the gear between hours',
+      'Sync with Drive should sit beside the gear with the token expired',
     ).toBeVisible();
     await expect(
       resting.syncButton,
@@ -76,7 +76,7 @@ test(
     await page.waitForTimeout(DOWNSTREAM_RETRY);
     await expect(
       resting.root,
-      'a first fetch the hour cut short should never count as arrived',
+      'a first fetch cut short by the token expiring should never count as arrived',
     ).toMatchAriaSnapshot(elsewhere('button "Sync with Drive"', 'status'));
 
     await device.goOffline();

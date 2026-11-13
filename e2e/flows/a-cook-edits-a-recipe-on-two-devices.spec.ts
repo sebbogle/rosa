@@ -47,7 +47,7 @@ test('a cook edits a recipe on two devices', async ({
     .toEqual(shakshuka);
   await settings.done();
   await googleDrive.fallsQuiet();
-  googleDrive.lapse();
+  googleDrive.expireToken();
 
   await contents.pick('Shakshuka');
   await pane.edit();
@@ -55,7 +55,7 @@ test('a cook edits a recipe on two devices', async ({
   await editor.done();
   await expect(
     besideTheGear.syncButton,
-    'notes written between hours should be an unsent change',
+    'notes written with the token expired should be an unsent change',
   ).toHaveAccessibleDescription('Unsent changes');
 
   googleDrive.anotherDeviceEdits({ ...shakshuka, method: METHOD_THERE });
@@ -76,7 +76,7 @@ test('a cook edits a recipe on two devices', async ({
   ).toHaveText(METHOD_THERE[0].steps);
 
   await googleDrive.fallsQuiet();
-  googleDrive.lapse();
+  googleDrive.expireToken();
   await pane.edit();
   await editor.typeNotes(NOTES_HERE_AGAIN);
   await editor.done();

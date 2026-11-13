@@ -119,7 +119,7 @@ export class DriveService {
 
   private readonly facts = computed<DriveFacts>(() => ({
     used: this.used(),
-    inTheHour: this.session.token() !== undefined,
+    tokenValid: this.session.token() !== undefined,
     gone: this.gone(),
     broken: this.broke(),
     offline: this.disconnected(),
@@ -143,7 +143,7 @@ export class DriveService {
   readonly unsent = unsentChanges(
     this.collection,
     REPLICATION_IDENTIFIER,
-    computed(() => this.state() === 'between hours'),
+    computed(() => this.state() === 'token expired'),
   );
 
   start(): void {
@@ -209,7 +209,7 @@ export class DriveService {
 
     const held = this.session.token();
     const clearing =
-      held === undefined ? await this.clearBetweenHours() : await this.clearInTheHour(held);
+      held === undefined ? await this.clearWithoutToken() : await this.clearWithToken(held);
     if (clearing === undefined) return 'unanswered';
     if (clearing !== 'gone') return 'still there';
 
@@ -217,7 +217,7 @@ export class DriveService {
     return 'gone';
   }
 
-  private async clearInTheHour(held: DriveToken): Promise<Clearing> {
+  private async clearWithToken(held: DriveToken): Promise<Clearing> {
     if (this.found === undefined) await this.starting;
 
     const found = this.found;
@@ -230,7 +230,7 @@ export class DriveService {
     return clearing;
   }
 
-  private async clearBetweenHours(): Promise<Clearing | undefined> {
+  private async clearWithoutToken(): Promise<Clearing | undefined> {
     const granted = await this.askGoogle('clear');
     if (granted === undefined) return undefined;
 

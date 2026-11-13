@@ -61,7 +61,7 @@ export class DriveSession {
 
   readonly address: Signal<string | undefined> = this.shelvedAddress.asReadonly();
 
-  constructor(private readonly lapsed: () => void) {}
+  constructor(private readonly expired: () => void) {}
 
   get clientId(): string {
     return oauthClientId();
@@ -100,7 +100,7 @@ export class DriveSession {
 
   expire(): void {
     this.forget();
-    this.lapsed();
+    this.expired();
   }
 
   end(): void {

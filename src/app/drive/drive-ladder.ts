@@ -4,7 +4,7 @@ export type DriveState =
   | 'moved renamed'
   | 'moved trashed'
   | 'broken'
-  | 'between hours'
+  | 'token expired'
   | 'offline'
   | 'fetching'
   | 'syncing'
@@ -15,7 +15,7 @@ export type Gone = 'cleared' | 'moved renamed' | 'moved trashed';
 
 export interface DriveFacts {
   readonly used: boolean;
-  readonly inTheHour: boolean;
+  readonly tokenValid: boolean;
   readonly gone: Gone | undefined;
   readonly broken: boolean;
   readonly offline: boolean;
@@ -28,7 +28,7 @@ export function driveStateOf(facts: DriveFacts): DriveState {
   if (!facts.used) return 'unused';
   if (facts.gone !== undefined) return facts.gone;
   if (facts.broken) return 'broken';
-  if (!facts.inTheHour) return 'between hours';
+  if (!facts.tokenValid) return 'token expired';
   if (facts.offline) return 'offline';
   if (!facts.fetched) return 'fetching';
   if (facts.catchingUp) return 'syncing';
@@ -62,7 +62,7 @@ export const SPEECH: Record<DriveState, Speech> = {
   broken: {
     line: 'Something went wrong with Google Drive, so rosa has stopped. Your recipes are safe on this device.',
   },
-  'between hours': {
+  'token expired': {
     button: 'Sync with Drive',
   },
   offline: {

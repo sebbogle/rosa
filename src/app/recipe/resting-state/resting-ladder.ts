@@ -68,7 +68,7 @@ export function restingControlOf(
   const control = RESTING_COPY[state].control;
   if (state !== 'elsewhere') return control;
 
-  return focused && drive === 'between hours' ? control : undefined;
+  return focused && drive === 'token expired' ? control : undefined;
 }
 
 export function restingInertOf(state: RestingCase, offline: boolean): boolean {

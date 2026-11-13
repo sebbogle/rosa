@@ -220,7 +220,7 @@ export class GoogleDrive {
     await context.route(API, (route) => this.serve(route));
   }
 
-  lapse(): void {
+  expireToken(): void {
     this.watch.letThroughFromGoogle(UNAUTHORIZED);
     if (this.current !== undefined) this.accepted.delete(this.current);
   }
