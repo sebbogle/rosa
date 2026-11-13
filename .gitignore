@@ -44,8 +44,5 @@ Thumbs.db
 
 # Agent skills config and local issue tracker
 /AGENTS.md
-/docs/agents/domain.md
-/docs/agents/issue-tracker.md
-/docs/agents/triage-labels.md
-/docs/*
+/docs/agents/*
 /.scratch/
