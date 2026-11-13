@@ -30,7 +30,7 @@ test('a cook deletes a recipe another device changed', async ({
     .toEqual([shakshuka, tarkaDal]);
   await settings.done();
   await googleDrive.fallsQuiet();
-  googleDrive.lapse();
+  googleDrive.expireToken();
 
   await contents.pick('Shakshuka');
   await pane.edit();
@@ -42,7 +42,7 @@ test('a cook deletes a recipe another device changed', async ({
   await editor.done();
   await expect(
     besideTheGear.syncButton,
-    'a delete and an edit between hours should be unsent changes',
+    'a delete and an edit with the token expired should be unsent changes',
   ).toHaveAccessibleDescription('Unsent changes');
 
   googleDrive.anotherDeviceEdits(changedThere);

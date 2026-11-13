@@ -38,7 +38,7 @@ test('a cook puts their recipes back after another device did', async ({
     .toEqual([shakshuka]);
   await settings.done();
   await googleDrive.fallsQuiet();
-  googleDrive.lapse();
+  googleDrive.expireToken();
 
   await contents.pick('Shakshuka');
   await pane.edit();

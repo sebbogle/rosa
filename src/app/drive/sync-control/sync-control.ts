@@ -52,7 +52,7 @@ export class SyncControl {
     if (this.drive.catchingUp()) return 'syncing';
     if (this.sayingInGoogleDrive()) return 'in Google Drive';
     if (this.pointingToSettings()) return 'Google Drive';
-    if (this.drive.state() !== 'between hours') return 'nothing';
+    if (this.drive.state() !== 'token expired') return 'nothing';
     return this.drive.askingToSync() ? 'asking' : 'offered';
   });
 
