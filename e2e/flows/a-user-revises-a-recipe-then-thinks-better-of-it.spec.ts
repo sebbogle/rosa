@@ -1,7 +1,7 @@
 import { shakshuka, turkishEggs } from '../recipes';
 import { expect, test } from '../test';
 
-test('a cook revises a recipe, then thinks better of it', async ({
+test('a user revises a recipe, then thinks better of it', async ({
   page,
   cookbook,
   contents,

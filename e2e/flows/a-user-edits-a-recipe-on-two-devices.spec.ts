@@ -22,7 +22,7 @@ const METHOD_THERE = [
 
 const TAGS_THERE = ['eggs', 'spicy', 'brunch'];
 
-test('a cook edits a recipe on two devices', async ({
+test('a user edits a recipe on two devices', async ({
   besideTheGear,
   cookbook,
   contents,

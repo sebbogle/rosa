@@ -4,7 +4,7 @@ const NOTES = 'Better the next day, warmed through.';
 
 const NO_RECIPES = 'No recipes yet.';
 
-test('a cook presses Escape on an untitled recipe', async ({ page, editor, sides }) => {
+test('a user presses Escape on an untitled recipe', async ({ page, editor, sides }) => {
   const { tabs, resting } = sides.one;
 
   await resting.addNewRecipe();

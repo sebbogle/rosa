@@ -2,7 +2,7 @@ import { shakshuka } from '../recipes';
 import { expect, test } from '../test';
 
 test(
-  'a cook rearranges a recipe on a phone',
+  'a user rearranges a recipe on a phone',
   { tag: '@narrow' },
   async ({ contents, cookbook, editor, sides }) => {
     await cookbook.holds(shakshuka);

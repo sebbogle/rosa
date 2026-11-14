@@ -7,7 +7,7 @@ const NOTES_THERE = 'Better with smoked paprika.';
 
 const NOTES_HERE = 'Temper the spices in ghee, not oil.';
 
-test('a cook deletes a recipe another device changed', async ({
+test('a user deletes a recipe another device changed', async ({
   besideTheGear,
   cookbook,
   contents,

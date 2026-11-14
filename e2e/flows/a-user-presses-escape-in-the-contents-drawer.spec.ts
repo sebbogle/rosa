@@ -3,7 +3,7 @@ import { tabsOutOf } from '../surfaces/layer';
 import { expect, test } from '../test';
 
 test(
-  'a cook presses Escape in the Contents drawer',
+  'a user presses Escape in the Contents drawer',
   { tag: '@narrow' },
   async ({ page, cookbook, contents }) => {
     await cookbook.holds(shakshuka, turkishEggs, focaccia, lemonTart);

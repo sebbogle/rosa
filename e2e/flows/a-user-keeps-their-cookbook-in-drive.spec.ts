@@ -8,7 +8,7 @@ const IN_GOOGLE_DRIVE_LEAVES = 10_000;
 
 const ASKS_AT_ONCE = 1_000;
 
-test('a cook keeps their cookbook in Drive', async ({
+test('a user keeps their cookbook in Drive', async ({
   besideTheGear,
   cookbook,
   contents,
@@ -503,7 +503,7 @@ test('a cook keeps their cookbook in Drive', async ({
   await besideTheGear.syncWithDrive();
   await expect(
     besideTheGear.root,
-    'a sync in the same session that finds Drive cleared from another device should send the cook to Google Drive',
+    'a sync in the same session that finds Drive cleared from another device should send the user to Google Drive',
   ).toMatchAriaSnapshot(`
     - /children: equal
     - button "Google Drive"

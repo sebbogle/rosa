@@ -1,17 +1,17 @@
 # Rosa
 
-Rosa is a cookbook that runs wholly in the browser and can keep one more copy of itself in the cook's own Google Drive. These are the words its docs, code and tickets use. The [architecture docs](architecture/README.md) have an index that leads to the page where each thing is described.
+This is an overview of the terminology that Rosa uses. The [architecture docs](architecture/README.md) have an index that leads to the page where each thing is described.
 
 ## Language
 
 ### The cookbook
 
-**Cook**:
+**User**:
 The person using Rosa.
-_Avoid_: user
+_Avoid_: cook
 
 **Cookbook**:
-All the recipes a cook keeps in Rosa. Each device holds its own copy, and Drive holds one more once the cook syncs.
+All the recipes a user keeps in Rosa. Each device holds its own copy, and Drive holds one more once the user syncs.
 _Avoid_: database, library, collection
 
 **Device**:
@@ -57,7 +57,7 @@ One of at most two columns that show recipes next to each other. Each side has i
 _Avoid_: pane, column, split
 
 **Focused side**:
-The side the cook is working in. The URL describes it and the keyboard acts on it.
+The side the user is working in. The URL describes it and the keyboard acts on it.
 _Avoid_: active side
 
 **Active tab**:
@@ -65,11 +65,11 @@ The tab a side is showing. Each side has at most one.
 _Avoid_: focused tab, current tab
 
 **Kept tab**:
-A tab that stays open until the cook closes it.
+A tab that stays open until the user closes it.
 _Avoid_: pinned tab
 
 **Preview tab**:
-A side's one temporary tab. The next recipe the cook opens replaces it, unless the cook keeps it first.
+A side's one temporary tab. The next recipe the user opens replaces it, unless the user keeps it first.
 _Avoid_: temporary tab
 
 **Resting state**:
@@ -83,7 +83,7 @@ _Avoid_: state machine
 ### Editing
 
 **Editor session**:
-One spell of editing a recipe, from opening the editor to closing it. It remembers the recipe as it was on opening, so the cook can revert, and it is the only place a new recipe exists until that recipe is stored.
+One spell of editing a recipe, from opening the editor to closing it. It remembers the recipe as it was on opening, so the user can revert, and it is the only place a new recipe exists until that recipe is stored.
 _Avoid_: draft, edit mode
 
 ### Drive
@@ -93,7 +93,7 @@ Bringing a device's copy of the cookbook and Drive's copy into agreement, in bot
 _Avoid_: replication, backup, upload
 
 **Drive folder**:
-The folder named `rosa` in the cook's Google Drive, which holds Drive's copy of the cookbook. Rosa creates it and can see nothing else in the cook's Drive.
+The folder named `rosa` in the user's Google Drive, which holds Drive's copy of the cookbook. Rosa creates it and can see nothing else in the user's Drive.
 _Avoid_: folder (on its own), remote
 
 **Drive state**:
@@ -101,7 +101,7 @@ Where a device stands with Drive at this moment: one of eleven states, from neve
 _Avoid_: sync status, connection state
 
 **Auth token**:
-What Google gives a device when the cook signs in, letting it reach the Drive folder. It expires after about an hour, and a device syncs only while it holds a valid one.
+What Google gives a device when the user signs in, letting it reach the Drive folder. It expires after about an hour, and a device syncs only while it holds a valid one.
 _Avoid_: the hour, between hours, session, permission
 
 **First fetch**:

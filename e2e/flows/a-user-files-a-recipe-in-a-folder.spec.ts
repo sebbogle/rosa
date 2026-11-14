@@ -1,7 +1,7 @@
 import { focaccia, lemonTart, shakshuka, sodaBread, turkishEggs } from '../recipes';
 import { expect, test } from '../test';
 
-test('a cook files a recipe in a folder', async ({ cookbook, contents, editor, sides, page }) => {
+test('a user files a recipe in a folder', async ({ cookbook, contents, editor, sides, page }) => {
   await cookbook.holds(shakshuka, turkishEggs, focaccia, sodaBread, lemonTart);
   const { pane } = sides.one;
 
@@ -118,7 +118,7 @@ test('a cook files a recipe in a folder', async ({ cookbook, contents, editor, s
 });
 
 test(
-  "a cook sees a folder's new-folder button without hovering",
+  "a user sees a folder's new-folder button without hovering",
   { tag: '@narrow' },
   async ({ cookbook, contents, editor, sides }) => {
     await cookbook.holds(shakshuka, focaccia);

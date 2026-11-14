@@ -16,7 +16,7 @@ const METHOD_THERE = [
   },
 ];
 
-test('a cook puts their recipes back after another device did', async ({
+test('a user puts their recipes back after another device did', async ({
   besideTheGear,
   cookbook,
   contents,
@@ -63,7 +63,7 @@ test('a cook puts their recipes back after another device did', async ({
       - button "Disconnect"
       - button "Put them back in Drive"
   `);
-  expect(inDrive(), 'nothing should be sent before the cook puts them back').toEqual([
+  expect(inDrive(), 'nothing should be sent before the user puts them back').toEqual([
     { ...shakshuka, method: METHOD_THERE },
   ]);
 

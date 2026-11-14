@@ -4,7 +4,7 @@ const TITLE = 'Focaccia';
 
 const NOTES = 'Better the next day, warmed through.';
 
-test('a cook presses Escape as a new recipe enters the cookbook', async ({
+test('a user presses Escape as a new recipe enters the cookbook', async ({
   page,
   editor,
   sides,

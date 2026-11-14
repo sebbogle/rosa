@@ -4,7 +4,7 @@ import { expect, test } from '../test';
 const DOWNSTREAM_RETRY = 6_000;
 
 test(
-  'a cook syncs a new phone with Drive',
+  'a user syncs a new phone with Drive',
   { tag: '@narrow' },
   async ({ besideTheGear, contents, device, googleDrive, page, safekeeping, settings, sides }) => {
     const { resting } = sides.one;

@@ -24,13 +24,13 @@ stateDiagram-v2
 - **Opening**: a click on a recipe in the Contents opens it in a preview tab. A double click, a click with Ctrl or Cmd held, or a middle click opens it in a kept tab.
 - **Keeping**: double-clicking a preview tab, or dragging it, makes it a kept tab. A kept tab never goes back to being a preview tab.
 - **Replacing**: a side's preview tab gives way to the next recipe that opens in a preview tab in that side.
-- **Closing**: a tab closes when the cook closes it, and when its recipe leaves the cookbook.
+- **Closing**: a tab closes when the user closes it, and when its recipe leaves the cookbook.
 
-The open set starts with one side and never has more than two. The cook makes the second by dragging a tab to the left or right of the first, which a side allows once it holds more than one tab. With two sides, dragging a tab onto the other side moves it there, and a side whose last tab is closed or moved away goes too.
+The open set starts with one side and never has more than two. The user makes the second by dragging a tab to the left or right of the first, which a side allows once it holds more than one tab. With two sides, dragging a tab onto the other side moves it there, and a side whose last tab is closed or moved away goes too.
 
 One side is the focused side. Pressing in a side, or on its tabs, focuses it. A recipe opened from the Contents opens in the focused side. If it is already open in the other side, that side shows it and becomes the focused side.
 
-The open set also holds which sizing each open recipe shows. Until the cook chooses one, a recipe shows its first sizing.
+The open set also holds which sizing each open recipe shows. Until the user chooses one, a recipe shows its first sizing.
 
 Two things outlast a reload: the `rosa.sides` value in localStorage, and the URL. The URL is `/recipe/` followed by the id of the recipe the focused side shows, or `/` when that side shows no recipe.
 
@@ -43,7 +43,7 @@ Two things outlast a reload: the `rosa.sides` value in localStorage, and the URL
 | The recipe the other side shows                             | Comes back, from localStorage, if it is in a kept tab. If not, that side shows its first kept tab. |
 | Every other preview tab, and the sizing a preview tab shows | Do not come back.                                                                                  |
 
-When the cook goes back or forward in the browser's history, the open set follows the URL.
+When the user goes back or forward in the browser's history, the open set follows the URL.
 
 ## Resting state
 
@@ -55,7 +55,7 @@ The resting state is what a side shows when it has no recipe to show: a line say
 | 2   | `elsewhere`    | The device syncs and its first fetch has not finished, but is not under way now.                    |
 | 3   | `not-found`    | The recipe the side was showing has left the cookbook, or the URL named a recipe that is not in it. |
 | 4   | `no-recipes`   | The cookbook is empty.                                                                              |
-| 5   | `no-match`     | The cook is searching the Contents and nothing matches.                                             |
+| 5   | `no-match`     | The user is searching the Contents and nothing matches.                                             |
 | 6   | `nothing-open` | None of the above. The side has no active tab.                                                      |
 
 Two states offer a control. `no-recipes` offers "Add new recipe". `elsewhere` offers "Sync with Drive", in the focused side only and only when Drive state is `token expired`.
@@ -68,19 +68,19 @@ Nothing is drawn until the device's copy of the cookbook is open and its recipes
 
 ```mermaid
 sequenceDiagram
-    actor Cook
+    actor User
     participant Rosa
     participant Storage as localStorage
     participant Copy as The device's copy
 
-    Cook->>Rosa: opens a URL
+    User->>Rosa: opens a URL
     Rosa->>Copy: open
     Copy-->>Rosa: every recipe
     Rosa->>Storage: read rosa.sides
     Storage-->>Rosa: kept tabs, their sizings, the focused side
     Note over Rosa: closes tabs whose recipes<br/>have left the cookbook
     Note over Rosa: opens the recipe the URL names<br/>in the focused side
-    Rosa-->>Cook: the sides and their tabs
+    Rosa-->>User: the sides and their tabs
 ```
 
 - **A recipe that is not in the cookbook**: when the URL names one, the focused side shows `not-found` and the URL becomes `/`.

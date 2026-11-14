@@ -1,8 +1,8 @@
 # Rosa architecture
 
-Rosa is a cookbook that runs wholly in the browser. A cook writes recipes, files them in folders and reads them, one or two at a time. The recipes are stored on the device, and nothing runs on a server: a static host hands the browser Rosa's files and that is all. Once those files have arrived, Rosa opens and works offline.
+Rosa is a cookbook that runs wholly in the browser. A user writes recipes, files them in folders and reads them, one or two at a time. The recipes are stored on the device, and nothing runs on a server: a static host hands the browser Rosa's files and that is all. Once those files have arrived, Rosa opens and works offline.
 
-A cook can also keep one more copy of the cookbook in their own Google Drive and sync each device with it. Sync is optional and set up per device. A device that never syncs works the same in every other way.
+A user can also keep one more copy of the cookbook in their own Google Drive and sync each device with it. Sync is optional and set up per device. A device that never syncs works the same in every other way.
 
 The pages use the words defined in the [glossary](../GLOSSARY.md).
 

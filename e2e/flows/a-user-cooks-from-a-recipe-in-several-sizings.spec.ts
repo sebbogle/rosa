@@ -1,7 +1,7 @@
 import { ragu, tarkaDal } from '../recipes';
 import { expect, test } from '../test';
 
-test('a cook cooks from a recipe in several sizings', async ({
+test('a user cooks from a recipe in several sizings', async ({
   page,
   cookbook,
   contents,

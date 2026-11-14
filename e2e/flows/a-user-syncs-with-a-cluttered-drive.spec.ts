@@ -5,7 +5,7 @@ const PAST_A_PAGE = 350;
 
 const UPSTREAM_RETRY = 15_000;
 
-test('a cook syncs with a cluttered Drive', async ({ contents, googleDrive, settings }) => {
+test('a user syncs with a cluttered Drive', async ({ contents, googleDrive, settings }) => {
   test.slow();
   googleDrive.anotherDeviceWrites(shakshuka);
   googleDrive.pileUp(PAST_A_PAGE);

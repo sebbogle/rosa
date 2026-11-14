@@ -3,7 +3,7 @@ import { expect, test } from '../test';
 
 const UPSTREAM_RETRY = 15_000;
 
-test('a cook syncs with Drive day after day', async ({
+test('a user syncs with Drive day after day', async ({
   cookbook,
   contents,
   editor,

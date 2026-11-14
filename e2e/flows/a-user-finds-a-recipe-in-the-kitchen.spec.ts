@@ -2,7 +2,7 @@ import { focaccia, shakshuka, tarkaDal, turkishEggs } from '../recipes';
 import { expect, test } from '../test';
 
 test(
-  'a cook finds a recipe in the kitchen',
+  'a user finds a recipe in the kitchen',
   { tag: '@narrow' },
   async ({ page, cookbook, contents, sides }) => {
     await cookbook.holds(shakshuka, turkishEggs, focaccia, tarkaDal);

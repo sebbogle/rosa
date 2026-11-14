@@ -3,7 +3,7 @@ import { lemonTart, shakshuka, turkishEggs } from '../recipes';
 import { expect, test } from '../test';
 
 test(
-  'a cook clicks beside a sheet to close it',
+  'a user clicks beside a sheet to close it',
   { tag: '@wide' },
   async ({ cookbook, contents, editor, settings, sides }) => {
     await cookbook.holds(shakshuka, turkishEggs);

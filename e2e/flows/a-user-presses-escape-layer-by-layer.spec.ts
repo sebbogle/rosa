@@ -4,7 +4,7 @@ import { expect, test } from '../test';
 
 const NOTES = 'Better the next day, warmed through.';
 
-test('a cook presses Escape layer by layer', async ({
+test('a user presses Escape layer by layer', async ({
   page,
   cookbook,
   contents,

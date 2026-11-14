@@ -13,7 +13,7 @@ const FOUR_BOWLS = [
 
 const SIX_BOWLS = ['375 g red lentils, rinsed', ...FOUR_BOWLS.slice(1)];
 
-test('a cook writes a recipe in a second sizing', async ({ cookbook, contents, editor, sides }) => {
+test('a user writes a recipe in a second sizing', async ({ cookbook, contents, editor, sides }) => {
   await cookbook.holds(tarkaDal);
   const { pane } = sides.one;
 

@@ -1,6 +1,6 @@
 # Drive
 
-A cook can keep one more copy of the cookbook in their own Google Drive and sync each device with it. Sync is optional and set up per device. A device that never syncs works the same in every other way.
+A user can keep one more copy of the cookbook in their own Google Drive and sync each device with it. Sync is optional and set up per device. A device that never syncs works the same in every other way.
 
 This page covers where a device stands with Drive at any moment, and the three flows that involve Drive. The services behind sync are on [External dependencies](dependencies.md), and what the Drive folder holds is on [Data model](data-model.md).
 
@@ -10,7 +10,7 @@ Drive state says where one device stands with Drive right now. It is a ladder: R
 
 | #   | State           | Holds when                                                                       |
 | --- | --------------- | -------------------------------------------------------------------------------- |
-| 1   | `unused`        | The device has never synced, or the cook disconnected it.                        |
+| 1   | `unused`        | The device has never synced, or the user disconnected it.                        |
 | 2   | `cleared`       | The Drive folder this device synced with has been deleted.                       |
 | 3   | `moved renamed` | That Drive folder has been moved or renamed, and Rosa has made a new, empty one. |
 | 4   | `moved trashed` | That Drive folder is in Drive's bin, and Rosa has made a new, empty one.         |
@@ -18,36 +18,36 @@ Drive state says where one device stands with Drive right now. It is a ladder: R
 | 6   | `token expired` | The device's auth token has expired.                                             |
 | 7   | `offline`       | The device has no network.                                                       |
 | 8   | `fetching`      | The first fetch has not finished.                                                |
-| 9   | `syncing`       | The cook has just pressed "Sync with Drive" and the device is catching up.       |
+| 9   | `syncing`       | The user has just pressed "Sync with Drive" and the device is catching up.       |
 | 10  | `pending`       | The device and Drive have been out of step for more than 30 seconds.             |
 | 11  | `up to date`    | None of the above. The device and Drive agree.                                   |
 
 In states 2 to 5 sync has stopped. Only `cleared` offers a way on, which is "Put them back in Drive".
 
-The Google Drive section of Settings shows the state. The sync control beside the Settings button appears in `token expired`, where it offers "Sync with Drive", and when the cook has asked for a sync, to show it running and how it ended.
+The Google Drive section of Settings shows the state. The sync control beside the Settings button appears in `token expired`, where it offers "Sync with Drive", and when the user has asked for a sync, to show it running and how it ended.
 
 ### The auth token
 
-Syncing needs a Google auth token. A token expires after about an hour, and Rosa never gets a new one by itself: it asks Google when the cook presses "Sync with Drive". So a device that syncs alternates between two conditions:
+Syncing needs a Google auth token. A token expires after about an hour, and Rosa never gets a new one by itself: it asks Google when the user presses "Sync with Drive". So a device that syncs alternates between two conditions:
 
 - **Valid auth token**: the device syncs without being asked. States 7 to 11 occur only here.
-- **Auth token expired**: changes are stored on the device as usual and wait there, and the sync control marks that some are unsent. Syncing starts again when the cook presses "Sync with Drive".
+- **Auth token expired**: changes are stored on the device as usual and wait there, and the sync control marks that some are unsent. Syncing starts again when the user presses "Sync with Drive".
 
 ## Syncing with Drive
 
 ```mermaid
 sequenceDiagram
-    actor Cook
+    actor User
     participant Device
     participant Google as Google sign-in
     participant Drive as Drive folder
 
-    Cook->>Device: Sync with Drive
+    User->>Device: Sync with Drive
     Device->>Google: ask for an auth token
     Google-->>Device: token, expires ~1 hour
 
     rect rgba(128, 128, 128, 0.15)
-        Note over Cook,Drive: Has valid auth token
+        Note over User,Drive: Has valid auth token
         Device->>Drive: find the Drive folder, or create it
         Drive-->>Device: first fetch (first time only)
         Device->>Drive: each change as it is stored
@@ -55,17 +55,17 @@ sequenceDiagram
     end
 
     rect rgba(128, 128, 128, 0.15)
-        Note over Cook,Drive: Auth token expired
-        Cook->>Device: edits a recipe
+        Note over User,Drive: Auth token expired
+        User->>Device: edits a recipe
         Note over Device: the change waits
     end
 
-    Cook->>Device: Sync with Drive
+    User->>Device: Sync with Drive
     Device->>Google: ask for an auth token
     Google-->>Device: token, expires ~1 hour
 
     rect rgba(128, 128, 128, 0.15)
-        Note over Cook,Drive: Has valid auth token
+        Note over User,Drive: Has valid auth token
         Device->>Drive: the changes that waited
         Drive-->>Device: changes from other devices
     end
@@ -73,7 +73,7 @@ sequenceDiagram
 
 - **First fetch** happens once per device. Until it finishes, the device may not hold every recipe.
 - **Arriving recipes** pass the gate, which is lenient with Drive. See [Data model](data-model.md).
-- **Resuming**: the device holds the token in the browser, so while it is valid sync picks up by itself after a reload, when the network returns, and when the cook comes back to the browser tab.
+- **Resuming**: the device holds the token in the browser, so while it is valid sync picks up by itself after a reload, when the network returns, and when the user comes back to the browser tab.
 - **Disconnect** returns the device to `unused`. The device's copy and Drive's copy both stay as they are.
 
 ## Crossed edits between two devices
@@ -106,12 +106,12 @@ Clear Drive removes Drive's copy of the cookbook and nothing else. Every device 
 
 ```mermaid
 sequenceDiagram
-    actor Cook
+    actor User
     participant A as Device A
     participant Drive as Google Drive
     participant B as Device B
 
-    Cook->>A: Clear Drive
+    User->>A: Clear Drive
     A->>Drive: delete the Drive folder for good
     Note over A: forgets the Drive folder<br/>Drive state: unused
 
@@ -120,7 +120,7 @@ sequenceDiagram
     Drive-->>B: a new, empty Drive folder, and the old one is gone
     Note over B: sync stops<br/>Drive state: cleared
 
-    Cook->>B: Put them back in Drive
+    User->>B: Put them back in Drive
     Note over B: forgets every last-agreed state
     B->>Drive: every recipe on B
 ```

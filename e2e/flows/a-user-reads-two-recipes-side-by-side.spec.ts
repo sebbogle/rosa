@@ -2,7 +2,7 @@ import { focaccia, ragu, shakshuka, tarkaDal, turkishEggs } from '../recipes';
 import { expect, test } from '../test';
 
 test(
-  'a cook reads two recipes side by side',
+  'a user reads two recipes side by side',
   { tag: '@wide' },
   async ({ page, cookbook, contents, sides, window }) => {
     await cookbook.holds(shakshuka, turkishEggs, focaccia, tarkaDal, ragu);

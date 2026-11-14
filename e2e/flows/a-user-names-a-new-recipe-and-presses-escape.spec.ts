@@ -2,7 +2,7 @@ import { expect, test } from '../test';
 
 const TITLE = 'Focaccia';
 
-test('a cook names a new recipe and presses Escape', async ({ page, contents, editor, sides }) => {
+test('a user names a new recipe and presses Escape', async ({ page, contents, editor, sides }) => {
   const { tabs, pane, resting } = sides.one;
 
   await resting.addNewRecipe();

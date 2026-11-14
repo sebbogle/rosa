@@ -9,7 +9,7 @@ const QUICK = [
   { name: 'Turkish eggs' },
 ];
 
-test('a cook finds the same recipes wherever they search', async ({
+test('a user finds the same recipes wherever they search', async ({
   cookbook,
   contents,
   exportPicker,

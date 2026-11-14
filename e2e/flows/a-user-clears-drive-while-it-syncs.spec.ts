@@ -1,7 +1,7 @@
 import { shakshuka, tarkaDal } from '../recipes';
 import { expect, test } from '../test';
 
-test('a cook clears Drive while it syncs', async ({ cookbook, googleDrive, settings }) => {
+test('a user clears Drive while it syncs', async ({ cookbook, googleDrive, settings }) => {
   await cookbook.holds(shakshuka, tarkaDal);
 
   await settings.open();

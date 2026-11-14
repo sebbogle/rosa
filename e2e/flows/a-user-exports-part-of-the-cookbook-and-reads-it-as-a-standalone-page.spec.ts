@@ -2,7 +2,7 @@ import { focaccia, lemonTart, shakshuka, sodaBread, tarkaDal, turkishEggs } from
 import { expect, test } from '../test';
 import { today } from '../today';
 
-test('a cook exports part of the cookbook and reads it as a standalone page', async ({
+test('a user exports part of the cookbook and reads it as a standalone page', async ({
   page,
   cookbook,
   contents,
@@ -34,7 +34,7 @@ test('a cook exports part of the cookbook and reads it as a standalone page', as
   );
   await expect(
     pane.sizingShown,
-    'the cook should be reading Soda bread in its second sizing as they export',
+    'the user should be reading Soda bread in its second sizing as they export',
   ).toHaveAccessibleName('Two loaves');
 
   await settings.open();
@@ -202,7 +202,7 @@ test('a cook exports part of the cookbook and reads it as a standalone page', as
   await standalone.contents.pick('Soda bread', ['Baking', 'Bread']);
   await expect(
     standalone.pane.sizingShown,
-    'a standalone page should open on the first sizing, whichever the cook was reading',
+    'a standalone page should open on the first sizing, whichever the user was reading',
   ).toHaveAccessibleName('One loaf');
   await expect(standalone.pane.ingredients.quantities).toHaveText(ONE_LOAF);
   await standalone.pane.chooseSizing('Two loaves');

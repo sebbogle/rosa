@@ -88,7 +88,7 @@ Apart from its copy of the cookbook, a device holds ten small values in the brow
 | Key                  | Holds                                                                            |
 | -------------------- | -------------------------------------------------------------------------------- |
 | `rosa.sides`         | The part of the open set that outlasts a reload.                                 |
-| `rosa.appearance`    | The appearance the cook chose.                                                   |
+| `rosa.appearance`    | The appearance the user chose.                                                   |
 | `rosa.divider`       | Where the divider between two sides sits.                                        |
 | `rosa.sidebar-width` | How wide the Contents is.                                                        |
 | `rosa.keep-refused`  | When the browser last declined to guard the device's copy against being cleared. |

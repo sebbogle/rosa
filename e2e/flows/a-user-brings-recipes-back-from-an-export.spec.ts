@@ -2,7 +2,7 @@ import { focaccia, shakshuka, tarkaDal, turkishEggs } from '../recipes';
 import { expect, test } from '../test';
 import { today } from '../today';
 
-test('a cook brings recipes back from an export', async ({
+test('a user brings recipes back from an export', async ({
   page,
   cookbook,
   contents,

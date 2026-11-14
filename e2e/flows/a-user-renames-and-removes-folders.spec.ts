@@ -2,7 +2,7 @@ import { focaccia, lemonTart, shakshuka, tarkaDal, turkishEggs } from '../recipe
 import { expect, test } from '../test';
 
 test(
-  'a cook renames and removes folders',
+  'a user renames and removes folders',
   { tag: '@wide' },
   async ({ page, cookbook, contents, editor, sides }) => {
     await cookbook.holds(shakshuka, turkishEggs, focaccia, lemonTart, tarkaDal);

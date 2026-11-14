@@ -5,7 +5,7 @@ const NOTES = 'Good cold, straight from the pan.';
 
 const STEP = 'Make four wells, crack in the eggs, cover and cook until the whites set.';
 
-test('a cook presses Escape mid-sentence', async ({ page, cookbook, contents, editor, sides }) => {
+test('a user presses Escape mid-sentence', async ({ page, cookbook, contents, editor, sides }) => {
   await cookbook.holds(shakshuka);
   const { pane } = sides.one;
 

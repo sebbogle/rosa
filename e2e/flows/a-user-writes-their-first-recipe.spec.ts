@@ -1,7 +1,7 @@
 import { focaccia } from '../recipes';
 import { expect, test } from '../test';
 
-test('a cook writes their first recipe', async ({ page, contents, editor, sides }) => {
+test('a user writes their first recipe', async ({ page, contents, editor, sides }) => {
   const { tabs, pane, resting } = sides.one;
 
   await expect(resting.line).toHaveText('No recipes yet.');
