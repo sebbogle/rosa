@@ -15,6 +15,7 @@ import { SettingsSheet } from './settings/settings-sheet';
 import { dividerEdge } from './shell/divider/divider';
 import { Grip } from './shell/grip/grip';
 import { clicks } from './shell/press';
+import { Update } from './shell/update';
 
 const DIGITS = /^Digit([1-9])$/;
 
@@ -63,6 +64,8 @@ export class App {
     this.tabs.sideOf(drag.data.id) !== drop.data;
 
   protected readonly drawerOpen = this.drawer.open;
+
+  protected readonly updateWaiting = inject(Update).waiting;
 
   protected toggleDrawer(): void {
     this.drawer.toggle();

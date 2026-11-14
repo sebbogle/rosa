@@ -17,6 +17,31 @@
   );
 }
 
+.chrome .contents {
+  position: relative;
+}
+
+.contents .marker {
+  position: absolute;
+  top: 12px;
+  right: 9px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--raised);
+}
+
+.announced {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .chrome .settings {
   min-height: 33px;
   border-left: 1px solid var(--line);
