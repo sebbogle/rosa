@@ -62,9 +62,7 @@ test(
     `);
 
     await contents.pick('Tarka dal');
-    await expect(tabs, 'the next recipe picked should take the preview').toHaveText([
-      'Tarka dal',
-    ]);
+    await expect(tabs, 'the next recipe picked should take the preview').toHaveText(['Tarka dal']);
     await expect(pane.title).toHaveText('Tarka dal');
     await expect(page).toHaveURL(`/recipe/${tarkaDal.id}`);
 
@@ -76,9 +74,7 @@ test(
 
     await page.goto('/');
     await expect(tabs, 'a kept tab should come back').toHaveText(['Tarka dal']);
-    await expect(resting.line, 'a load at / should leave nothing open').toHaveText(
-      'Nothing open.',
-    );
+    await expect(resting.line, 'a load at / should leave nothing open').toHaveText('Nothing open.');
     await expect(page).toHaveURL('/');
   },
 );
