@@ -8,27 +8,29 @@ This page covers the shape of a recipe and the rules it follows, where copies of
 
 ```mermaid
 erDiagram
-    RECIPE ||--|{ SIZING : has
-    RECIPE ||--o{ INGREDIENT_GROUP : has
-    INGREDIENT_GROUP ||--o{ INGREDIENT : holds
-    INGREDIENT ||--|{ QUANTITY : "has one per sizing"
+    RECIPE ||--|{ SIZING : sizings
+    RECIPE ||--o{ INGREDIENT_GROUP : ingredients
+    INGREDIENT_GROUP ||--o{ INGREDIENT : items
+    INGREDIENT ||--|{ QUANTITY : "quantities, one per sizing"
     QUANTITY }o..|| SIZING : "matches by position"
-    RECIPE ||--o{ METHOD_GROUP : has
-    METHOD_GROUP ||--o{ STEP : holds
+    RECIPE ||--o{ METHOD_GROUP : method
+    METHOD_GROUP ||--o{ STEP : steps
 
     RECIPE["Recipe"] {
+        text id
         text title
-        list folder_path
+        list folder "the folder path"
         list tags
         text prep
         text notes
-        text source "a text and a link"
+        object source "a text and a link"
     }
     SIZING["Sizing"] {
+        text id
         text name
     }
     INGREDIENT_GROUP["Ingredient group"] {
-        text name
+        text group "its name"
     }
     INGREDIENT["Ingredient"] {
         text item
@@ -38,24 +40,22 @@ erDiagram
         text unit
     }
     METHOD_GROUP["Method group"] {
-        text name
+        text group "its name"
     }
-    STEP["Step"] {
-        text step
-    }
+    STEP["Step"]
 ```
 
-The Recipe is a single document, not seven tables. Everything in the diagram is nested inside it.
+The Recipe is a single document, not seven tables. Everything in the diagram is nested inside it. The field names, and the labels on the lines, are the keys of that document, and an exported JSON file holds the same keys. A step is plain text with no fields of its own.
 
 ## Design rules
 
-- **The id never follows the title.** A recipe's id is made once, from its first title. Renaming the recipe leaves the id, and so the recipe's URL, as they were.
+- **The id never follows the title.** A recipe's id is made once, from its first title and a random ending, so two recipes with the same title still differ. Renaming the recipe leaves the id, and so the recipe's URL, as they were.
 - **Folders exist only as paths on recipes.** Nothing stores a folder by itself. The tree of folders is worked out from the folder paths of the recipes.
-- **Quantities match sizings by position.** An ingredient's first quantity belongs to the recipe's first sizing, its second to the second, and so on. A quantity carries no reference to its sizing.
+- **Quantities match sizings by position.** An ingredient's first quantity belongs to the recipe's first sizing, its second to the second, and so on. A quantity carries no reference to its sizing. A sizing's `id` is used only to remember which sizing a recipe is showing.
 - **A recipe is stored once it has a title.** Until then a new recipe exists only in the editor session.
 - **An edit beats a delete.** When one device deleted a recipe and another changed it, with no sync in between, the recipe stays, with the change.
 - **Crossed edits favour the device that syncs.** Crossed edits are settled part by part against the last-agreed state. A part that only one device changed is taken from that device. A part that both changed is taken from the device that is syncing. The eight parts are listed under "Part" in the [glossary](../GLOSSARY.md).
-- **Deletion leaves a marker.** A deleted recipe leaves a deletion marker behind, so that the deletion can reach other devices through sync and a later import can restore the recipe.
+- **Deletion leaves a marker.** A deleted recipe leaves a deletion marker behind. The marker carries the deletion to other devices through sync, and it tells a later import that the recipe was deleted, so that Rosa asks before bringing it back.
 
 ## Where copies live
 
@@ -100,7 +100,12 @@ Apart from its copy of the cookbook, a device holds ten small values in the brow
 
 ## The gate
 
-A recipe from outside the device passes the gate before it enters the cookbook. With an imported file the gate is strict and can refuse the recipe. With a recipe arriving from Drive it is lenient: it makes what it can of the recipe and always accepts it.
+A recipe from outside the device passes the gate before it enters the cookbook. The gate builds a recipe of the right shape from whatever it is given, in one of two ways.
+
+- **Lenient, for a recipe arriving from Drive.** The gate makes what it can of the recipe and always accepts it. A field of the wrong kind becomes empty.
+- **Strict, for an imported file.** One fault refuses the whole file, and the gate names every fault it found. The faults are: text that is not JSON, a list where one recipe should be, a recipe marked as deleted, a missing or empty title, an id that is not lowercase letters, digits and hyphens or is longer than 73 characters, a field of the wrong kind, a group with no list of items or steps, two sizings with the same id, an empty folder name, and an ingredient with more quantities than the recipe has sizings.
+
+Both ways fill in most of what is missing. A recipe with no id is given one, made from its title. A recipe with no sizings gets one unnamed sizing, and an ingredient short of quantities gets blank ones. The strict gate also tidies what it accepts: folder names are trimmed and given a capital first letter, and tags are trimmed, with blank and repeated tags dropped. Anything in a file that is not part of a recipe is left out.
 
 ## Folder rename and remove
 

@@ -35,7 +35,7 @@ The list of folder names on a recipe, from the top of the tree down. A recipe wi
 _Avoid_: placement
 
 **Deletion marker**:
-The record a deleted recipe leaves behind in a copy of the cookbook. It lets the deletion reach other devices through sync, and lets a later import restore the recipe.
+The record a deleted recipe leaves behind in a copy of the cookbook. It carries the deletion to other devices through sync, and it tells an import that the recipe was deleted, so that Rosa asks before bringing it back.
 _Avoid_: tombstone
 
 **Gate**:
