@@ -6,10 +6,6 @@ This is an overview of the terminology that Rosa uses. The [architecture docs](a
 
 ### The cookbook
 
-**User**:
-The person using Rosa.
-_Avoid_: cook
-
 **Cookbook**:
 All the recipes a user keeps in Rosa. Each device holds its own copy, and Drive holds one more once the user syncs.
 _Avoid_: database, library, collection
