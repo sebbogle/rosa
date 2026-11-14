@@ -3,7 +3,7 @@ import type { Recipe } from '../src/app/recipe/recipe';
 import type { Device } from './device';
 import type { Watch } from './watch';
 
-const ACCOUNT = 'cook@example.com';
+const ACCOUNT = 'user@example.com';
 
 const IDENTITY_SCRIPT = 'https://accounts.google.com/gsi/client';
 
