@@ -1,0 +1,74 @@
+:host {
+  display: block;
+  flex: none;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 0 10px 10px;
+  padding: 4px 4px 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--paper);
+  box-shadow: var(--update-shadow);
+  font-size: 12px;
+}
+
+.words {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.said {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+svg {
+  flex: none;
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.primary {
+  padding: 3px 10px;
+  border-radius: var(--radius-small-button);
+  font-size: 12px;
+}
+
+@media (width < 1024px), (pointer: coarse) {
+  .card {
+    gap: 12px;
+    margin: 0 12px 12px;
+    padding: 4px 4px 4px 14px;
+    border-radius: var(--radius-card);
+    font-size: 15px;
+  }
+
+  .words {
+    gap: 9px;
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .primary {
+    padding: 8px 16px;
+    border-radius: var(--radius);
+    font-size: 14px;
+  }
+}

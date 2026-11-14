@@ -15,11 +15,12 @@ import { ContentsDrawer } from '../contents-drawer';
 import { ContentsFilter } from '../contents-filter';
 import { FolderTree } from '../folder-tree/folder-tree';
 import { contentsEdge } from '../sidebar-width';
+import { UpdateCard } from '../update-card/update-card';
 import { SIDEBAR_CSS } from './sidebar.css';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [FolderTree, Grip],
+  imports: [FolderTree, Grip, UpdateCard],
   host: { '(document:keydown.escape)': 'escape($event)' },
   templateUrl: './sidebar.html',
   styles: [SIDEBAR_CSS],

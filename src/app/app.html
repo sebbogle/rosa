@@ -9,10 +9,21 @@
         aria-label="Contents"
         [class.showing]="drawerOpen()"
         [attr.aria-expanded]="drawerOpen()"
+        [attr.aria-describedby]="updateWaiting() ? 'update-waiting' : null"
         (click)="toggleDrawer()"
       >
         <span aria-hidden="true">☰</span>
+
+        @if (updateWaiting()) {
+          <span class="marker"></span>
+        }
       </button>
+
+      <p id="update-waiting" class="announced" role="status">
+        @if (updateWaiting()) {
+          Update available
+        }
+      </p>
 
       <div class="strips">
         @for (side of sides(); track side.key; let at = $index) {
