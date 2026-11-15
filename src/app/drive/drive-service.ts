@@ -34,6 +34,8 @@ const PUSH_BATCH_SIZE = 50;
 
 const BUILD_RETRY_MS = 5_000;
 
+const ICE_SERVERS: RTCIceServer[] = [{ urls: 'stun:stun.l.google.com:19302' }];
+
 export type CatchUpOutcome = 'in Google Drive' | 'gone wrong' | 'cut short';
 
 export interface CatchUpEnd {
@@ -411,6 +413,7 @@ export class DriveService {
         },
         pull: { modifier: recipeStateOf },
         push: { batchSize: PUSH_BATCH_SIZE },
+        signalingOptions: { config: { iceServers: ICE_SERVERS } },
         toggleOnDocumentVisible: false,
       });
 
