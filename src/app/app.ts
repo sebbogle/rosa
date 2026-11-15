@@ -14,6 +14,7 @@ import { Settings } from './settings/settings/settings';
 import { SettingsSheet } from './settings/settings-sheet';
 import { dividerEdge } from './shell/divider/divider';
 import { Grip } from './shell/grip/grip';
+import { Icon } from './shell/icon/icon';
 import { clicks } from './shell/press';
 import { Update } from './shell/update';
 
@@ -31,6 +32,7 @@ const FIELDS =
     CdkDropListGroup,
     Editor,
     Grip,
+    Icon,
     RecipePane,
     RestingState,
     Settings,

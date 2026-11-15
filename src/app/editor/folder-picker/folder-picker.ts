@@ -21,6 +21,7 @@ import {
   resolveFolderName,
 } from '../../recipe/folders';
 import { RecipeStore } from '../../recipe/recipe-store';
+import { Icon } from '../../shell/icon/icon';
 import { folderRows } from './folder-rows';
 
 const ROOT = 'No folder';
@@ -34,6 +35,7 @@ interface Adding {
 
 @Component({
   selector: 'app-folder-picker',
+  imports: [Icon],
   templateUrl: './folder-picker.html',
   styleUrls: ['../../shell/tree-row.css', './folder-picker.css'],
 })

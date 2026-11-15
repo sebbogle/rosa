@@ -1,8 +1,10 @@
 import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { RecipeStore } from '../../recipe/recipe-store';
+import { Icon } from '../../shell/icon/icon';
 
 @Component({
   selector: 'app-tag-input',
+  imports: [Icon],
   templateUrl: './tag-input.html',
   styleUrl: './tag-input.css',
 })

@@ -85,6 +85,9 @@
 }
 
 .close {
+  display: flex;
+  align-items: center;
+  align-self: stretch;
   flex: none;
   padding: 8px 9px;
   border: 0;

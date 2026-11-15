@@ -1,11 +1,12 @@
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, ElementRef, computed, inject, input, output, viewChild } from '@angular/core';
+import { Icon } from '../../shell/icon/icon';
 import { EditorSession } from '../editor-session';
 import { Column } from '../working-list';
 
 @Component({
   selector: 'app-group-head',
-  imports: [CdkDragHandle],
+  imports: [CdkDragHandle, Icon],
   templateUrl: './group-head.html',
   styleUrl: './group-head.css',
 })

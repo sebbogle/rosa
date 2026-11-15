@@ -27,7 +27,7 @@
       <span class="above">{{ above() }}</span>
       <span class="here" [class.nowhere]="folder().length === 0">{{ here() }}</span>
     </span>
-    <span class="caret" aria-hidden="true">▾</span>
+    <app-icon class="caret" name="caret" />
   </button>
 
   @if (open()) {
@@ -95,7 +95,7 @@
                   [attr.aria-label]="(row.expanded ? 'Collapse ' : 'Expand ') + row.name"
                   (click)="flip(row.segments)"
                 >
-                  <span class="glyph" aria-hidden="true">▸</span>
+                  <app-icon class="glyph" name="chevron" [size]="1.2" />
                 </button>
               } @else {
                 <span class="spacer" aria-hidden="true"></span>

@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, computed, inject, input, output } from '@angular/core';
 import { EditorSession } from '../../editor/editor-session';
+import { Icon } from '../../shell/icon/icon';
 import { Segment, Segmented } from '../../shell/segmented/segmented';
 import { drawnPath } from '../folders';
 import { IngredientGroup, MethodGroup, Recipe, Source, shownName } from '../recipe';
@@ -74,7 +75,7 @@ function shownSource(source: Source): Shown | undefined {
 @Component({
   selector: 'app-recipe-pane',
   templateUrl: './recipe-pane.html',
-  imports: [Segmented],
+  imports: [Icon, Segmented],
   styles: [PANE_CSS],
   encapsulation: ViewEncapsulation.None,
 })

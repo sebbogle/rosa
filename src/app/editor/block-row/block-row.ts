@@ -1,11 +1,12 @@
 import { CdkDragHandle } from '@angular/cdk/drag-drop';
 import { Component, computed, inject, input } from '@angular/core';
+import { Icon } from '../../shell/icon/icon';
 import { EditorSession } from '../editor-session';
 import { Column, Row, Slot, quantityAt } from '../working-list';
 
 @Component({
   selector: 'app-block-row',
-  imports: [CdkDragHandle],
+  imports: [CdkDragHandle, Icon],
   host: {
     role: 'group',
     '[attr.aria-label]': 'label()',

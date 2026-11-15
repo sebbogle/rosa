@@ -32,7 +32,7 @@
         [attr.aria-label]="'Close ' + tab.title"
         (click)="close(tab.id)"
       >
-        <span aria-hidden="true">×</span>
+        <app-icon name="close" [size]="0.8" />
       </button>
     </div>
   }

@@ -84,7 +84,7 @@
                 [attr.aria-label]="(row.expanded ? 'Collapse ' : 'Expand ') + row.name"
                 (click)="toggle(row.key)"
               >
-                <span class="glyph" aria-hidden="true">▸</span>
+                <app-icon class="glyph" name="chevron" [size]="1.2" />
               </button>
 
               <label class="item folder">

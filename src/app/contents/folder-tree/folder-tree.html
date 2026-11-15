@@ -24,7 +24,9 @@
           [attr.aria-expanded]="row.expanded"
           (click)="toggle(row.key)"
         >
-          <span class="chevron" [class.open]="row.expanded" aria-hidden="true">▸</span>
+          <span class="chevron" [class.open]="row.expanded" aria-hidden="true"
+            ><app-icon name="chevron" [size]="1.2"
+          /></span>
           <span class="label">{{ row.name }}</span>
         </button>
 
@@ -34,7 +36,7 @@
           [attr.aria-label]="'Folder actions for ' + row.name"
           (click)="menu(row.key)"
         >
-          ⋯
+          <app-icon name="more" [size]="1.15" />
         </button>
 
         @if (menuAt() === row.key) {

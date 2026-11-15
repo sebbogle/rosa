@@ -17,6 +17,7 @@ import { RecipeStore } from '../../recipe/recipe-store';
 import { Tabs } from '../../recipe/tabs';
 import { Ask, Confirm } from '../../shell/confirm/confirm';
 import { plural } from '../../shell/formatting';
+import { Icon } from '../../shell/icon/icon';
 import { ContentsDrawer } from '../contents-drawer';
 import { ContentsFilter } from '../contents-filter';
 import { isOpen, toggled } from '../contents-rules';
@@ -27,7 +28,7 @@ const ROOT = 'No folder';
 
 @Component({
   selector: 'app-folder-tree',
-  imports: [Confirm],
+  imports: [Confirm, Icon],
   host: { '(document:pointerdown)': 'dismiss($event)' },
   templateUrl: './folder-tree.html',
   styles: [FOLDER_TREE_CSS],
