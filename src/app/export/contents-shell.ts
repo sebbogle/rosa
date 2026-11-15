@@ -21,14 +21,30 @@ export function contentsShell(frozen: readonly Frozen[], name: string): Shell {
   <app-sidebar>
     <dialog class="drawer" id="drawer" role="navigation" aria-label="Contents" closedby="none">
       <div class="searchwrap">
-        <input
-          class="search"
-          id="search"
-          type="search"
-          placeholder="Search recipes…"
-          aria-label="Search recipes"
-          autocomplete="off"
-        >
+        <label class="searchbox">
+          <svg
+            class="magnifier"
+            width="13"
+            height="13"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.7"
+            stroke-linecap="round"
+            aria-hidden="true"
+          >
+            <circle cx="7" cy="7" r="4.5" />
+            <path d="M10.5 10.5L14 14" />
+          </svg>
+          <input
+            class="search"
+            id="search"
+            type="search"
+            placeholder="Search recipes…"
+            aria-label="Search recipes"
+            autocomplete="off"
+          >
+        </label>
         <button type="button" class="shut" id="shut" aria-label="Close Contents">
           <span aria-hidden="true">×</span>
         </button>
