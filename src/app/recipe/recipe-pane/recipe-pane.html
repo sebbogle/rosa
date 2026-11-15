@@ -86,9 +86,10 @@
               @for (ingredient of group.rows; track $index) {
                 <li>
                   @if (ingredient.amount; as amount) {
-                    <b class="amount">{{ amount }}</b>
+                    <b class="amount">{{ amount }}</b
+                    >&ngsp;
                   }
-                  {{ ingredient.item }}
+                  <span class="item">{{ ingredient.item }}</span>
                 </li>
               }
             </ul>
