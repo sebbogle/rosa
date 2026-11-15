@@ -7,16 +7,33 @@
   (click)="beside($event)"
 >
   <div class="searchwrap">
-    <input
-      #searchField
-      class="search"
-      type="search"
-      placeholder="Search recipes…"
-      aria-label="Search recipes"
-      autocomplete="off"
-      [value]="query()"
-      (input)="search($event)"
-    />
+    <label class="searchbox">
+      <svg
+        class="magnifier"
+        width="13"
+        height="13"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <circle cx="7" cy="7" r="4.5" />
+        <path d="M10.5 10.5L14 14" />
+      </svg>
+
+      <input
+        #searchField
+        class="search"
+        type="search"
+        placeholder="Search recipes…"
+        aria-label="Search recipes"
+        autocomplete="off"
+        [value]="query()"
+        (input)="search($event)"
+      />
+    </label>
 
     <button type="button" class="shut" aria-label="Close Contents" (click)="close()">
       <span aria-hidden="true">×</span>
@@ -30,7 +47,21 @@
   <app-update-card />
 
   <footer class="foot">
-    <button type="button" class="addnew" (click)="add()">Add new recipe</button>
+    <button type="button" class="addnew" (click)="add()">
+      <svg
+        width="12"
+        height="12"
+        viewBox="0 0 16 16"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <path d="M8 3v10M3 8h10" />
+      </svg>
+      Add new recipe
+    </button>
   </footer>
 
   <app-grip [edge]="edge" label="Contents edge" />
