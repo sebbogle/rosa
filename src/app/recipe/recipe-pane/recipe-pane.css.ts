@@ -210,19 +210,16 @@ app-recipe-pane .group-card h3 {
 }
 
 app-recipe-pane .ingredients {
-  display: grid;
-  grid-template-columns: minmax(4.4em, max-content) minmax(0, 1fr);
-  column-gap: 14px;
+  display: table;
+  width: 100%;
   margin: 0;
   padding: 0;
+  border-collapse: collapse;
   list-style: none;
 }
 
 app-recipe-pane .ingredients li {
-  display: grid;
-  grid-template-columns: subgrid;
-  grid-column: 1 / -1;
-  padding: 5px 0;
+  display: table-row;
   line-height: 1.5;
 }
 
@@ -230,15 +227,27 @@ app-recipe-pane .ingredients li + li {
   border-top: 1px solid var(--line);
 }
 
+app-recipe-pane .amount,
+app-recipe-pane .item {
+  display: table-cell;
+  padding-block: 5px;
+}
+
+app-recipe-pane .amount,
+app-recipe-pane .ingredients li:not(:has(.amount))::before {
+  width: 4.4em;
+  padding-right: 14px;
+}
+
+app-recipe-pane .ingredients li:not(:has(.amount))::before {
+  content: '';
+  display: table-cell;
+}
+
 app-recipe-pane .amount {
-  grid-column: 1;
   font-variant-numeric: tabular-nums;
   text-align: right;
   white-space: nowrap;
-}
-
-app-recipe-pane .item {
-  grid-column: 2;
 }
 
 app-recipe-pane .steps {
@@ -330,9 +339,13 @@ app-recipe-pane .steps li::marker {
   }
 
   app-recipe-pane .ingredients li {
-    padding: 8px 0;
     font-size: 18px;
     line-height: 1.5;
+  }
+
+  app-recipe-pane .amount,
+  app-recipe-pane .item {
+    padding-block: 8px;
   }
 
   app-recipe-pane .steps {
@@ -402,8 +415,9 @@ app-recipe-pane .steps li::marker {
       margin-top: 26px;
     }
 
-    app-recipe-pane .ingredients li {
-      padding: 9px 0;
+    app-recipe-pane .amount,
+    app-recipe-pane .item {
+      padding-block: 9px;
     }
 
     app-recipe-pane .steps {
