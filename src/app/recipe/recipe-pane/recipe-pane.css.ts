@@ -195,21 +195,12 @@ app-recipe-pane .sizing-name {
 app-recipe-pane .ingredients-head app-segmented {
   flex-wrap: wrap;
   max-width: 100%;
-  overflow: visible;
 }
 
 app-recipe-pane .ingredients-head .segment {
   padding: 2px 9px;
   line-height: 16px;
   overflow-wrap: anywhere;
-}
-
-app-recipe-pane .ingredients-head .segment:first-child {
-  border-radius: calc(var(--radius) - 1px) 0 0 calc(var(--radius) - 1px);
-}
-
-app-recipe-pane .ingredients-head .segment:last-child {
-  border-radius: 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0;
 }
 
 app-recipe-pane .group-card h3 {
@@ -330,16 +321,8 @@ app-recipe-pane .steps li::marker {
   }
 
   app-recipe-pane .ingredients-head .segment {
-    justify-content: center;
-    min-width: 44px;
     padding: 2px 11px;
     font-size: 13px;
-  }
-
-  app-recipe-pane .ingredients-head .segment::after {
-    content: '';
-    position: absolute;
-    inset: -11px 0;
   }
 
   app-recipe-pane .group-card h3 {
