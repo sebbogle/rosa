@@ -2,7 +2,7 @@
   display: flex;
   min-width: 0;
   background: var(--raised);
-  border-bottom: 1px solid var(--line);
+  box-shadow: inset 0 -1px 0 var(--line);
 }
 
 .strip {
@@ -23,6 +23,10 @@
   max-width: 220px;
   border-right: 1px solid var(--line);
   color: var(--dim);
+}
+
+.tab:not(.active) {
+  box-shadow: inset 0 -1px 0 var(--line);
 }
 
 .tab:hover:not(.active) {
@@ -99,11 +103,16 @@
   .tab.preview:not(.cdk-drag-placeholder) {
     order: 1;
   }
+
+  .tab:not(.active, :hover, :focus-within) .close {
+    opacity: 0;
+  }
 }
 
 @media (width < 1024px), (pointer: coarse) {
-  :host {
-    border-bottom: 0;
+  :host,
+  .tab:not(.active) {
+    box-shadow: none;
   }
 
   .strip {
