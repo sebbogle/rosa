@@ -1,6 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { Appearance, appearance } from '../../shell/appearance';
 import { Segment, Segmented } from '../../shell/segmented/segmented';
+
+const SAYS: Record<Appearance, string> = {
+  default: 'Colour, with shadows and motion.',
+  'e-ink': 'Black and white for e-paper, with no shadows or motion.',
+};
 
 @Component({
   selector: 'app-appearance-section',
@@ -15,6 +20,8 @@ export class AppearanceSection {
   ];
 
   protected readonly chosen = appearance.chosen;
+
+  protected readonly says = computed(() => SAYS[this.chosen()]);
 
   protected choose(next: Appearance): void {
     appearance.choose(next);

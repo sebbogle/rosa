@@ -3,7 +3,6 @@
 }
 
 .appearance {
-  justify-content: flex-end;
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
 }
