@@ -55,6 +55,10 @@
     flex-wrap: wrap;
     justify-content: flex-end;
   }
+
+  .acts:has(> :only-child) {
+    flex-basis: auto;
+  }
 }
 
 .said-below {
