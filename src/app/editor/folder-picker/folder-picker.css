@@ -11,6 +11,7 @@
   align-items: center;
   gap: 8px;
   width: 100%;
+  min-height: var(--field-height);
   padding: 7px 10px;
   border: 1px solid var(--line);
   border-radius: var(--radius);

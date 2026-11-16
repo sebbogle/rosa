@@ -8,7 +8,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 5px;
-  min-height: 34px;
+  min-height: var(--field-height, 34px);
   padding: 5px 8px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -96,7 +96,7 @@
 @media (width < 1024px), (pointer: coarse) {
   @media (width >= 768px) {
     .box {
-      min-height: 44px;
+      min-height: var(--field-height, 44px);
     }
 
     .chip {
