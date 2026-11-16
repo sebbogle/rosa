@@ -102,6 +102,8 @@
 
 * {
   box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: var(--handle) transparent;
 }
 
 html {
