@@ -2,12 +2,18 @@
   <h1>{{ recipe().title }}</h1>
 
   <div class="headmain">
-    @if (crumbline(); as crumbline) {
-      <p class="crumbline">{{ crumbline }}</p>
-    }
-
-    @if (folder(); as folder) {
-      <p class="folder">{{ folder }}</p>
+    @if (folder() || meta()) {
+      <p class="crumbline">
+        @if (folder(); as folder) {
+          <span class="folder">{{ folder }}</span>
+        }
+        @if (folder() && meta()) {
+          &ngsp;·&ngsp;
+        }
+        @if (meta(); as meta) {
+          <span class="meta">{{ meta }}</span>
+        }
+      </p>
     }
 
     @if (recipe().tags.length) {
@@ -16,10 +22,6 @@
           <span class="tag">{{ tag }}</span>
         }
       </p>
-    }
-
-    @if (meta(); as meta) {
-      <p class="meta">{{ meta }}</p>
     }
 
     @if (recipe().notes; as notes) {

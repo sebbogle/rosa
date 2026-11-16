@@ -244,9 +244,8 @@ function lemonTartReads({ frozen }: { readonly frozen: boolean }): string {
   return `
     - /children: deep-equal
     - heading "Lemon tart" [level=1]
-    - paragraph: Baking › Tarts
+    - paragraph: Baking › Tarts · Prep 1 hr, plus chilling
     - paragraph: citrus weekend
-    - paragraph: Prep 1 hr, plus chilling
     - paragraph: Take it out while the middle still wobbles.
     - text: The River Cafe Cook Book${editControl}
     - heading "Ingredients" [level=2]

@@ -122,10 +122,6 @@ export class RecipePane {
     return sizings.find((sizing) => sizing.id === held)?.id ?? sizings[0].id;
   });
 
-  protected readonly crumbline = computed(() =>
-    [this.folder(), this.meta()].filter(Boolean).join(' · '),
-  );
-
   protected readonly method = computed(() =>
     shownGroups(
       this.recipe().method.map((group: MethodGroup) => ({
