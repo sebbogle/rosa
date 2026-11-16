@@ -26,6 +26,7 @@ test(
       - navigation "Contents":
         - /children: equal
         - searchbox "Search recipes": tarts eggs
+        - paragraph: No recipes match “tarts eggs”.
         - button "Add new recipe"
         - separator "Contents edge"
     `);

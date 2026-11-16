@@ -127,7 +127,11 @@ app-folder-tree .rename:focus {
 }
 
 app-folder-tree .nomatch {
-  display: none;
+  margin: 8px;
+  color: var(--faint);
+  font-size: 13px;
+  line-height: 1.5;
+  text-wrap: pretty;
 }
 
 @media (width < 1024px), (pointer: coarse) {
@@ -162,12 +166,8 @@ app-folder-tree .nomatch {
   }
 
   app-folder-tree .nomatch {
-    display: block;
     margin: 14px 10px;
-    color: var(--faint);
     font-size: 16px;
-    line-height: 1.5;
-    text-wrap: pretty;
   }
 }
 `;
