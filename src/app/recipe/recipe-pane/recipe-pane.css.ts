@@ -155,6 +155,17 @@ app-recipe-pane .columns {
   margin-top: 26px;
 }
 
+app-recipe-pane .column.alone {
+  grid-column: 1 / -1;
+  max-width: 70ch;
+}
+
+app-recipe-pane .columns .unwritten {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--faint);
+}
+
 app-recipe-pane .column > h2,
 app-recipe-pane .ingredients-head {
   display: flex;

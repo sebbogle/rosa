@@ -63,46 +63,48 @@
 </header>
 
 <div class="two-column columns">
-  <section class="column">
-    <div class="ingredients-head">
-      <h2>Ingredients</h2>
-      @if (segments().length > 1) {
-        <app-segmented
-          label="Sizing"
-          [options]="segments()"
-          [chosen]="shown()"
-          (choose)="choose.emit($event)"
-        />
-      } @else if (loneName(); as name) {
-        <span class="sizing-name">{{ name }}</span>
-      }
-    </div>
-    @for (list of sizings(); track list.id) {
-      <div class="sizing" [hidden]="list.id !== shown()">
-        @for (group of list.groups; track $index) {
-          <div class="group-card">
-            @if (group.group; as heading) {
-              <h3>{{ heading }}</h3>
-            }
-            <ul class="ingredients">
-              @for (ingredient of group.rows; track $index) {
-                <li>
-                  @if (ingredient.amount; as amount) {
-                    <b class="amount">{{ amount }}</b
-                    >&ngsp;
-                  }
-                  <span class="item">{{ ingredient.item }}</span>
-                </li>
-              }
-            </ul>
-          </div>
+  @if (listed()) {
+    <section class="column">
+      <div class="ingredients-head">
+        <h2>Ingredients</h2>
+        @if (segments().length > 1) {
+          <app-segmented
+            label="Sizing"
+            [options]="segments()"
+            [chosen]="shown()"
+            (choose)="choose.emit($event)"
+          />
+        } @else if (loneName(); as name) {
+          <span class="sizing-name">{{ name }}</span>
         }
       </div>
-    }
-  </section>
+      @for (list of sizings(); track list.id) {
+        <div class="sizing" [hidden]="list.id !== shown()">
+          @for (group of list.groups; track $index) {
+            <div class="group-card">
+              @if (group.group; as heading) {
+                <h3>{{ heading }}</h3>
+              }
+              <ul class="ingredients">
+                @for (ingredient of group.rows; track $index) {
+                  <li>
+                    @if (ingredient.amount; as amount) {
+                      <b class="amount">{{ amount }}</b
+                      >&ngsp;
+                    }
+                    <span class="item">{{ ingredient.item }}</span>
+                  </li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+      }
+    </section>
+  }
 
   @if (method().length) {
-    <section class="column">
+    <section class="column" [class.alone]="!listed()">
       <h2>Method</h2>
       @for (group of method(); track $index) {
         <div class="group-card">
@@ -117,5 +119,9 @@
         </div>
       }
     </section>
+  }
+
+  @if (!listed() && !method().length) {
+    <p class="unwritten">No ingredients or method yet.</p>
   }
 </div>

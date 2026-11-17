@@ -131,6 +131,10 @@ export class RecipePane {
     ),
   );
 
+  protected readonly listed = computed(() =>
+    this.sizings().some((sizing) => sizing.groups.length > 0),
+  );
+
   protected edit(): void {
     this.editor.edit(this.recipe());
   }

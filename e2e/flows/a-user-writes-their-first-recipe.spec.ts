@@ -15,7 +15,7 @@ test('a user writes their first recipe', async ({ page, contents, editor, sides 
   await editor.leaveTitle();
   await expect(tabs).toHaveText(['Focaccia']);
   await expect(page).toHaveURL(/\/recipe\/focaccia-[0-9a-f]{12}$/);
-  await expect(pane.ingredients.heading).toBeVisible();
+  await expect(pane.ingredients.heading).toHaveCount(0);
   await expect(pane.method.heading).toHaveCount(0);
 
   await editor.write(focaccia);
