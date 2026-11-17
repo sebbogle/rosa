@@ -64,6 +64,15 @@ app-root:not(:has(*)) {
   background: var(--accent-strong);
 }
 
+:is(.quiet, .danger):active {
+  background: var(--hover);
+}
+
+:is(.primary, .destroy):active {
+  border-color: var(--accent-pressed);
+  background: var(--accent-pressed);
+}
+
 :is(.quiet, .primary, .danger, .destroy):is(:disabled, [aria-disabled='true']) {
   border-color: var(--line);
   background: var(--paper);
@@ -102,6 +111,10 @@ app-root:not(:has(*)) {
   background: var(--hover);
 }
 
+.menu button:active {
+  background: var(--hover-strong);
+}
+
 .menu .undo {
   color: var(--accent);
 }
@@ -111,7 +124,7 @@ app-root:not(:has(*)) {
   cursor: default;
 }
 
-.menu button:disabled:hover {
+.menu button:disabled:is(:hover, :active) {
   background: transparent;
 }
 

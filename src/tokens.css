@@ -12,6 +12,7 @@
   --hover: #f1eaec;
   --accent: #7d2340;
   --accent-strong: #661c34;
+  --accent-pressed: #521629;
   --accent-edge: #e3c8d1;
   --accent-wash: #faf3f5;
   --hover-strong: #e7dde0;
@@ -75,6 +76,7 @@
   --hover: #c6c6c6;
   --accent: #3f3f3f;
   --accent-strong: #222222;
+  --accent-pressed: #000000;
   --accent-edge: #7f7f7f;
   --accent-wash: #ececec;
   --hover-strong: #b4b4b4;

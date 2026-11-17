@@ -75,6 +75,11 @@ app-bubble {
   border-color: var(--accent-strong);
 }
 
+.control:active {
+  background: var(--accent-pressed);
+  border-color: var(--accent-pressed);
+}
+
 .control[aria-disabled='true'],
 .control[aria-disabled='true']:hover {
   border-color: var(--line);

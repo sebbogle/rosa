@@ -49,6 +49,10 @@ app-folder-tree > .line.menu-open > .row {
   color: var(--ink);
 }
 
+app-folder-tree .row:active {
+  background: var(--hover-strong);
+}
+
 app-folder-tree .chevron {
   display: inline-flex;
   align-items: center;

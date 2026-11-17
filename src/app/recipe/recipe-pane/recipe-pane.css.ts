@@ -151,6 +151,11 @@ app-recipe-pane .edit:hover {
   color: var(--accent);
 }
 
+app-recipe-pane .edit:active,
+app-recipe-pane a.source:active {
+  background: var(--hover);
+}
+
 app-recipe-pane .columns {
   --two-column-split: minmax(0, 5fr) minmax(0, 7fr);
   margin-top: 26px;

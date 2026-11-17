@@ -117,6 +117,10 @@
   color: var(--ink);
 }
 
+.item:active {
+  background: var(--hover-strong);
+}
+
 .item:focus-visible,
 .item:has(input:focus-visible) {
   outline: var(--focus);

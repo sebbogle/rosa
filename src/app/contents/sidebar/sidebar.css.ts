@@ -105,6 +105,10 @@ app-sidebar .addnew:hover {
   color: var(--accent);
 }
 
+app-sidebar .addnew:active {
+  background: var(--hover-strong);
+}
+
 app-sidebar app-grip {
   top: 0;
   right: -3px;
