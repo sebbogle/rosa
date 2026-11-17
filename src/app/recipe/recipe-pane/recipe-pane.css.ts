@@ -131,9 +131,10 @@ app-recipe-pane .source .text {
 
 app-recipe-pane .tell {
   flex: none;
-  margin-left: 5px;
-  opacity: 0.6;
-  font-size: 11px;
+  width: 11px;
+  height: 11px;
+  margin-left: 6px;
+  opacity: 0.7;
 }
 
 app-recipe-pane .edit {
@@ -297,7 +298,8 @@ app-recipe-pane .steps li::marker {
   }
 
   app-recipe-pane .tell {
-    font-size: 12px;
+    width: 13px;
+    height: 13px;
   }
 
   app-recipe-pane .edit {

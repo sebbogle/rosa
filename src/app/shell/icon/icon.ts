@@ -1,4 +1,5 @@
 import { Component, input } from '@angular/core';
+import { ICON_PATHS } from './icon-paths';
 
 export type IconName = 'menu' | 'gear' | 'pencil' | 'close' | 'chevron' | 'caret' | 'more' | 'grip';
 
@@ -18,7 +19,7 @@ export type IconName = 'menu' | 'gear' | 'pencil' | 'close' | 'chevron' | 'caret
     >
       @switch (name()) {
         @case ('menu') {
-          <path d="M2.5 4.5h11M2.5 8h11M2.5 11.5h11" />
+          <path [attr.d]="paths.menu" />
         }
         @case ('gear') {
           <circle cx="8" cy="8" r="2" />
@@ -31,10 +32,10 @@ export type IconName = 'menu' | 'gear' | 'pencil' | 'close' | 'chevron' | 'caret
           <path d="M9.4 4.1l2.5 2.5" />
         }
         @case ('close') {
-          <path d="M4 4l8 8M12 4l-8 8" />
+          <path [attr.d]="paths.close" />
         }
         @case ('chevron') {
-          <path d="M6 3.5L10.5 8 6 12.5" />
+          <path [attr.d]="paths.chevron" />
         }
         @case ('caret') {
           <path d="M3.5 6L8 10.5 12.5 6" />
@@ -66,4 +67,6 @@ export class Icon {
   readonly name = input.required<IconName>();
 
   readonly size = input(1);
+
+  protected readonly paths = ICON_PATHS;
 }
