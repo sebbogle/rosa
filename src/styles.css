@@ -125,4 +125,14 @@ app-root:not(:has(*)) {
     padding: 11px 16px;
     font-size: 14px;
   }
+
+  .menu {
+    min-width: 208px;
+  }
+
+  .menu button {
+    min-height: 44px;
+    padding: 11px 12px;
+    font-size: 15px;
+  }
 }
