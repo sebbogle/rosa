@@ -100,13 +100,13 @@ app-recipe-pane .notes {
 app-recipe-pane .actions {
   grid-area: actions;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 10px;
 }
 
 app-recipe-pane .source {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   max-width: 40cqi;
   padding: 7px 12px;
   border: 1px solid var(--line);
@@ -138,6 +138,8 @@ app-recipe-pane .tell {
 }
 
 app-recipe-pane .edit {
+  display: flex;
+  align-items: center;
   padding: 7px 11px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
