@@ -154,10 +154,20 @@ app-folder-tree .nomatch {
     font-size: 11px;
   }
 
+  app-folder-tree .row.folder {
+    padding-right: 40px;
+  }
+
   app-folder-tree .more {
+    display: block;
     width: 32px;
     height: 32px;
     font-size: 15px;
+  }
+
+  app-folder-tree > .line:not(:hover, .menu-open) > .more {
+    background: transparent;
+    color: var(--faint);
   }
 
   app-folder-tree .rename {

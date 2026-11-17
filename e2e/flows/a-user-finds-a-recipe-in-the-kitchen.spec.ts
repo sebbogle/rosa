@@ -42,7 +42,9 @@ test(
         - searchbox "Search recipes": baking
         - button "Close Contents"
         - button "Baking" [expanded]
+        - button "Folder actions for Baking"
         - button "Bread" [expanded]
+        - button "Folder actions for Bread"
         - button "Focaccia"
         - button "Add new recipe"
     `);
@@ -57,6 +59,7 @@ test(
     await expect(contents.search, 'a pick should clear the search').toHaveValue('');
     await expect(contents.root).toMatchAriaSnapshot(`
       - button "Brunch"
+      - button "Folder actions for Brunch"
       - button "Shakshuka"
       - button "Tarka dal"
     `);

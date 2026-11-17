@@ -119,7 +119,9 @@ test(
       - searchbox "Search recipes"
       - button "Close Contents"
       - button "Baking"
+      - button "Folder actions for Baking"
       - button "Pasta"
+      - button "Folder actions for Pasta"
       - button "Shakshuka"
       - button "Add new recipe"
   `);
