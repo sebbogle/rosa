@@ -33,6 +33,7 @@ export class BlockRow {
 
   protected type(slot: Slot, event: Event): void {
     const target = event.target as HTMLInputElement | HTMLTextAreaElement;
+    if (slot === 'item') target.value = target.value.replace(/\s*\n\s*/g, ' ');
     this.session.retype(this.column(), this.block(), this.index(), slot, target.value);
   }
 

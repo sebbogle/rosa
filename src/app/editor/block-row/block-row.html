@@ -35,16 +35,17 @@
     (input)="type('unit', $event)"
     (blur)="settle()"
   />
-  <input
-    class="cell"
-    type="text"
+  <textarea
+    class="cell item"
+    rows="1"
     autocomplete="off"
     aria-label="Item"
     placeholder="Item"
     [value]="row().item"
     (input)="type('item', $event)"
+    (keydown.enter)="$event.preventDefault()"
     (blur)="settle()"
-  />
+  ></textarea>
 }
 
 <button
