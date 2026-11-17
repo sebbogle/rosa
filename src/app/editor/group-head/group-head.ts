@@ -7,6 +7,7 @@ import { Column } from '../working-list';
 @Component({
   selector: 'app-group-head',
   imports: [CdkDragHandle, Icon],
+  host: { '[class.collapsed]': 'collapsed()' },
   templateUrl: './group-head.html',
   styleUrl: './group-head.css',
 })
