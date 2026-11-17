@@ -42,7 +42,9 @@ app-folder-tree .row.recipe .label {
   grid-column: 1 / -1;
 }
 
-app-folder-tree .row:hover {
+app-folder-tree .row:hover,
+app-folder-tree > .line:has(> .more:hover) > .row,
+app-folder-tree > .line.menu-open > .row {
   background: var(--hover);
   color: var(--ink);
 }
