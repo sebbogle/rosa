@@ -270,6 +270,14 @@ app-recipe-pane .steps li {
   line-height: 1.6;
 }
 
+app-recipe-pane .steps li:first-child {
+  margin-top: 4px;
+}
+
+app-recipe-pane .steps li:last-child {
+  margin-bottom: 4px;
+}
+
 app-recipe-pane .steps li::marker {
   color: var(--accent);
 }
@@ -361,6 +369,14 @@ app-recipe-pane .steps li::marker {
     line-height: 1.65;
   }
 
+  app-recipe-pane .steps li:first-child {
+    margin-top: 6px;
+  }
+
+  app-recipe-pane .steps li:last-child {
+    margin-bottom: 6px;
+  }
+
   @media (width < 768px) {
     app-recipe-pane h1 {
       font-size: 34px;
@@ -397,6 +413,14 @@ app-recipe-pane .steps li::marker {
 
     app-recipe-pane .steps li {
       margin: 14px 0;
+    }
+
+    app-recipe-pane .steps li:first-child {
+      margin-top: 7px;
+    }
+
+    app-recipe-pane .steps li:last-child {
+      margin-bottom: 7px;
     }
   }
 }
