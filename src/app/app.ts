@@ -79,7 +79,7 @@ export class App {
       const reading = this.sides()
         .find((side) => side.focused)
         ?.reading?.title.trim();
-      title.setTitle(reading ? `${reading} · ${NAME}` : NAME);
+      title.setTitle(reading ? `${reading} - ${NAME}` : NAME);
     });
   }
 
