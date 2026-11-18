@@ -56,7 +56,9 @@ test(
         - searchbox "Search recipes"
         - button "Close Contents"
         - button "Baking" [expanded]
+        - button "Folder actions for Baking"
         - button "Tarts" [expanded=false]
+        - button "Folder actions for Tarts"
         - button "Focaccia"
         - button "Shakshuka"
         - button "Turkish eggs"

@@ -4,7 +4,7 @@
     var(--grip-col) minmax(0, var(--qty-col)) minmax(0, var(--unit-col))
     minmax(0, 1fr) var(--del-col);
   gap: var(--row-gap);
-  align-items: center;
+  align-items: start;
 }
 
 :host(.step) {
@@ -68,11 +68,15 @@
   font-variant-numeric: tabular-nums;
 }
 
-.prose {
+.prose,
+.item {
   field-sizing: content;
-  line-height: 1.55;
   resize: none;
   overflow: hidden;
+}
+
+.prose {
+  line-height: 1.55;
 }
 
 .lose {

@@ -6,3 +6,9 @@
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
 }
+
+@media (width < 1024px), (pointer: coarse) {
+  .appearance {
+    --segment-target: 44px;
+  }
+}

@@ -1,4 +1,6 @@
-<span class="grip" cdkDragHandle title="Drag to reorder this group" aria-hidden="true">⠿</span>
+<span class="grip" cdkDragHandle title="Drag to reorder this group" aria-hidden="true"
+  ><app-icon name="grip" [size]="1.1"
+/></span>
 
 <button
   type="button"
@@ -8,7 +10,7 @@
   [attr.aria-label]="(collapsed() ? 'Expand ' : 'Collapse ') + called()"
   (click)="toggle()"
 >
-  ▾
+  <app-icon name="caret" [size]="1.1" />
 </button>
 
 <input
@@ -32,7 +34,7 @@
   [attr.aria-label]="'Actions for ' + called()"
   (click)="toggleMenu()"
 >
-  ⋯
+  <app-icon name="more" [size]="1.15" />
 </button>
 
 @if (open()) {

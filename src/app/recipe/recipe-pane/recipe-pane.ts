@@ -1,5 +1,6 @@
 import { Component, ViewEncapsulation, computed, inject, input, output } from '@angular/core';
 import { EditorSession } from '../../editor/editor-session';
+import { Icon } from '../../shell/icon/icon';
 import { Segment, Segmented } from '../../shell/segmented/segmented';
 import { drawnPath } from '../folders';
 import { IngredientGroup, MethodGroup, Recipe, Source, shownName } from '../recipe';
@@ -74,7 +75,7 @@ function shownSource(source: Source): Shown | undefined {
 @Component({
   selector: 'app-recipe-pane',
   templateUrl: './recipe-pane.html',
-  imports: [Segmented],
+  imports: [Icon, Segmented],
   styles: [PANE_CSS],
   encapsulation: ViewEncapsulation.None,
 })
@@ -121,10 +122,6 @@ export class RecipePane {
     return sizings.find((sizing) => sizing.id === held)?.id ?? sizings[0].id;
   });
 
-  protected readonly crumbline = computed(() =>
-    [this.folder(), this.meta()].filter(Boolean).join(' · '),
-  );
-
   protected readonly method = computed(() =>
     shownGroups(
       this.recipe().method.map((group: MethodGroup) => ({
@@ -132,6 +129,10 @@ export class RecipePane {
         rows: group.steps.filter((step) => step !== ''),
       })),
     ),
+  );
+
+  protected readonly listed = computed(() =>
+    this.sizings().some((sizing) => sizing.groups.length > 0),
   );
 
   protected edit(): void {

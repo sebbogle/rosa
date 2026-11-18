@@ -6,6 +6,7 @@ import { FRAME_CSS, PANE_LAYOUT_CSS } from '../frame.css';
 import { Recipe } from '../recipe/recipe';
 import { TOUCH } from '../shell/touch';
 import { CONTENTS_SHELL_CSS } from './contents-shell.css';
+import { drawnIcon } from './drawn-icon';
 import { escaped, escapedAttribute } from './escaping';
 import { PageContents, pageScript } from './page-runtime';
 import { Frozen } from './pane-markup';
@@ -21,16 +22,19 @@ export function contentsShell(frozen: readonly Frozen[], name: string): Shell {
   <app-sidebar>
     <dialog class="drawer" id="drawer" role="navigation" aria-label="Contents" closedby="none">
       <div class="searchwrap">
-        <input
-          class="search"
-          id="search"
-          type="search"
-          placeholder="Search recipes…"
-          aria-label="Search recipes"
-          autocomplete="off"
-        >
+        <label class="searchbox">
+          ${drawnIcon('magnifier', 1, 'magnifier')}
+          <input
+            class="search"
+            id="search"
+            type="search"
+            placeholder="Search recipes…"
+            aria-label="Search recipes"
+            autocomplete="off"
+          >
+        </label>
         <button type="button" class="shut" id="shut" aria-label="Close Contents">
-          <span aria-hidden="true">×</span>
+          ${drawnIcon('close', 0.85)}
         </button>
       </div>
 
@@ -51,7 +55,7 @@ ${treeMarkup(recipes)}
         aria-label="Contents"
         aria-expanded="false"
       >
-        <span aria-hidden="true">☰</span>
+        ${drawnIcon('menu', 1.1)}
       </button>
       <span class="bookname">${escaped(name)}</span>
     </div>
@@ -92,7 +96,7 @@ function rowMarkup(row: ContentsRow): string {
   const guides = row.guides.map(() => '<span class="guide" aria-hidden="true"></span>').join('');
 
   if (row.kind === 'folder') {
-    return `          <div class="line" data-key="${escapedAttribute(row.key)}">${guides}<button type="button" class="row folder" aria-expanded="false"><span class="chevron" aria-hidden="true">▸</span><span class="label">${escaped(row.name)}</span></button></div>`;
+    return `          <div class="line" data-key="${escapedAttribute(row.key)}">${guides}<button type="button" class="row folder" aria-expanded="false"><span class="chevron" aria-hidden="true">${drawnIcon('chevron', 1.2)}</span><span class="label">${escaped(row.name)}</span></button></div>`;
   }
 
   return `          <div class="line" data-id="${escapedAttribute(row.id)}">${guides}<button type="button" class="row recipe"><span class="label">${escaped(row.title)}</span></button></div>`;

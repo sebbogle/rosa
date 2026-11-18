@@ -7,19 +7,23 @@
   (click)="beside($event)"
 >
   <div class="searchwrap">
-    <input
-      #searchField
-      class="search"
-      type="search"
-      placeholder="Search recipes…"
-      aria-label="Search recipes"
-      autocomplete="off"
-      [value]="query()"
-      (input)="search($event)"
-    />
+    <label class="searchbox">
+      <app-icon class="magnifier" name="magnifier" />
+
+      <input
+        #searchField
+        class="search"
+        type="search"
+        placeholder="Search recipes…"
+        aria-label="Search recipes"
+        autocomplete="off"
+        [value]="query()"
+        (input)="search($event)"
+      />
+    </label>
 
     <button type="button" class="shut" aria-label="Close Contents" (click)="close()">
-      <span aria-hidden="true">×</span>
+      <app-icon name="close" [size]="0.85" />
     </button>
   </div>
 
@@ -30,7 +34,10 @@
   <app-update-card />
 
   <footer class="foot">
-    <button type="button" class="addnew" (click)="add()">Add new recipe</button>
+    <button type="button" class="addnew" (click)="add()">
+      <app-icon name="plus" [size]="0.92" />
+      Add new recipe
+    </button>
   </footer>
 
   <app-grip [edge]="edge" label="Contents edge" />

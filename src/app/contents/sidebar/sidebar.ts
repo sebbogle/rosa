@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { EditorSession } from '../../editor/editor-session';
 import { Grip } from '../../shell/grip/grip';
+import { Icon } from '../../shell/icon/icon';
 import { TOUCH } from '../../shell/touch';
 import { ContentsDrawer } from '../contents-drawer';
 import { ContentsFilter } from '../contents-filter';
@@ -20,7 +21,7 @@ import { SIDEBAR_CSS } from './sidebar.css';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [FolderTree, Grip, UpdateCard],
+  imports: [FolderTree, Grip, Icon, UpdateCard],
   host: { '(document:keydown.escape)': 'escape($event)' },
   templateUrl: './sidebar.html',
   styles: [SIDEBAR_CSS],

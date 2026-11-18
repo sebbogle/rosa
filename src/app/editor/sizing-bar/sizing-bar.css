@@ -28,38 +28,42 @@
 
 .line {
   flex-basis: 100%;
-  margin: 2px 0;
+  margin: 2px 0 4px;
 }
 
 .sizing {
   position: relative;
   display: flex;
   align-items: center;
-  max-width: 260px;
-  min-height: var(--more-size);
-  border-bottom: 1px solid var(--line);
+  gap: var(--row-gap);
+  max-width: 340px;
 }
 
-.sizing:focus-within {
-  border-bottom-color: var(--accent);
+.what {
+  flex: none;
+  margin-right: 2px;
+  color: var(--dim);
+  font-size: var(--add-fs);
 }
 
 .name {
   flex: 1;
   min-width: 0;
-  padding: 4px 2px;
-  border: 0;
-  background: transparent;
-  color: var(--accent);
+  min-height: var(--cell-min);
+  padding: var(--cell-pad);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
   font: inherit;
-  font-size: var(--group-fs);
-  font-weight: 600;
-  letter-spacing: 0.06em;
+  font-size: var(--cell-fs);
+}
+
+.name:hover {
+  border-color: var(--edge);
 }
 
 .name::placeholder {
   color: var(--faint);
-  font-weight: 400;
 }
 
 .more {
@@ -67,15 +71,22 @@
   align-items: center;
   justify-content: center;
   flex: none;
-  width: var(--more-size);
-  height: var(--more-size);
+  width: max(var(--more-size), var(--cell-min));
+  height: max(var(--more-size), var(--cell-min));
   padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--accent);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--paper);
+  color: var(--dim);
   font-size: var(--more-fs);
   line-height: 1;
   cursor: pointer;
+}
+
+.more:hover,
+.more[aria-expanded='true'] {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .menu {

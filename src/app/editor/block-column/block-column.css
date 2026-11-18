@@ -92,6 +92,7 @@
 }
 
 .block.grouped {
+  margin-inline: -11px;
   border: 1px solid var(--line);
   border-radius: var(--radius-card);
 }
@@ -142,13 +143,6 @@
   align-items: center;
   gap: 8px;
   margin: 8px 0;
-  opacity: 0;
-  transition: opacity calc(120ms * var(--motion)) ease;
-}
-
-.divider:hover,
-.divider:focus-within {
-  opacity: 1;
 }
 
 .rule {
@@ -159,7 +153,7 @@
 
 .divider button {
   padding: var(--gap-pad);
-  border: 1px solid var(--line);
+  border: 1px solid transparent;
   border-radius: var(--radius-small-button);
   background: var(--paper);
   color: var(--faint);
@@ -179,10 +173,6 @@
 }
 
 @media (width < 1024px), (pointer: coarse) {
-  .divider {
-    opacity: 1;
-  }
-
   @media (width >= 768px) {
     :host {
       --grip-col: 32px;

@@ -54,6 +54,10 @@
   color: var(--ink);
 }
 
+.settings:active {
+  background: var(--hover-strong);
+}
+
 .strips {
   display: contents;
 }

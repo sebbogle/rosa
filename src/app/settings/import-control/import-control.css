@@ -107,6 +107,27 @@
   margin-top: 14px;
 }
 
+.report {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 12px;
+  align-items: center;
+}
+
+.report > * {
+  grid-column: 1 / -1;
+}
+
+.report > .lead {
+  grid-column: 1;
+}
+
+.report > .act {
+  grid-column: 2;
+  grid-row: 1;
+  margin-top: 0;
+}
+
 .tick input:focus-visible {
   outline: var(--focus);
   outline-offset: 1px;

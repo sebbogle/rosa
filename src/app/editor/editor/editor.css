@@ -8,6 +8,7 @@ app-sheet {
 }
 
 .fields {
+  --field-height: 37px;
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
   gap: 12px 18px;
@@ -44,6 +45,7 @@ app-sheet {
 }
 
 .title {
+  height: var(--field-height);
   font-size: 18px;
 }
 
@@ -90,6 +92,9 @@ app-sheet {
   .meta {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .meta > :last-child {
+    grid-column: 1 / -1;
+  }
 }
 
 .right {
@@ -99,6 +104,9 @@ app-sheet {
 }
 
 @media (width < 1024px), (pointer: coarse) {
+  .fields {
+    --field-height: 44px;
+  }
   .name {
     font-size: 12px;
   }
@@ -109,11 +117,13 @@ app-sheet {
   }
 
   .title {
+    height: auto;
     font-size: 19px;
   }
 
   @media (width < 768px) {
     .fields {
+      --field-height: 37px;
       grid-template-columns: minmax(0, 1fr);
     }
 
@@ -127,6 +137,7 @@ app-sheet {
     }
 
     .title {
+      height: var(--field-height);
       font-size: 18px;
     }
   }

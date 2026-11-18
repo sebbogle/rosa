@@ -97,6 +97,7 @@
   border-radius: 4px;
   background: var(--paper);
   color: var(--on-accent);
+  font-size: 10px;
 }
 
 .tick:is(:checked, :indeterminate) + .tickbox {
@@ -107,14 +108,6 @@
 .mark,
 .dash {
   display: none;
-}
-
-.mark {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2.6;
-  stroke-linecap: round;
-  stroke-linejoin: round;
 }
 
 .dash {

@@ -1,5 +1,6 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
-import { Component, inject } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 import { ContentsDrawer } from './contents/contents-drawer';
 import { Sidebar } from './contents/sidebar/sidebar';
 import { DriveService } from './drive/drive-service';
@@ -14,8 +15,11 @@ import { Settings } from './settings/settings/settings';
 import { SettingsSheet } from './settings/settings-sheet';
 import { dividerEdge } from './shell/divider/divider';
 import { Grip } from './shell/grip/grip';
+import { Icon } from './shell/icon/icon';
 import { clicks } from './shell/press';
 import { Update } from './shell/update';
+
+const NAME = 'rosa';
 
 const DIGITS = /^Digit([1-9])$/;
 
@@ -31,6 +35,7 @@ const FIELDS =
     CdkDropListGroup,
     Editor,
     Grip,
+    Icon,
     RecipePane,
     RestingState,
     Settings,
@@ -66,6 +71,17 @@ export class App {
   protected readonly drawerOpen = this.drawer.open;
 
   protected readonly updateWaiting = inject(Update).waiting;
+
+  constructor() {
+    const title = inject(Title);
+
+    effect(() => {
+      const reading = this.sides()
+        .find((side) => side.focused)
+        ?.reading?.title.trim();
+      title.setTitle(reading ? `${reading} - ${NAME}` : NAME);
+    });
+  }
 
   protected toggleDrawer(): void {
     this.drawer.toggle();

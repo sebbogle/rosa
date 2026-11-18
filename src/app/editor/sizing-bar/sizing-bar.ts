@@ -7,12 +7,13 @@ import {
   viewChild,
 } from '@angular/core';
 import { shownName } from '../../recipe/recipe';
+import { Icon } from '../../shell/icon/icon';
 import { Segment, Segmented } from '../../shell/segmented/segmented';
 import { EditorSession } from '../editor-session';
 
 @Component({
   selector: 'app-sizing-bar',
-  imports: [Segmented],
+  imports: [Icon, Segmented],
   templateUrl: './sizing-bar.html',
   styleUrl: './sizing-bar.css',
 })

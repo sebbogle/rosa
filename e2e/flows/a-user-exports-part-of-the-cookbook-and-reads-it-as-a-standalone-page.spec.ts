@@ -239,14 +239,13 @@ const ONE_LOAF = ['500 g', '1 tsp', '1 tsp', '400 ml'];
 const TWO_LOAVES = ['1 kg', '2 tsp', '2 tsp', '800 ml'];
 
 function lemonTartReads({ frozen }: { readonly frozen: boolean }): string {
-  const editControl = frozen ? '' : '\n    - button "Edit recipe": ✎';
+  const editControl = frozen ? '' : '\n    - button "Edit recipe"';
 
   return `
     - /children: deep-equal
     - heading "Lemon tart" [level=1]
-    - paragraph: Baking › Tarts
+    - paragraph: Baking › Tarts · Prep 1 hr, plus chilling
     - paragraph: citrus weekend
-    - paragraph: Prep 1 hr, plus chilling
     - paragraph: Take it out while the middle still wobbles.
     - text: The River Cafe Cook Book${editControl}
     - heading "Ingredients" [level=2]

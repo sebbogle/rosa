@@ -157,7 +157,7 @@ export class Editor {
       .getByRole('group', { name: new RegExp(`^${ROWS.Ingredients.row} \\d+$`) })
       .evaluateAll((rows) =>
         rows.map((row) =>
-          [...row.querySelectorAll('input')]
+          [...row.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input, textarea')]
             .map((cell) => cell.value)
             .filter(Boolean)
             .join(' '),

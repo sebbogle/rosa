@@ -1,4 +1,6 @@
-<span class="grip" cdkDragHandle title="Drag to move this row" aria-hidden="true">⠿</span>
+<span class="grip" cdkDragHandle title="Drag to move this row" aria-hidden="true"
+  ><app-icon name="grip" [size]="1.1"
+/></span>
 
 @if (steps()) {
   <span class="number" aria-hidden="true">{{ index() + 1 }}.</span>
@@ -33,16 +35,17 @@
     (input)="type('unit', $event)"
     (blur)="settle()"
   />
-  <input
-    class="cell"
-    type="text"
+  <textarea
+    class="cell item"
+    rows="1"
     autocomplete="off"
     aria-label="Item"
     placeholder="Item"
     [value]="row().item"
     (input)="type('item', $event)"
+    (keydown.enter)="$event.preventDefault()"
     (blur)="settle()"
-  />
+  ></textarea>
 }
 
 <button
@@ -51,5 +54,5 @@
   [attr.aria-label]="steps() ? 'Delete step' : 'Delete row'"
   (click)="remove()"
 >
-  ×
+  <app-icon name="close" [size]="0.75" />
 </button>

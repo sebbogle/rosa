@@ -29,20 +29,45 @@ app-sidebar .searchwrap {
   padding: 14px 12px 10px;
 }
 
-app-sidebar .search {
+app-sidebar .searchbox {
+  display: flex;
   flex: 1;
+  align-items: center;
+  gap: 7px;
   min-width: 0;
-  width: 100%;
-  padding: 7px 10px;
+  padding: 0 10px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--field);
   font-size: 13px;
+  cursor: text;
+}
+
+app-sidebar .magnifier {
+  flex: none;
+  color: var(--faint);
+}
+
+app-sidebar .search {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  padding: 7px 0;
+  border: 0;
+  background: transparent;
 }
 
 app-sidebar .search:focus {
+  outline: none;
+}
+
+app-sidebar .searchbox:has(.search:focus) {
   outline: var(--focus);
   outline-offset: -1px;
+}
+
+app-sidebar .searchbox:has(.search:focus) .magnifier {
+  color: var(--accent);
 }
 
 app-sidebar .shut {
@@ -62,7 +87,9 @@ app-sidebar .foot {
 }
 
 app-sidebar .addnew {
-  display: block;
+  display: flex;
+  align-items: center;
+  gap: 8px;
   width: 100%;
   padding: 11px 16px;
   border: 0;
@@ -75,7 +102,11 @@ app-sidebar .addnew {
 
 app-sidebar .addnew:hover {
   background: var(--hover);
-  color: var(--ink);
+  color: var(--accent);
+}
+
+app-sidebar .addnew:active {
+  background: var(--hover-strong);
 }
 
 app-sidebar app-grip {
@@ -113,9 +144,14 @@ app-sidebar app-grip {
     display: none;
   }
 
-  app-sidebar .search {
-    padding: 12px;
+  app-sidebar .searchbox {
+    gap: 9px;
+    padding: 0 12px;
     font-size: 16px;
+  }
+
+  app-sidebar .search {
+    padding: 12px 0;
   }
 
   app-sidebar .shut {

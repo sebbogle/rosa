@@ -61,7 +61,9 @@ app-recipe-pane .headmain {
 }
 
 app-recipe-pane .crumbline {
-  display: none;
+  margin: 0 0 10px;
+  color: var(--dim);
+  font-size: 14px;
 }
 
 app-recipe-pane h1 {
@@ -71,17 +73,6 @@ app-recipe-pane h1 {
   font-size: 34px;
   font-weight: 600;
   line-height: 1.1;
-}
-
-app-recipe-pane .folder,
-app-recipe-pane .meta {
-  margin: 0 0 10px;
-  color: var(--dim);
-  font-size: 13px;
-}
-
-app-recipe-pane .folder {
-  font-size: 14px;
 }
 
 app-recipe-pane .tags {
@@ -109,13 +100,13 @@ app-recipe-pane .notes {
 app-recipe-pane .actions {
   grid-area: actions;
   display: flex;
-  align-items: center;
+  align-items: stretch;
   gap: 10px;
 }
 
 app-recipe-pane .source {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   max-width: 40cqi;
   padding: 7px 12px;
   border: 1px solid var(--line);
@@ -139,13 +130,13 @@ app-recipe-pane .source .text {
 }
 
 app-recipe-pane .tell {
-  flex: none;
-  margin-left: 5px;
-  opacity: 0.6;
-  font-size: 11px;
+  margin-left: 6px;
+  opacity: 0.7;
 }
 
 app-recipe-pane .edit {
+  display: flex;
+  align-items: center;
   padding: 7px 11px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
@@ -159,9 +150,25 @@ app-recipe-pane .edit:hover {
   color: var(--accent);
 }
 
+app-recipe-pane .edit:active,
+app-recipe-pane a.source:active {
+  background: var(--hover);
+}
+
 app-recipe-pane .columns {
   --two-column-split: minmax(0, 5fr) minmax(0, 7fr);
   margin-top: 26px;
+}
+
+app-recipe-pane .column.alone {
+  grid-column: 1 / -1;
+  max-width: 70ch;
+}
+
+app-recipe-pane .columns .unwritten {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: var(--faint);
 }
 
 app-recipe-pane .column > h2,
@@ -198,6 +205,8 @@ app-recipe-pane .ingredients-head app-segmented {
 }
 
 app-recipe-pane .ingredients-head .segment {
+  padding: 2px 9px;
+  line-height: 16px;
   overflow-wrap: anywhere;
 }
 
@@ -208,18 +217,44 @@ app-recipe-pane .group-card h3 {
 }
 
 app-recipe-pane .ingredients {
+  display: table;
+  width: 100%;
   margin: 0;
-  padding-left: 20px;
-  list-style: disc;
+  padding: 0;
+  border-collapse: collapse;
+  list-style: none;
 }
 
 app-recipe-pane .ingredients li {
-  margin: 5px 0;
+  display: table-row;
   line-height: 1.5;
+}
+
+app-recipe-pane .ingredients li + li {
+  border-top: 1px solid var(--line);
+}
+
+app-recipe-pane .amount,
+app-recipe-pane .item {
+  display: table-cell;
+  padding-block: 5px;
+}
+
+app-recipe-pane .amount,
+app-recipe-pane .ingredients li:not(:has(.amount))::before {
+  width: 4.4em;
+  padding-right: 14px;
+}
+
+app-recipe-pane .ingredients li:not(:has(.amount))::before {
+  content: '';
+  display: table-cell;
 }
 
 app-recipe-pane .amount {
   font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
 }
 
 app-recipe-pane .steps {
@@ -230,6 +265,14 @@ app-recipe-pane .steps {
 app-recipe-pane .steps li {
   margin: 9px 0;
   line-height: 1.6;
+}
+
+app-recipe-pane .steps li:first-child {
+  margin-top: 4px;
+}
+
+app-recipe-pane .steps li:last-child {
+  margin-bottom: 4px;
 }
 
 app-recipe-pane .steps li::marker {
@@ -243,15 +286,7 @@ app-recipe-pane .steps li::marker {
   }
 
   app-recipe-pane .crumbline {
-    display: block;
-    margin: 0 0 10px;
-    color: var(--dim);
     font-size: 16px;
-  }
-
-  app-recipe-pane .folder,
-  app-recipe-pane .meta {
-    display: none;
   }
 
   app-recipe-pane .tags {
@@ -272,10 +307,6 @@ app-recipe-pane .steps li::marker {
   app-recipe-pane .source {
     padding: 10px 14px;
     font-size: 15px;
-  }
-
-  app-recipe-pane .tell {
-    font-size: 12px;
   }
 
   app-recipe-pane .edit {
@@ -302,23 +333,22 @@ app-recipe-pane .steps li::marker {
   }
 
   app-recipe-pane .ingredients-head .segment {
-    justify-content: center;
-    min-width: 44px;
-    min-height: 44px;
+    padding: 2px 11px;
+    font-size: 13px;
   }
 
   app-recipe-pane .group-card h3 {
     font-size: 16px;
   }
 
-  app-recipe-pane .ingredients {
-    padding-left: 22px;
-  }
-
   app-recipe-pane .ingredients li {
-    margin: 8px 0;
     font-size: 18px;
     line-height: 1.5;
+  }
+
+  app-recipe-pane .amount,
+  app-recipe-pane .item {
+    padding-block: 8px;
   }
 
   app-recipe-pane .steps {
@@ -331,53 +361,29 @@ app-recipe-pane .steps li::marker {
     line-height: 1.65;
   }
 
-  @media (width < 768px) {
-    app-recipe-pane .head {
-      grid-template-areas:
-        'title edit'
-        'main main'
-        'source source';
-      column-gap: 12px;
-    }
+  app-recipe-pane .steps li:first-child {
+    margin-top: 6px;
+  }
 
+  app-recipe-pane .steps li:last-child {
+    margin-bottom: 6px;
+  }
+
+  @media (width < 768px) {
     app-recipe-pane h1 {
       font-size: 34px;
       line-height: 1.1;
     }
 
     app-recipe-pane .crumbline {
-      display: none;
-    }
-
-    app-recipe-pane .folder {
-      display: block;
       margin: 0 0 12px;
-      font-size: 16px;
-    }
-
-    app-recipe-pane .meta {
-      display: block;
-      margin: 0 0 12px;
-      font-size: 15px;
     }
 
     app-recipe-pane .notes {
-      margin: 0 0 16px;
       font-size: 18px;
     }
 
-    app-recipe-pane .actions {
-      display: contents;
-    }
-
-    app-recipe-pane .source {
-      grid-area: source;
-      justify-self: start;
-      max-width: 100%;
-    }
-
     app-recipe-pane .edit {
-      grid-area: edit;
       width: 44px;
       min-width: 44px;
       padding: 0;
@@ -388,8 +394,9 @@ app-recipe-pane .steps li::marker {
       margin-top: 26px;
     }
 
-    app-recipe-pane .ingredients li {
-      margin: 9px 0;
+    app-recipe-pane .amount,
+    app-recipe-pane .item {
+      padding-block: 9px;
     }
 
     app-recipe-pane .steps {
@@ -399,6 +406,41 @@ app-recipe-pane .steps li::marker {
     app-recipe-pane .steps li {
       margin: 14px 0;
     }
+
+    app-recipe-pane .steps li:first-child {
+      margin-top: 7px;
+    }
+
+    app-recipe-pane .steps li:last-child {
+      margin-bottom: 7px;
+    }
+  }
+}
+@container pane (width < 760px) {
+  app-recipe-pane .head {
+    grid-template-areas:
+      'title edit'
+      'main main'
+      'source source';
+    column-gap: 12px;
+  }
+
+  app-recipe-pane .headmain:has(+ .actions .source) .notes {
+    margin-bottom: 16px;
+  }
+
+  app-recipe-pane .actions {
+    display: contents;
+  }
+
+  app-recipe-pane .source {
+    grid-area: source;
+    justify-self: start;
+    max-width: 100%;
+  }
+
+  app-recipe-pane .edit {
+    grid-area: edit;
   }
 }
 `;

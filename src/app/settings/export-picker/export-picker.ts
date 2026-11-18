@@ -15,6 +15,7 @@ import { ExportFormat, Exporter } from '../../export/exporter';
 import { beneathAt } from '../../recipe/folders';
 import { RecipeStore } from '../../recipe/recipe-store';
 import { plural } from '../../shell/formatting';
+import { Icon } from '../../shell/icon/icon';
 import { Segment, Segmented } from '../../shell/segmented/segmented';
 import { settled } from '../../shell/settled';
 import { Tick, tickOf } from './tick';
@@ -45,7 +46,7 @@ type PickerRow = PickerFolderRow | PickerRecipeRow;
 
 @Component({
   selector: 'app-export-picker',
-  imports: [Segmented],
+  imports: [Icon, Segmented],
   templateUrl: './export-picker.html',
   styleUrls: ['../settings-row.css', '../../shell/tree-row.css', './export-picker.css'],
 })

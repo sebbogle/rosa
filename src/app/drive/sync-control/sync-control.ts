@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { SettingsSheet } from '../../settings/settings-sheet';
 import { Bubble } from '../../shell/bubble/bubble';
+import { Icon } from '../../shell/icon/icon';
 import { UNREACHABLE, UNSENT, inertOf } from '../drive-ladder';
 import { CatchUpEnd, DriveService } from '../drive-service';
 
@@ -28,7 +29,7 @@ const IN_GOOGLE_DRIVE_FOR_MS = 4500;
 
 @Component({
   selector: 'app-sync-control',
-  imports: [Bubble],
+  imports: [Bubble, Icon],
   templateUrl: './sync-control.html',
   styleUrl: './sync-control.css',
 })

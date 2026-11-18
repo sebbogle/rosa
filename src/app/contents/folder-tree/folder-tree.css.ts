@@ -42,9 +42,15 @@ app-folder-tree .row.recipe .label {
   grid-column: 1 / -1;
 }
 
-app-folder-tree .row:hover {
+app-folder-tree .row:hover,
+app-folder-tree > .line:has(> .more:hover) > .row,
+app-folder-tree > .line.menu-open > .row {
   background: var(--hover);
   color: var(--ink);
+}
+
+app-folder-tree .row:active {
+  background: var(--hover-strong);
 }
 
 app-folder-tree .chevron {
@@ -127,7 +133,11 @@ app-folder-tree .rename:focus {
 }
 
 app-folder-tree .nomatch {
-  display: none;
+  margin: 8px;
+  color: var(--faint);
+  font-size: 13px;
+  line-height: 1.5;
+  text-wrap: pretty;
 }
 
 @media (width < 1024px), (pointer: coarse) {
@@ -150,10 +160,20 @@ app-folder-tree .nomatch {
     font-size: 11px;
   }
 
+  app-folder-tree .row.folder {
+    padding-right: 40px;
+  }
+
   app-folder-tree .more {
+    display: block;
     width: 32px;
     height: 32px;
     font-size: 15px;
+  }
+
+  app-folder-tree > .line:not(:hover, .menu-open) > .more {
+    background: transparent;
+    color: var(--faint);
   }
 
   app-folder-tree .rename {
@@ -162,12 +182,8 @@ app-folder-tree .nomatch {
   }
 
   app-folder-tree .nomatch {
-    display: block;
     margin: 14px 10px;
-    color: var(--faint);
     font-size: 16px;
-    line-height: 1.5;
-    text-wrap: pretty;
   }
 }
 `;

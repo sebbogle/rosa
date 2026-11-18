@@ -1,5 +1,6 @@
 import { CdkDrag, CdkDragDrop, CdkDropList } from '@angular/cdk/drag-drop';
 import { Component, DestroyRef, computed, inject, input, signal } from '@angular/core';
+import { Icon } from '../../shell/icon/icon';
 import { clicks } from '../../shell/press';
 import { TOUCH } from '../../shell/touch';
 import { Tab, Tabs } from '../tabs';
@@ -8,7 +9,7 @@ const STRIP_NAMES = ['Open recipes on the left', 'Open recipes on the right'];
 
 @Component({
   selector: 'app-tab-strip',
-  imports: [CdkDrag, CdkDropList],
+  imports: [CdkDrag, CdkDropList, Icon],
   host: {
     role: 'group',
     '[attr.aria-label]': 'label()',
