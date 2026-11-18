@@ -1,6 +1,7 @@
 import TOKENS_CSS from '../../tokens.css' with { loader: 'text' };
 import { PANE_LAYOUT_CSS } from '../frame.css';
 import { PANE_CSS } from '../recipe/recipe-pane/recipe-pane.css';
+import { ICON_CSS } from '../shell/icon/icon.css';
 import { SEGMENTED_CSS } from '../shell/segmented/segmented.css';
 import { contentsShell } from './contents-shell';
 import { escaped } from './escaping';
@@ -39,7 +40,7 @@ export function pageBlob(frozen: readonly Frozen[], name: string): Blob {
 }
 
 function standalonePage({ title, css, body }: Shell): string {
-  const styles = [TOKENS_CSS, PANE_CSS, SEGMENTED_CSS, ...css];
+  const styles = [TOKENS_CSS, ICON_CSS, PANE_CSS, SEGMENTED_CSS, ...css];
 
   return `<!doctype html>
 <html lang="en" data-appearance="default">

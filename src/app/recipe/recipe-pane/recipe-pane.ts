@@ -1,7 +1,6 @@
 import { Component, ViewEncapsulation, computed, inject, input, output } from '@angular/core';
 import { EditorSession } from '../../editor/editor-session';
 import { Icon } from '../../shell/icon/icon';
-import { ICON_PATHS } from '../../shell/icon/icon-paths';
 import { Segment, Segmented } from '../../shell/segmented/segmented';
 import { drawnPath } from '../folders';
 import { IngredientGroup, MethodGroup, Recipe, Source, shownName } from '../recipe';
@@ -94,8 +93,6 @@ export class RecipePane {
   protected readonly folder = computed(() => drawnPath(this.recipe().folder));
 
   protected readonly source = computed(() => shownSource(this.recipe().source));
-
-  protected readonly arrow = ICON_PATHS.arrow;
 
   protected readonly meta = computed(() => {
     const { prep } = this.recipe();
