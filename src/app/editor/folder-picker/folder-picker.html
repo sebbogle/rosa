@@ -54,18 +54,7 @@
           [attr.data-adds]="rootKey"
           (click)="startAdding([])"
         >
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            aria-hidden="true"
-          >
-            <path d="M8 3v10M3 8h10" />
-          </svg>
+          <app-icon name="plus" [size]="0.92" />
         </button>
       </div>
 
@@ -106,18 +95,7 @@
                 [attr.data-adds]="row.key"
                 (click)="startAdding(row.segments)"
               >
-                <svg
-                  width="11"
-                  height="11"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="1.9"
-                  stroke-linecap="round"
-                  aria-hidden="true"
-                >
-                  <path d="M8 3v10M3 8h10" />
-                </svg>
+                <app-icon name="plus" [size]="0.85" />
               </button>
             </div>
           } @else if (row.kind === 'none') {

@@ -128,6 +128,7 @@
   border-radius: var(--radius-small);
   background: transparent;
   color: var(--dim);
+  font-size: 13px;
   cursor: pointer;
   opacity: 0;
 }
@@ -239,12 +240,8 @@
   .add {
     width: 32px;
     height: 32px;
+    font-size: 17px;
     opacity: 1;
-  }
-
-  .add svg {
-    width: 15px;
-    height: 15px;
   }
 
   .room {

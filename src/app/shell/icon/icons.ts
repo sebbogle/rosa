@@ -15,6 +15,7 @@ const SHAPES = {
   more: { d: 'M3.5 8h.01M8 8h.01M12.5 8h.01', weight: 2.2 },
   grip: { d: 'M6 3.5h.01M10 3.5h.01M6 8h.01M10 8h.01M6 12.5h.01M10 12.5h.01', weight: 2 },
   arrow: { d: 'M4.5 11.5l7-7M6 4.5h5.5V10' },
+  plus: { d: 'M8 3v10M3 8h10' },
   magnifier: { d: 'M2.5 7a4.5 4.5 0 1 0 9 0a4.5 4.5 0 1 0-9 0M10.5 10.5L14 14' },
 } satisfies Record<string, IconShape>;
 
