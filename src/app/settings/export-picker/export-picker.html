@@ -83,9 +83,7 @@
                   (change)="tickFolder(row, $event)"
                 />
                 <span class="tickbox" aria-hidden="true">
-                  <svg class="mark" width="10" height="10" viewBox="0 0 16 16">
-                    <path d="M3 8.5l3.2 3L13 4.5" />
-                  </svg>
+                  <app-icon class="mark" name="tick" [weight]="2.6" />
                   <span class="dash"></span>
                 </span>
                 <span class="name">{{ row.name }}</span>
@@ -101,9 +99,7 @@
                   (change)="tickRecipe(row.id, $event)"
                 />
                 <span class="tickbox" aria-hidden="true">
-                  <svg class="mark" width="10" height="10" viewBox="0 0 16 16">
-                    <path d="M3 8.5l3.2 3L13 4.5" />
-                  </svg>
+                  <app-icon class="mark" name="tick" [weight]="2.6" />
                 </span>
                 <span class="name">{{ row.title }}</span>
               </label>
