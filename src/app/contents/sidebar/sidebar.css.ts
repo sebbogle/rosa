@@ -39,6 +39,7 @@ app-sidebar .searchbox {
   border: 1px solid var(--line);
   border-radius: var(--radius);
   background: var(--field);
+  font-size: 13px;
   cursor: text;
 }
 
@@ -54,7 +55,6 @@ app-sidebar .search {
   padding: 7px 0;
   border: 0;
   background: transparent;
-  font-size: 13px;
 }
 
 app-sidebar .search:focus {
@@ -147,16 +147,11 @@ app-sidebar app-grip {
   app-sidebar .searchbox {
     gap: 9px;
     padding: 0 12px;
-  }
-
-  app-sidebar .magnifier {
-    width: 16px;
-    height: 16px;
+    font-size: 16px;
   }
 
   app-sidebar .search {
     padding: 12px 0;
-    font-size: 16px;
   }
 
   app-sidebar .shut {

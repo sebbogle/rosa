@@ -33,20 +33,7 @@
   @if (open()) {
     <div class="dropdown listbox" role="dialog" aria-label="Choose a folder" tabindex="-1">
       <div class="search">
-        <span class="magnifier" aria-hidden="true">
-          <svg
-            width="13"
-            height="13"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.7"
-            stroke-linecap="round"
-          >
-            <circle cx="7" cy="7" r="4.5" />
-            <path d="M10.5 10.5L14 14" />
-          </svg>
-        </span>
+        <app-icon class="magnifier" name="magnifier" />
 
         <input
           #finder

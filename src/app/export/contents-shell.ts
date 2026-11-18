@@ -23,20 +23,7 @@ export function contentsShell(frozen: readonly Frozen[], name: string): Shell {
     <dialog class="drawer" id="drawer" role="navigation" aria-label="Contents" closedby="none">
       <div class="searchwrap">
         <label class="searchbox">
-          <svg
-            class="magnifier"
-            width="13"
-            height="13"
-            viewBox="0 0 16 16"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.7"
-            stroke-linecap="round"
-            aria-hidden="true"
-          >
-            <circle cx="7" cy="7" r="4.5" />
-            <path d="M10.5 10.5L14 14" />
-          </svg>
+          ${drawnIcon('magnifier', 1, 'magnifier')}
           <input
             class="search"
             id="search"

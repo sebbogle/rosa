@@ -15,6 +15,7 @@
   padding: 2px 5px 2px 11px;
   border-bottom: 1px solid var(--line);
   border-radius: calc(var(--radius-card) - 1px) calc(var(--radius-card) - 1px) 0 0;
+  font-size: 13px;
 }
 
 .search:has(.find:focus-visible) {
@@ -23,8 +24,6 @@
 }
 
 .magnifier {
-  display: inline-flex;
-  flex: none;
   color: var(--dim);
 }
 
@@ -34,7 +33,6 @@
   padding: 2px 0;
   border: 0;
   background: transparent;
-  font-size: 13px;
 }
 
 .find:focus {
@@ -141,9 +139,6 @@
 @media (width < 1024px), (pointer: coarse) {
   .search {
     min-height: 44px;
-  }
-
-  .find {
     font-size: 16px;
   }
 
