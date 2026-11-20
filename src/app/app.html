@@ -10,8 +10,7 @@
         [class.showing]="drawerOpen()"
         [attr.aria-expanded]="drawerOpen()"
         [attr.aria-describedby]="updateWaiting() ? 'update-waiting' : null"
-        (click)="toggleDrawer()"
-      >
+        (click)="toggleDrawer()">
         <app-icon name="menu" [size]="1.1" />
 
         @if (updateWaiting()) {
@@ -47,15 +46,13 @@
           [class.focused]="side.focused"
           [attr.role]="split() ? 'region' : null"
           [attr.aria-label]="split() ? sideNames[at] : null"
-          (pointerdown)="press(at, $event)"
-        >
+          (pointerdown)="press(at, $event)">
           <div class="pane">
             @if (side.reading; as recipe) {
               <app-recipe-pane
                 [recipe]="recipe"
                 [sizing]="side.sizing"
-                (choose)="choose(recipe.id, $event)"
-              />
+                (choose)="choose(recipe.id, $event)" />
             } @else {
               <app-resting-state [side]="at" />
             }
@@ -67,22 +64,19 @@
               cdkDropList
               [cdkDropListData]="at"
               [cdkDropListEnterPredicate]="fromTheOtherSide"
-              (cdkDropListDropped)="moveToSide($event)"
-            ></div>
+              (cdkDropListDropped)="moveToSide($event)"></div>
           } @else {
             <div
               class="zone left"
               cdkDropList
               [cdkDropListEnterPredicate]="splittable"
-              (cdkDropListDropped)="makeSide($event, 'left')"
-            ></div>
+              (cdkDropListDropped)="makeSide($event, 'left')"></div>
 
             <div
               class="zone right"
               cdkDropList
               [cdkDropListEnterPredicate]="splittable"
-              (cdkDropListDropped)="makeSide($event, 'right')"
-            ></div>
+              (cdkDropListDropped)="makeSide($event, 'right')"></div>
           }
         </div>
       }

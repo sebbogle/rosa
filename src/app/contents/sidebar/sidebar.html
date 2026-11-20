@@ -4,8 +4,7 @@
   role="navigation"
   aria-label="Contents"
   closedby="none"
-  (click)="beside($event)"
->
+  (click)="beside($event)">
   <div class="searchwrap">
     <label class="searchbox">
       <app-icon class="magnifier" name="magnifier" />
@@ -18,8 +17,7 @@
         aria-label="Search recipes"
         autocomplete="off"
         [value]="query()"
-        (input)="search($event)"
-      />
+        (input)="search($event)" />
     </label>
 
     <button type="button" class="shut" aria-label="Close Contents" (click)="close()">

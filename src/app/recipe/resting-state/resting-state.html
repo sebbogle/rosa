@@ -13,8 +13,7 @@
           type="button"
           class="control"
           [attr.aria-disabled]="inert() || held() ? 'true' : null"
-          (click)="press()"
-        >
+          (click)="press()">
           {{ act }}
         </button>
 

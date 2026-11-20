@@ -37,14 +37,14 @@
           [href]="link"
           [title]="source.text"
           target="_blank"
-          rel="noreferrer noopener"
-          ><span class="text">{{ source.text }}</span
-          ><app-icon class="tell" name="arrow" [size]="0.85"
-        /></a>
+          rel="noreferrer noopener">
+          <span class="text">{{ source.text }}</span>
+          <app-icon class="tell" name="arrow" [size]="0.85" />
+        </a>
       } @else {
-        <span class="source" [title]="source.text"
-          ><span class="text">{{ source.text }}</span></span
-        >
+        <span class="source" [title]="source.text">
+          <span class="text">{{ source.text }}</span>
+        </span>
       }
     }
 
@@ -54,8 +54,7 @@
         class="edit"
         title="Edit recipe"
         aria-label="Edit recipe"
-        (click)="edit()"
-      >
+        (click)="edit()">
         <app-icon name="pencil" [size]="1.05" />
       </button>
     }
@@ -72,8 +71,7 @@
             label="Sizing"
             [options]="segments()"
             [chosen]="shown()"
-            (choose)="choose.emit($event)"
-          />
+            (choose)="choose.emit($event)" />
         } @else if (loneName(); as name) {
           <span class="sizing-name">{{ name }}</span>
         }
@@ -89,8 +87,8 @@
                 @for (ingredient of group.rows; track $index) {
                   <li>
                     @if (ingredient.amount; as amount) {
-                      <b class="amount">{{ amount }}</b
-                      >&ngsp;
+                      <b class="amount">{{ amount }}</b>
+                      &ngsp;
                     }
                     <span class="item">{{ ingredient.item }}</span>
                   </li>

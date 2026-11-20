@@ -4,8 +4,7 @@
     label="Sizing"
     [options]="segments()"
     [chosen]="chosen()"
-    (choose)="choose($event)"
-  />
+    (choose)="choose($event)" />
 }
 
 <button type="button" class="add" (click)="add()">+ Sizing</button>
@@ -23,8 +22,7 @@
       [placeholder]="placeholder()"
       [value]="name()"
       (input)="rename($event)"
-      (blur)="settle()"
-    />
+      (blur)="settle()" />
 
     <button
       type="button"
@@ -32,8 +30,7 @@
       aria-haspopup="menu"
       [attr.aria-expanded]="open()"
       [attr.aria-label]="actions()"
-      (click)="toggleMenu()"
-    >
+      (click)="toggleMenu()">
       <app-icon name="more" [size]="1.15" />
     </button>
 
@@ -51,8 +48,7 @@
           role="menuitem"
           class="undo"
           [disabled]="!several()"
-          (click)="delete()"
-        >
+          (click)="delete()">
           Delete sizing
         </button>
       </div>

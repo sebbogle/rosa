@@ -6,8 +6,7 @@
   [attr.aria-label]="label()"
   (pointerdown)="press($event)"
   (pointerup)="lift($event)"
-  (click)="release($event)"
->
+  (click)="release($event)">
   <div #frame class="sheet" tabindex="-1" autofocus>
     <div class="body" cdkScrollable>
       <ng-content />

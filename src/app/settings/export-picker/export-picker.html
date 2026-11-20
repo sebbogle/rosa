@@ -14,8 +14,7 @@
       class="quiet"
       [attr.aria-disabled]="exportable() ? null : 'true'"
       [attr.aria-describedby]="exportable() ? null : 'export-line'"
-      (click)="show()"
-    >
+      (click)="show()">
       Export
     </button>
   }
@@ -27,8 +26,7 @@
     class="panel picking"
     role="region"
     aria-label="Choose recipes"
-    [class.leaving]="leaving()"
-  >
+    [class.leaving]="leaving()">
     <div class="listbox">
       <div class="search">
         <app-icon class="magnifier" name="magnifier" />
@@ -41,8 +39,7 @@
           aria-label="Filter recipes"
           autocomplete="off"
           [value]="typed()"
-          (input)="search($event)"
-        />
+          (input)="search($event)" />
 
         @if (tally().any) {
           <button type="button" class="small" (click)="clear()">Clear</button>
@@ -53,8 +50,7 @@
           type="button"
           class="small"
           [attr.aria-disabled]="sweep().nothing ? 'true' : null"
-          (click)="sweepMatching()"
-        >
+          (click)="sweepMatching()">
           Tick all
         </button>
       </div>
@@ -69,8 +65,7 @@
                 [class.open]="row.expanded"
                 [attr.aria-expanded]="row.expanded"
                 [attr.aria-label]="(row.expanded ? 'Collapse ' : 'Expand ') + row.name"
-                (click)="toggle(row.key)"
-              >
+                (click)="toggle(row.key)">
                 <app-icon class="glyph" name="chevron" [size]="1.2" />
               </button>
 
@@ -80,8 +75,7 @@
                   class="tick"
                   [checked]="row.tick === 'all'"
                   [indeterminate]="row.tick === 'some'"
-                  (change)="tickFolder(row, $event)"
-                />
+                  (change)="tickFolder(row, $event)" />
                 <span class="tickbox" aria-hidden="true">
                   <app-icon class="mark" name="tick" [weight]="2.6" />
                   <span class="dash"></span>
@@ -96,8 +90,7 @@
                   type="checkbox"
                   class="tick"
                   [checked]="row.ticked"
-                  (change)="tickRecipe(row.id, $event)"
-                />
+                  (change)="tickRecipe(row.id, $event)" />
                 <span class="tickbox" aria-hidden="true">
                   <app-icon class="mark" name="tick" [weight]="2.6" />
                 </span>
@@ -116,8 +109,7 @@
         label="Format"
         [options]="formats"
         [chosen]="format()"
-        (choose)="choose($event)"
-      />
+        (choose)="choose($event)" />
 
       <span class="note" role="status">{{ tally().hidden }}</span>
 

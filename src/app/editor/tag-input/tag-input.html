@@ -6,8 +6,7 @@
         type="button"
         class="drop"
         [attr.aria-label]="'Remove tag ' + tag"
-        (click)="remove(tag)"
-      >
+        (click)="remove(tag)">
         <app-icon name="close" [size]="0.8" />
       </button>
     </span>
@@ -22,8 +21,7 @@
     (input)="type($event)"
     (keydown)="key($event)"
     (focus)="focused.set(true)"
-    (blur)="focused.set(false)"
-  />
+    (blur)="focused.set(false)" />
 </div>
 
 @if (listing()) {
@@ -35,8 +33,7 @@
           class="suggestion"
           [class.highlighted]="index === highlighted()"
           (mousedown)="$event.preventDefault()"
-          (click)="pick(tag)"
-        >
+          (click)="pick(tag)">
           {{ tag }}
         </button>
       </li>
