@@ -7,8 +7,7 @@
   class="groups"
   cdkDropList
   [cdkDropListSortPredicate]="belowTheFirst"
-  (cdkDropListDropped)="dropGroup($event)"
->
+  (cdkDropListDropped)="dropGroup($event)">
   @for (block of blocks(); track $index; let at = $index) {
     <div class="place" cdkDrag [cdkDragDisabled]="at === 0" (cdkDragStarted)="buzz($event)">
       <div
@@ -20,16 +19,14 @@
         [id]="lists()[at]"
         [cdkDropListData]="at"
         [cdkDropListConnectedTo]="lists()"
-        (cdkDropListDropped)="dropRow($event)"
-      >
+        (cdkDropListDropped)="dropRow($event)">
         @if (at > 0) {
           <app-group-head
             [column]="column()"
             [block]="at"
             [group]="block.group"
             [collapsed]="block.collapsed"
-            (insert)="insertGroup(at + 1)"
-          />
+            (insert)="insertGroup(at + 1)" />
         }
 
         @if (at === 0 || !block.collapsed) {
@@ -41,8 +38,7 @@
                 [block]="at"
                 [index]="index"
                 [row]="row"
-                (cdkDragStarted)="buzz($event)"
-              />
+                (cdkDragStarted)="buzz($event)" />
             }
           </div>
 

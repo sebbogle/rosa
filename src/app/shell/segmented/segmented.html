@@ -5,8 +5,7 @@
       [name]="name"
       [value]="segment.value"
       [checked]="segment.value === chosen()"
-      (change)="choose.emit(segment.value)"
-    />
+      (change)="choose.emit(segment.value)" />
     {{ segment.label }}
   </label>
 }

@@ -14,19 +14,17 @@
           [attr.aria-label]="'Rename ' + row.name"
           [value]="row.name"
           (blur)="commitRename(row, $event)"
-          (keydown.enter)="commitRename(row, $event)"
-        />
+          (keydown.enter)="commitRename(row, $event)" />
       } @else {
         <button
           type="button"
           class="row folder"
           [attr.data-key]="row.key"
           [attr.aria-expanded]="row.expanded"
-          (click)="toggle(row.key)"
-        >
-          <span class="chevron" [class.open]="row.expanded" aria-hidden="true"
-            ><app-icon name="chevron" [size]="1.2"
-          /></span>
+          (click)="toggle(row.key)">
+          <span class="chevron" [class.open]="row.expanded" aria-hidden="true">
+            <app-icon name="chevron" [size]="1.2" />
+          </span>
           <span class="label">{{ row.name }}</span>
         </button>
 
@@ -34,8 +32,7 @@
           type="button"
           class="more"
           [attr.aria-label]="'Folder actions for ' + row.name"
-          (click)="menu(row.key)"
-        >
+          (click)="menu(row.key)">
           <app-icon name="more" [size]="1.15" />
         </button>
 
@@ -54,8 +51,7 @@
         (click)="read(row.id, $event)"
         (dblclick)="keep(row.id)"
         (auxclick)="middleClick(row.id, $event)"
-        (mousedown)="suppressAutoscroll($event)"
-      >
+        (mousedown)="suppressAutoscroll($event)">
         <span class="label">{{ row.title }}</span>
       </button>
     }

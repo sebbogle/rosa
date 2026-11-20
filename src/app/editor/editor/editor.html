@@ -10,8 +10,7 @@
           autocomplete="off"
           [value]="editing.fields.title"
           (input)="type('title', $event)"
-          (blur)="settleTitle($event)"
-        />
+          (blur)="settleTitle($event)" />
       </label>
 
       <div class="field">
@@ -40,8 +39,7 @@
           rows="3"
           [value]="editing.fields.notes"
           (input)="type('notes', $event)"
-          (blur)="settle('notes')"
-        ></textarea>
+          (blur)="settle('notes')"></textarea>
       </label>
 
       <div class="meta">
@@ -53,8 +51,7 @@
             autocomplete="off"
             [value]="editing.fields.prep"
             (input)="type('prep', $event)"
-            (blur)="settle('prep')"
-          />
+            (blur)="settle('prep')" />
         </label>
 
         <label class="field">
@@ -65,8 +62,7 @@
             autocomplete="off"
             [value]="editing.fields.source.text"
             (input)="typeSource('text', $event)"
-            (blur)="settleSource()"
-          />
+            (blur)="settleSource()" />
         </label>
 
         <label class="field">
@@ -77,8 +73,7 @@
             autocomplete="off"
             [value]="editing.fields.source.link"
             (input)="typeSource('link', $event)"
-            (blur)="settleSource()"
-          />
+            (blur)="settleSource()" />
         </label>
       </div>
     </div>

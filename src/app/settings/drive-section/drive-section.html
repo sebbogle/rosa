@@ -2,7 +2,10 @@
   @if (unsent() || speech().line || account()) {
     <div class="text">
       @if (unsent()) {
-        <p class="line unsent"><span class="marker" aria-hidden="true"></span>{{ unsentWords }}</p>
+        <p class="line unsent">
+          <span class="marker" aria-hidden="true"></span>
+          <span>{{ unsentWords }}</span>
+        </p>
       } @else if (speech().line; as line) {
         <p class="line">{{ line }}</p>
       }
@@ -21,8 +24,7 @@
           class="danger"
           [attr.aria-disabled]="held() || clearInert() ? 'true' : null"
           [attr.aria-describedby]="clearInert() ? 'drive-inert-reason' : null"
-          (click)="askToClear()"
-        >
+          (click)="askToClear()">
           Clear Drive
         </button>
 
@@ -35,8 +37,7 @@
           class="primary"
           [attr.aria-disabled]="inert() || held() ? 'true' : null"
           [attr.aria-describedby]="inert() ? 'drive-inert-reason' : null"
-          (click)="press()"
-        >
+          (click)="press()">
           {{ act }}
         </button>
       }

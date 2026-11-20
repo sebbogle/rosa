@@ -7,8 +7,7 @@
     [class.inert]="inert()"
     [attr.aria-disabled]="inert() || held() ? 'true' : null"
     [attr.aria-describedby]="marked() ? 'unsent-changes' : null"
-    (click)="press()"
-  >
+    (click)="press()">
     <span class="glyph" [class.turning]="turning()" aria-hidden="true">
       @if (showing() === 'in Google Drive') {
         <app-icon name="tick" [size]="1.15" />
