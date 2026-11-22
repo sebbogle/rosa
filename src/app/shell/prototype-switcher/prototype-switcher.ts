@@ -36,26 +36,24 @@ const FIELDS = 'input, textarea, select, [contenteditable]';
       </span>
       @if (open()) {
         <span class="group">
-          <button type="button" (click)="prototype.stepUntitled()">
-            Untitled: <b>{{ prototype.untitled() }}</b>
+          <button type="button" [class.on]="!prototype.asks()" (click)="prototype.toggleAsks()">
+            Remove asks: <b>{{ prototype.asks() ? 'yes' : 'no' }}</b>
           </button>
           <button type="button" [class.on]="prototype.slow()" (click)="prototype.toggleSlow()">
             Slow: <b>{{ prototype.slow() ? 'on' : 'off' }}</b>
           </button>
-          <button
-            type="button"
-            [class.on]="prototype.failNext() !== 'off'"
-            (click)="prototype.stepFail()"
-          >
-            Next fails: <b>{{ prototype.failNext() }}</b>
+          <button type="button" [class.on]="prototype.failNext()" (click)="prototype.toggleFail()">
+            Next fails: <b>{{ prototype.failNext() ? 'yes' : 'no' }}</b>
           </button>
         </span>
         <span class="group">
           <button type="button" [disabled]="prototype.count() === 0" (click)="prototype.clear()">
             Clear pictures ({{ prototype.count() }})
           </button>
-          @if (!inEditor()) {
-            <button type="button" [disabled]="seeding() !== 'Add test recipes'" (click)="seed()">
+          @if (inEditor()) {
+            <button type="button" (click)="sample()">Sample picture</button>
+          } @else {
+            <button type="button" [disabled]="seeding() === 'Adding…'" (click)="seed()">
               {{ seeding() }}
             </button>
           }
@@ -179,7 +177,7 @@ export class PrototypeSwitcher {
 
   protected readonly editorOpen = computed(() => this.session.editing() !== undefined);
 
-  protected readonly seeding = signal('Add test recipes');
+  protected readonly seeding = signal('Add test recipes with pictures');
 
   protected readonly open = this.prototype.barOpen;
 
@@ -200,7 +198,13 @@ export class PrototypeSwitcher {
     );
     const plan = await this.importer.read(files, () => undefined);
     await this.importer.write(plan, { replacing: false, restoring: false });
-    this.seeding.set(`${plan.added.length} added, ${plan.here} already here`);
+    this.prototype.seed();
+    this.seeding.set(`${plan.added.length} added, ${plan.here} already here; pictures given`);
+  }
+
+  protected sample(): void {
+    const editing = this.session.editing();
+    if (editing) this.prototype.sample(editing.id ?? editing.draft);
   }
 
   protected onKey(event: KeyboardEvent): void {

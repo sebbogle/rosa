@@ -14,7 +14,6 @@ import { Sheet } from '../../shell/sheet/sheet';
 import { BlockColumn } from '../block-column/block-column';
 import { EditorSession, SourceSlot } from '../editor-session';
 import { FolderPicker } from '../folder-picker/folder-picker';
-import { AddingPicture } from '../picture-prototype/adding-picture';
 import { PictureAdder } from '../picture-prototype/picture-adder';
 import { SizingBar } from '../sizing-bar/sizing-bar';
 import { TagInput } from '../tag-input/tag-input';
@@ -59,8 +58,6 @@ export class Editor {
   protected readonly open = this.session.editing;
 
   protected readonly prototyping = isDevMode();
-
-  protected readonly pictureVariant = inject(AddingPicture).variant;
 
   protected readonly deletable = this.session.deletable;
   protected readonly revertable = this.session.revertable;
