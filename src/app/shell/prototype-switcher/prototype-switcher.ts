@@ -1,4 +1,5 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { Importer } from '../../import/importer';
 import {
   PicturePrototype,
   VARIANTS,
@@ -22,6 +23,10 @@ const FIELDS = 'input, textarea, select, [contenteditable]';
       <span class="divider"></span>
       <button type="button" class="picture" (click)="prototype.stepPicture(1)">
         Picture: <b>{{ prototype.choice() }}</b>
+      </button>
+      <span class="divider"></span>
+      <button type="button" [disabled]="seeding() !== 'Add test recipes'" (click)="seed()">
+        {{ seeding() }}
       </button>
     </div>
   `,
@@ -93,9 +98,25 @@ const FIELDS = 'input, textarea, select, [contenteditable]';
 export class PrototypeSwitcher {
   protected readonly prototype = inject(PicturePrototype);
 
+  private readonly importer = inject(Importer);
+
+  protected readonly seeding = signal('Add test recipes');
+
   protected readonly name = computed(
     () => VARIANTS.find((variant) => variant.key === this.prototype.variant())?.name,
   );
+
+  protected async seed(): Promise<void> {
+    this.seeding.set('Adding…');
+    const recipes: { id: string }[] = await (await fetch('picture-prototype/seed.json')).json();
+    const files = recipes.map(
+      (recipe) =>
+        new File([JSON.stringify(recipe)], `${recipe.id}.json`, { type: 'application/json' }),
+    );
+    const plan = await this.importer.read(files, () => undefined);
+    await this.importer.write(plan, { replacing: false, restoring: false });
+    this.seeding.set(`${plan.added.length} added, ${plan.here} already here`);
+  }
 
   protected onKey(event: KeyboardEvent): void {
     if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
