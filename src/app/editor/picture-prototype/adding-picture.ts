@@ -3,7 +3,7 @@ import { Injectable, inject, signal } from '@angular/core';
 
 export const VARIANTS = [
   { key: 'A', name: 'Empty band at the top' },
-  { key: 'B', name: 'Picture field by the tags' },
+  { key: 'B', name: "Picture field in Prep's place" },
   { key: 'C', name: 'From the bar, drop or paste anywhere' },
   { key: 'D', name: 'Look before it goes in' },
 ] as const;

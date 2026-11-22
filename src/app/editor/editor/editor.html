@@ -51,16 +51,22 @@
       </label>
 
       <div class="meta">
-        <label class="field">
-          <span class="name">Prep</span>
-          <input
-            class="input"
-            type="text"
-            autocomplete="off"
-            [value]="editing.fields.prep"
-            (input)="type('prep', $event)"
-            (blur)="settle('prep')" />
-        </label>
+        @if (prototyping) {
+          <app-picture-adder slot="meta" />
+        }
+
+        @if (!prototyping || pictureVariant() !== 'B') {
+          <label class="field">
+            <span class="name">Prep</span>
+            <input
+              class="input"
+              type="text"
+              autocomplete="off"
+              [value]="editing.fields.prep"
+              (input)="type('prep', $event)"
+              (blur)="settle('prep')" />
+          </label>
+        }
 
         <label class="field">
           <span class="name">Source</span>

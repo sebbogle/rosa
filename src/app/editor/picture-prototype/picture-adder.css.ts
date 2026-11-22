@@ -131,6 +131,22 @@ export const PICTURE_ADDER_CSS = `
   text-transform: uppercase;
 }
 
+.pa-meta-field {
+  --field-height: 37px;
+}
+
+@media (width < 1024px), (pointer: coarse) {
+  .pa-meta-field {
+    --field-height: 46px;
+  }
+
+  @media (width < 768px) {
+    .pa-meta-field {
+      --field-height: 37px;
+    }
+  }
+}
+
 .pa-row {
   display: flex;
   align-items: center;

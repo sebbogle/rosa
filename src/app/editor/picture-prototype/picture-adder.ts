@@ -13,7 +13,7 @@ import { EditorSession } from '../editor-session';
 import { AddingPicture, UNREADABLE } from './adding-picture';
 import { PICTURE_ADDER_CSS } from './picture-adder.css';
 
-export type AdderSlot = 'top' | 'field' | 'bar' | 'overlay';
+export type AdderSlot = 'top' | 'field' | 'meta' | 'bar' | 'overlay';
 
 @Component({
   selector: 'app-picture-adder',
@@ -129,8 +129,8 @@ export type AdderSlot = 'top' | 'field' | 'bar' | 'overlay';
         }
       }
 
-      @case ('fieldB') {
-        <div class="pa-field">
+      @case ('metaB') {
+        <div class="pa-field pa-meta-field">
           <span class="pa-name">Picture</span>
           <div class="pa-row">
             @if (shown) {
@@ -172,7 +172,7 @@ export type AdderSlot = 'top' | 'field' | 'bar' | 'overlay';
           }
           <p class="pa-error" id="pa-error" role="alert">
             @if (state.kind === 'failed') {
-              <b>{{ unreadable[state.why].line }}</b> {{ unreadable[state.why].sentence }}
+              Unable to load picture.
             }
           </p>
         </div>
