@@ -1,5 +1,9 @@
 <app-sheet #sheet label="Edit recipe" [shown]="open()" [peel]="peel" (dismiss)="requestClose()">
   @if (sheet.held(); as editing) {
+    @if (prototyping) {
+      <app-picture-adder slot="top" />
+    }
+
     <div class="fields">
       <label class="field title-field">
         <span class="name">Title</span>
@@ -22,6 +26,10 @@
         <span class="name">Tags</span>
         <app-tag-input [tags]="editing.fields.tags" (changed)="tag($event)" />
       </div>
+
+      @if (prototyping) {
+        <app-picture-adder slot="field" />
+      }
     </div>
 
     <div class="columns">
@@ -83,12 +91,23 @@
     <button bar type="button" class="danger" (click)="requestDelete()">Delete</button>
   }
 
+  @if (prototyping) {
+    <app-picture-adder bar slot="bar" />
+  }
+
   <div bar class="right">
     @if (revertable()) {
       <button type="button" class="quiet" (click)="requestRevert()">Revert</button>
     }
     <button type="button" class="primary" (click)="requestClose()">Done</button>
   </div>
+
+  @if (prototyping) {
+    <ng-container ngProjectAs="[overlay]">
+      <app-picture-adder slot="overlay" />
+      <app-prototype-switcher [inEditor]="true" />
+    </ng-container>
+  }
 
   @if (asking(); as ask) {
     <app-confirm [ask]="ask" (keep)="withdraw()" (act)="answer()" />

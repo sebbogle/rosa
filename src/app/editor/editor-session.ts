@@ -2,6 +2,7 @@ import { Injectable, computed, effect, inject, signal, untracked } from '@angula
 import { Recipe, RecipeWithoutId, emptyRecipe } from '../recipe/recipe';
 import { RecipeStore } from '../recipe/recipe-store';
 import { Tabs } from '../recipe/tabs';
+import { AddingPicture } from './picture-prototype/adding-picture';
 import {
   Block,
   Column,
@@ -41,6 +42,7 @@ export interface Editing extends WorkingList {
   readonly id: string | undefined;
   readonly snapshot: RecipeWithoutId | undefined;
   readonly storedTitle: string;
+  readonly draft: string;
 }
 
 export interface GroupMenu {
@@ -70,6 +72,9 @@ interface Adoption {
 export class EditorSession {
   private readonly recipes = inject(RecipeStore);
   private readonly tabs = inject(Tabs);
+  private readonly pictures = inject(AddingPicture);
+
+  private drafts = 0;
 
   private readonly session = signal<Editing | undefined>(undefined);
 
@@ -92,7 +97,9 @@ export class EditorSession {
       editing.id === undefined &&
       editing.fields.title.trim() === '' &&
       this.adopting() === undefined &&
-      written(editing)
+      (written(editing) ||
+        this.pictures.of(editing.draft) !== undefined ||
+        this.pictures.stateFor(editing.draft).kind === 'shrinking')
     );
   });
 
@@ -295,6 +302,7 @@ export class EditorSession {
       ...reverted,
       showing: kept ? editing.showing : reverted.showing,
     });
+    this.pictures.reverted(editing.id);
     void this.recipes.patch(editing.id, editing.snapshot);
   }
 
@@ -316,6 +324,10 @@ export class EditorSession {
   }
 
   close(): void {
+    const editing = untracked(this.session);
+    if (editing && editing.id === undefined && !untracked(this.adopting)) {
+      this.pictures.dropped(editing.draft);
+    }
     this.endSitting();
     this.session.set(undefined);
     this.openMenu.set(undefined);
@@ -328,7 +340,14 @@ export class EditorSession {
     on: RecipeWithoutId,
   ): void {
     this.endSitting();
-    this.session.set({ id, snapshot, storedTitle: on.title, ...workingListOf(on) });
+    this.session.set({
+      id,
+      snapshot,
+      storedTitle: on.title,
+      draft: `draft:${++this.drafts}`,
+      ...workingListOf(on),
+    });
+    this.pictures.opened(id);
     this.openMenu.set(undefined);
     this.asked.set(undefined);
   }
@@ -351,6 +370,7 @@ export class EditorSession {
 
     try {
       const id = await this.recipes.create(recipeOf(editing));
+      this.pictures.adopted(editing.draft, id);
       this.tabs.keep(id);
 
       const { unwritten } = adoption;

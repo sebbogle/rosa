@@ -7,7 +7,6 @@ import {
   inject,
   input,
   output,
-  signal,
   viewChild,
 } from '@angular/core';
 import { EditorSession } from '../../editor/editor-session';
@@ -15,7 +14,7 @@ import { Icon } from '../../shell/icon/icon';
 import { Segment, Segmented } from '../../shell/segmented/segmented';
 import { drawnPath } from '../folders';
 import { IngredientGroup, MethodGroup, Recipe, Source, shownName } from '../recipe';
-import { PicturePrototype } from './picture-prototype/picture-prototype';
+import { AddingPicture } from '../../editor/picture-prototype/adding-picture';
 import { PICTURE_PROTOTYPE_CSS } from './picture-prototype/picture-prototype.css';
 import { PANE_CSS } from './recipe-pane.css';
 
@@ -95,7 +94,7 @@ function shownSource(source: Source): Shown | undefined {
 export class RecipePane {
   private readonly editor = inject(EditorSession);
 
-  protected readonly prototype = inject(PicturePrototype);
+  private readonly pictures = inject(AddingPicture);
 
   readonly recipe = input.required<Recipe>();
 
@@ -103,13 +102,7 @@ export class RecipePane {
 
   readonly sizing = input<string>();
 
-  readonly side = input(0);
-
-  protected readonly shownPicture = computed(() =>
-    this.prototype.pictureFor(this.recipe().id, this.side()),
-  );
-
-  protected readonly grown = signal(false);
+  protected readonly shownPicture = computed(() => this.pictures.of(this.recipe().id));
 
   private readonly viewer = viewChild<ElementRef<HTMLDialogElement>>('viewer');
 

@@ -1,10 +1,20 @@
-import { Component, ElementRef, computed, effect, inject, viewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  computed,
+  effect,
+  inject,
+  isDevMode,
+  viewChild,
+} from '@angular/core';
 import { shownName } from '../../recipe/recipe';
 import { Ask, Confirm } from '../../shell/confirm/confirm';
+import { PrototypeSwitcher } from '../../shell/prototype-switcher/prototype-switcher';
 import { Sheet } from '../../shell/sheet/sheet';
 import { BlockColumn } from '../block-column/block-column';
 import { EditorSession, SourceSlot } from '../editor-session';
 import { FolderPicker } from '../folder-picker/folder-picker';
+import { PictureAdder } from '../picture-prototype/picture-adder';
 import { SizingBar } from '../sizing-bar/sizing-bar';
 import { TagInput } from '../tag-input/tag-input';
 import { Fields } from '../working-list';
@@ -21,7 +31,16 @@ const MENU_ITEM = '[role="menuitem"]';
 
 @Component({
   selector: 'app-editor',
-  imports: [BlockColumn, Confirm, FolderPicker, Sheet, SizingBar, TagInput],
+  imports: [
+    BlockColumn,
+    Confirm,
+    FolderPicker,
+    PictureAdder,
+    PrototypeSwitcher,
+    Sheet,
+    SizingBar,
+    TagInput,
+  ],
   host: {
     '(pointerdown)': 'shut($event)',
     '(click)': 'shut($event)',
@@ -37,6 +56,8 @@ export class Editor {
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef).nativeElement;
 
   protected readonly open = this.session.editing;
+
+  protected readonly prototyping = isDevMode();
 
   protected readonly deletable = this.session.deletable;
   protected readonly revertable = this.session.revertable;
