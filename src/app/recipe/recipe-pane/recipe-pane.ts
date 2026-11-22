@@ -1,9 +1,22 @@
-import { Component, ViewEncapsulation, computed, inject, input, output } from '@angular/core';
+import { NgTemplateOutlet } from '@angular/common';
+import {
+  Component,
+  ElementRef,
+  ViewEncapsulation,
+  computed,
+  inject,
+  input,
+  output,
+  signal,
+  viewChild,
+} from '@angular/core';
 import { EditorSession } from '../../editor/editor-session';
 import { Icon } from '../../shell/icon/icon';
 import { Segment, Segmented } from '../../shell/segmented/segmented';
 import { drawnPath } from '../folders';
 import { IngredientGroup, MethodGroup, Recipe, Source, shownName } from '../recipe';
+import { PicturePrototype } from './picture-prototype/picture-prototype';
+import { PICTURE_PROTOTYPE_CSS } from './picture-prototype/picture-prototype.css';
 import { PANE_CSS } from './recipe-pane.css';
 
 interface Shown {
@@ -75,18 +88,30 @@ function shownSource(source: Source): Shown | undefined {
 @Component({
   selector: 'app-recipe-pane',
   templateUrl: './recipe-pane.html',
-  imports: [Icon, Segmented],
-  styles: [PANE_CSS],
+  imports: [Icon, NgTemplateOutlet, Segmented],
+  styles: [PANE_CSS, PICTURE_PROTOTYPE_CSS],
   encapsulation: ViewEncapsulation.None,
 })
 export class RecipePane {
   private readonly editor = inject(EditorSession);
+
+  protected readonly prototype = inject(PicturePrototype);
 
   readonly recipe = input.required<Recipe>();
 
   readonly frozen = input(false);
 
   readonly sizing = input<string>();
+
+  readonly side = input(0);
+
+  protected readonly shownPicture = computed(() =>
+    this.prototype.pictureFor(this.recipe().id, this.side()),
+  );
+
+  protected readonly grown = signal(false);
+
+  private readonly viewer = viewChild<ElementRef<HTMLDialogElement>>('viewer');
 
   readonly choose = output<string>();
 
@@ -137,5 +162,9 @@ export class RecipePane {
 
   protected edit(): void {
     this.editor.edit(this.recipe());
+  }
+
+  protected view(): void {
+    this.viewer()?.nativeElement.showModal();
   }
 }

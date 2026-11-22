@@ -1,5 +1,5 @@
 import { CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup } from '@angular/cdk/drag-drop';
-import { Component, effect, inject } from '@angular/core';
+import { Component, effect, inject, isDevMode } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { ContentsDrawer } from './contents/contents-drawer';
 import { Sidebar } from './contents/sidebar/sidebar';
@@ -16,6 +16,7 @@ import { SettingsSheet } from './settings/settings-sheet';
 import { dividerEdge } from './shell/divider/divider';
 import { Grip } from './shell/grip/grip';
 import { Icon } from './shell/icon/icon';
+import { PrototypeSwitcher } from './shell/prototype-switcher/prototype-switcher';
 import { clicks } from './shell/press';
 import { Update } from './shell/update';
 
@@ -36,6 +37,7 @@ const FIELDS =
     Editor,
     Grip,
     Icon,
+    PrototypeSwitcher,
     RecipePane,
     RestingState,
     Settings,
@@ -71,6 +73,8 @@ export class App {
   protected readonly drawerOpen = this.drawer.open;
 
   protected readonly updateWaiting = inject(Update).waiting;
+
+  protected readonly prototyping = isDevMode();
 
   constructor() {
     const title = inject(Title);

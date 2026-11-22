@@ -1,6 +1,8 @@
-<header class="head">
+<ng-template #title>
   <h1>{{ recipe().title }}</h1>
+</ng-template>
 
+<ng-template #headmain>
   <div class="headmain">
     @if (folder() || meta()) {
       <p class="crumbline">
@@ -28,7 +30,9 @@
       <p class="notes">{{ notes }}</p>
     }
   </div>
+</ng-template>
 
+<ng-template #actions>
   <div class="actions">
     @if (source(); as source) {
       @if (source.link; as link) {
@@ -59,7 +63,94 @@
       </button>
     }
   </div>
-</header>
+</ng-template>
+
+@let picture = shownPicture();
+
+@switch (picture ? prototype.variant() : 'none') {
+  @case ('A') {
+    <button
+      type="button"
+      class="banner"
+      [class.grown]="grown()"
+      [class.portrait]="picture!.portrait"
+      [style.--ratio]="picture!.width + ' / ' + picture!.height"
+      [attr.aria-expanded]="grown()"
+      aria-label="Show the whole picture"
+      (click)="grown.set(!grown())">
+      <img [src]="picture!.src" alt="" />
+      <span class="grow-tell">{{ grown() ? 'Less' : 'Whole picture' }}</span>
+    </button>
+
+    <header class="head">
+      <ng-container [ngTemplateOutlet]="title" />
+      <ng-container [ngTemplateOutlet]="headmain" />
+      <ng-container [ngTemplateOutlet]="actions" />
+    </header>
+  }
+
+  @case ('B') {
+    <header class="head beside" [class.portrait]="picture!.portrait">
+      <ng-container [ngTemplateOutlet]="title" />
+      <ng-container [ngTemplateOutlet]="headmain" />
+      <ng-container [ngTemplateOutlet]="actions" />
+      <button type="button" class="framed" aria-label="Open the picture full-size" (click)="view()">
+        <img [src]="picture!.src" alt="" />
+      </button>
+    </header>
+  }
+
+  @case ('C') {
+    <header class="head thumbed">
+      <button type="button" class="thumb" aria-label="Open the picture full-size" (click)="view()">
+        <img [src]="picture!.src" alt="" />
+      </button>
+      <ng-container [ngTemplateOutlet]="title" />
+      <ng-container [ngTemplateOutlet]="headmain" />
+      <ng-container [ngTemplateOutlet]="actions" />
+    </header>
+  }
+
+  @case ('D') {
+    <header class="head covered">
+      <div class="cover">
+        <img [src]="picture!.src" alt="" />
+        <button
+          type="button"
+          class="cover-open"
+          aria-label="Open the picture full-size"
+          (click)="view()"></button>
+        <div class="cover-text">
+          <ng-container [ngTemplateOutlet]="title" />
+        </div>
+        <ng-container [ngTemplateOutlet]="actions" />
+      </div>
+      <ng-container [ngTemplateOutlet]="headmain" />
+    </header>
+  }
+
+  @default {
+    <header class="head">
+      <ng-container [ngTemplateOutlet]="title" />
+      <ng-container [ngTemplateOutlet]="headmain" />
+      <ng-container [ngTemplateOutlet]="actions" />
+    </header>
+  }
+}
+
+@if (picture) {
+  <dialog
+    #viewer
+    class="viewer"
+    closedby="any"
+    [attr.aria-label]="'Picture of ' + recipe().title"
+    (click)="viewer.close()">
+    <img [src]="picture.src" alt="" />
+    <button type="button" class="viewer-close" aria-label="Close the picture">
+      <app-icon name="close" [size]="1.2" />
+    </button>
+  </dialog>
+}
 
 <div class="two-column columns">
   @if (listed()) {

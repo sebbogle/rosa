@@ -51,6 +51,7 @@
             @if (side.reading; as recipe) {
               <app-recipe-pane
                 [recipe]="recipe"
+                [side]="at"
                 [sizing]="side.sizing"
                 (choose)="choose(recipe.id, $event)" />
             } @else {
@@ -91,3 +92,7 @@
 <app-editor />
 
 <app-settings />
+
+@if (prototyping) {
+  <app-prototype-switcher />
+}
